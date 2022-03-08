@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvNameLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/helvetica"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center_vertical"
+            android:text="@string/nama"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_marginStart="5dp"
+            android:backgroundTint="@color/login"
+            android:id="@+id/etName"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="14sp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/enter_name_company"
+            android:autofillHints="name"
+            android:inputType="textMultiLine|textPersonName"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvNPWPLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/npwp"
+            android:fontFamily="@font/helvetica"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:backgroundTint="@color/login"
+            android:id="@+id/etNPWPId"
+            android:layout_width="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:inputType="number"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="14sp"
+            android:hint="@string/enter_npwp"
+            tools:ignore="Autofill" />
+        <!--            android:digits="1234567890.-"-->
+        <!--            android:maxLength="21"-->
+        <!--            android:inputType="textNoSuggestions"-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvAlamatLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/alamat"
+            android:fontFamily="@font/helvetica"
+            android:textSize="14sp" />
+
+        <EditText
+            android:backgroundTint="@color/login"
+            android:id="@+id/etAlamatId"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="14sp"
+            android:hint="@string/enter_alamat"
+            tools:ignore="Autofill"
+            android:gravity="center_vertical"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:background="@drawable/rounded_button"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/add_record" />
+
+    <ScrollView
+        android:id="@+id/svItemList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnAdd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvItemsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tvNoRecordsAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_record"
+        android:textSize="18sp"
+        android:visibility="visible"/>
+
+</LinearLayout>

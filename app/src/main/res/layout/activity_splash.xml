@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/top_text_splash"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/bea_cukai"
+        android:textSize="35sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_light"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/bot_text_splash"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/makin_baik"
+        android:textSize="35sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_light"
+        android:gravity="center"
+        />
+
+</LinearLayout>

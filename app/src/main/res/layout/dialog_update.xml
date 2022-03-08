@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/rounded"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/update_record"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/nunito"
+        android:textSize="17sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="35dp"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold" />
+
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/tvNameLabel"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/nama"
+            android:fontFamily="@font/helvetica"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_marginStart="7dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
+            android:layout_marginTop="-10dp"
+            android:id="@+id/etUpdateName"
+            android:layout_width="0dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/login"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_name"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="13sp"
+            android:autofillHints="name"
+            android:inputType="textMultiLine|textPersonName"
+            android:scrollbars="vertical"/>
+
+
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etUpdateName"
+            android:id="@+id/tvNIPLabel"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/helvetica"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="@string/nip"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvNIPLabel"
+            android:id="@+id/etUpdateNIPId"
+            android:layout_width="0dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="-10dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned"
+            android:backgroundTint="@color/login"
+            android:hint="@string/enter_nip"
+            android:fontFamily="@font/poppins_light"
+            android:layout_marginEnd="5dp"
+            android:textSize="13sp"
+            android:maxLength="18"
+            tools:ignore="Autofill" />
+
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/etUpdateNIPId"
+            app:layout_constraintEnd_toStartOf="@id/tvCancel"
+            android:id="@+id/tvUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="15dp"
+            android:fontFamily="@font/nunito"
+            android:textSize="15sp"
+            android:text="@string/update"
+            android:textColor="@color/login"
+            android:textStyle="bold" />
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/etUpdateNIPId"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/tvCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:fontFamily="@font/nunito"
+            android:padding="15dp"
+            android:text="@android:string/cancel"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
