@@ -1,6 +1,7 @@
 package bc.okimatra.soundingcalculator
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -10,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -22,8 +22,9 @@ import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlin.math.abs
-import kotlin.math.log10
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.round
 
 
@@ -894,6 +895,10 @@ class TabFragment(private val title: String) : Fragment() {
     private fun addRecordUser(userDao: UserDao) {
         val name = _binding3?.etName?.text.toString()
         val nip = _binding3?.etNIPId?.text.toString()
+        val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
+        val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
+        val year = sdfyear.format(Calendar.getInstance().time)
+        val date = sdfdate.format(Calendar.getInstance().time)
 
         when {
             name.isEmpty() -> {
@@ -902,8 +907,32 @@ class TabFragment(private val title: String) : Fragment() {
             nip.isEmpty() -> {
                 Toast.makeText(context, "Mohon masukkan NIP Anda", Toast.LENGTH_SHORT).show()
             }
-            digitcheck(nip) -> {
-                Toast.makeText(context, "Mohon cek kembali NIP Anda", Toast.LENGTH_SHORT).show()
+            nip.length != 18 -> {
+                Toast.makeText(context, "Jumlah Digit NIP Anda Kurang", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(0,4).toInt() !in year.toInt()-90..year.toInt()-13 -> {
+                Toast.makeText(context, "Mohon Periksa Tahun Lahir Anda", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(4,6).toInt() !in 1..12 -> {
+                Toast.makeText(context, "Mohon Periksa Bulan Lahir Anda", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(6,8).toInt() !in 1..31 -> {
+                Toast.makeText(context, "Mohon Periksa Hari Lahir Anda", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(8,12).toInt() !in nip.substring(0,4).toInt()+13..year.toInt() -> {
+                Toast.makeText(context, "Mohon Periksa Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(8,12).toInt() - nip.substring(0,4).toInt() > 70 -> {
+                Toast.makeText(context, "Mohon Periksa Tahun Lahir dan Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(12,14).toInt() !in 1..12 -> {
+                Toast.makeText(context, "Mohon Periksa Bulan Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(8,14).toInt() > date.toInt() -> {
+                Toast.makeText(context, "Anda Bulan Ini Belum Menjadi PNS", Toast.LENGTH_SHORT).show()
+            }
+            nip.substring(14,15).toInt() !in 1..2 -> {
+                Toast.makeText(context, "Mohon Periksa Kode Terkait Jenis Kelamin Anda", Toast.LENGTH_SHORT).show()
             }
             else -> {
                 lifecycleScope.launch {
@@ -935,6 +964,10 @@ class TabFragment(private val title: String) : Fragment() {
 
             val name = binding.etUpdateName.text.toString()
             val nip = binding.etUpdateNIPId.text.toString()
+            val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
+            val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
+            val year = sdfyear.format(Calendar.getInstance().time)
+            val date = sdfdate.format(Calendar.getInstance().time)
 
             when {
                 name.isEmpty() -> {
@@ -943,8 +976,32 @@ class TabFragment(private val title: String) : Fragment() {
                 nip.isEmpty() -> {
                     Toast.makeText(context, "Mohon masukkan NIP Anda", Toast.LENGTH_SHORT).show()
                 }
-                digitcheck(nip) -> {
-                    Toast.makeText(context, "Mohon cek kembali NIP Anda", Toast.LENGTH_SHORT).show()
+                nip.length != 18 -> {
+                    Toast.makeText(context, "Jumlah Digit NIP Anda Kurang", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(0,4).toInt() !in year.toInt()-90..year.toInt()-13 -> {
+                    Toast.makeText(context, "Mohon Periksa Tahun Lahir Anda", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(4,6).toInt() !in 1..12 -> {
+                    Toast.makeText(context, "Mohon Periksa Bulan Lahir Anda", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(6,8).toInt() !in 1..31 -> {
+                    Toast.makeText(context, "Mohon Periksa Hari Lahir Anda", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(8,12).toInt() !in nip.substring(0,4).toInt()+13..year.toInt() -> {
+                    Toast.makeText(context, "Mohon Periksa Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(8,12).toInt() - nip.substring(0,4).toInt() > 70 -> {
+                    Toast.makeText(context, "Mohon Periksa Tahun Lahir dan Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(12,14).toInt() !in 1..12 -> {
+                    Toast.makeText(context, "Mohon Periksa Bulan Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(8,14).toInt() > date.toInt() -> {
+                    Toast.makeText(context, "Anda Bulan Ini Belum Menjadi PNS", Toast.LENGTH_SHORT).show()
+                }
+                nip.substring(14,15).toInt() !in 1..2 -> {
+                    Toast.makeText(context, "Mohon Periksa Kode Terkait Jenis Kelamin Anda", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     lifecycleScope.launch {
@@ -1253,18 +1310,5 @@ class TabFragment(private val title: String) : Fragment() {
         // Set other dialog properties
         alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
         alertDialog.show()  // show the dialog to UI
-    }
-
-    private fun Long.longlength() = when(this) {
-        0L -> 1
-        else -> log10(abs(toDouble())).toInt() + 1
-    }
-
-    private fun EditText.placeCursorToEnd() {
-        this.setSelection(this.text.length)
-    }
-
-    private fun EditText.placeCursorToStart() {
-        this.setSelection(0)
     }
 }
