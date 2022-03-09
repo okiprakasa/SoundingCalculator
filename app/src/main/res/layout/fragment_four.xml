@@ -71,10 +71,11 @@
             android:inputType="number"
             android:fontFamily="@font/poppins_light"
             android:textSize="14sp"
+            android:maxLength="21"
             android:hint="@string/enter_npwp"
             tools:ignore="Autofill" />
         <!--            android:digits="1234567890.-"-->
-        <!--            android:maxLength="21"-->
+        <!--            -->
         <!--            android:inputType="textNoSuggestions"-->
 
     </LinearLayout>

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -739,13 +738,20 @@ class TabFragment(private val title: String) : Fragment() {
                 
                 binding4.apply {
 
+                    var number = ""
+                    var numberOld = ""
+                    var textOld = ""
+                    val holder = "__.___.___._-___.___"
+                    var cursorPosition: Int
+                    var cursor: Int
+
                     etNPWPId.setOnFocusChangeListener { _, _ ->
                         if (etNPWPId.text.toString().isEmpty()) {
                             etNPWPId.setText(getString(R.string.before_edited))
                         }
-                        etNPWPId.post {
-                            etNPWPId.setSelection(0)
-                        }
+                        if (etNPWPId.selectionStart > number.length) {
+                                etNPWPId.setSelection(number.length)
+                            }
                     }
 
                     etName.setOnFocusChangeListener { _, _ ->
@@ -760,26 +766,78 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     }
 
-                    var number = ""
-                    var numberold = ""
-
                     etNPWPId.addTextChangedListener(object : TextWatcher {
                         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
                         }
 
                         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
+                            textOld = s.toString()
                         }
 
                         override fun afterTextChanged(s: Editable) {
                             number = s.toString().replace("_","").replace(".","").replace("-","")
-                            if (number.length % 3 == 0 && numberold != number) {
-                                etNPWPId.setText(String.format(getString(R.string.first_edited, number)))
-                                numberold = number
+                            cursorPosition = etNPWPId.selectionStart
+
+                            if (cursorPosition > number.length) {
+                                etNPWPId.setSelection(number.length)
+                            }
+
+//                            if (etNPWPId.hasFocus()) {
+//                                if ((number.isEmpty() && textOld != holder) || etNPWPId.text.toString().isEmpty() || (number.isEmpty() && textOld == holder && s.toString() != holder) ) {
+//                                    etNPWPId.setText(getString(R.string.before_edited))
+//                                }
+//                            }
+
+                            if ((numberOld != number || etNPWPId.text.toString().length != 20) && etNPWPId.hasFocus()) {
+                                numberOld = number
+                                cursor = numberOld.length
+                                when (numberOld.length) {
+                                    15 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_15),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12)))
+                                        cursor += 5
+                                    }
+                                    in 13..14 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_12),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12),holder.substring(numberOld.length+5)))
+                                        cursor += 5
+                                    }
+                                    in 10..12 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_9),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9),holder.substring(numberOld.length+4)))
+                                        cursor += 4
+                                    }
+                                    9 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_9_exact),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),holder.substring(numberOld.length+3)))
+                                        cursor += 3
+                                    }
+                                    in 6..8 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_5),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5),holder.substring(numberOld.length+2)))
+                                        cursor += 2
+                                    }
+                                    in 3..5 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_2),numberOld.substring(0,2),numberOld.substring(2),holder.substring(numberOld.length+1)))
+                                        cursor += 1
+                                    }
+                                    in 1..2 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_0),numberOld.substring(0),holder.substring(numberOld.length)))
+                                    }
+                                    0 -> {
+                                        etNPWPId.setText(holder)
+                                    }
+                                    else -> {
+                                        etNPWPId.setText(textOld)
+                                    }
+                                }
+                                etNPWPId.post {
+                                    etNPWPId.setSelection(cursor)
+                                }
                             }
                         }
                     })
+
+                    etNPWPId.setOnClickListener {
+                        if (etNPWPId.selectionStart > number.length) {
+                            etNPWPId.setSelection(number.length)
+                        }
+                    }
                 }
 
                 _binding4?.btnAdd?.setOnClickListener {
