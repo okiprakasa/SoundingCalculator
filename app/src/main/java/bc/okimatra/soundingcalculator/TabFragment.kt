@@ -1,7 +1,6 @@
 package bc.okimatra.soundingcalculator
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -72,13 +71,7 @@ class TabFragment(private val title: String) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         when {
             title === "Calculator" -> {
-                var soundingCorrect: Double
-                var volumeApp:Double
-                var volumeAbs : Double
-                var volume : Double
-                var nilaiHasilKalkulator : Double
-                var delta : String
-                var volumeMid : Double
+                var results: List<Double>
 
                 binding1.apply{
                     interpolasiTab.setOnClickListener {
@@ -91,6 +84,7 @@ class TabFragment(private val title: String) : Fragment() {
                         tabelKalibrasi.text = null
                         tabelFraksi.text = null
                     }
+
                     fraksiTab.setOnClickListener {
                         fraksiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -101,9 +95,14 @@ class TabFragment(private val title: String) : Fragment() {
                         tabelKalibrasi1.text = null
                         tabelKalibrasi2.text = null
                     }
+
                     simpanHasil.setOnClickListener {
                         if (hasilKalkulator.text.toString() != "Hasil : 0.000 MT") {
                             suhuCairan.text = null
+                            suhuTetap.text = null
+                            tinggiMeja.text = null
+                            muai.text = null
+                            densityCairan.text = null
                             tinggiCairan.text = null
                             tabelFraksi.text = null
                             tabelKalibrasi.text = null
@@ -114,8 +113,8 @@ class TabFragment(private val title: String) : Fragment() {
                             Toast.makeText(requireActivity(), "Tidak Ada Data", Toast.LENGTH_SHORT).show()
                         }
                     }
-                    tinggiCairan.addTextChangedListener(object : TextWatcher
-                    {
+
+                    tinggiCairan.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -123,84 +122,16 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()) {
-                                val soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
-                                val soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
-                                soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
-                                dataTabel.text = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
-                                try {
-                                    judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 3))
-                                }
-                                catch (e:Exception) {
-                                    try {
-                                        judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited1), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 2))
-                                    }
-                                    catch (e:Exception) {
-                                        try {
-                                            judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 1))
-                                        }
-                                        catch (e:Exception) {
-                                            judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal)
-                                        }
-                                    }
-                                }
-                                judulTabelKalibrasi1.text = judulTabelKalibrasi.text.toString()
-                                if (judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.toString().length-5,judulTabelKalibrasi.text.toString().length-4).toString().toInt() != 9) {
-                                    judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 100.0) / 100.0).toString())
-                                }
-                                else {
-                                    judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited1), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 10.0) / 10.0).toString())
-                                }
-                                delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                judulTabelFraksi.text = String.format(getString(R.string.tabel_fraksi_edited), delta)
-                                if (tinggiCairan.text.toString().isNotEmpty() and
-                                    tinggiMeja.text.toString().isNotEmpty() and
-                                    suhuCairan.text.toString().isNotEmpty() and
-                                    suhuTetap.text.toString().isNotEmpty() and
-                                    muai.text.toString().isNotEmpty() and
-                                    densityCairan.text.toString().isNotEmpty()) {
-                                    when {
-                                        tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                            volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                            volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                            volume = volumeAbs/1000.0
-                                            nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                            hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                        }
-                                        tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                            volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                            volumeApp = volumeMid
-                                            volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                            volume = volumeAbs/1000.0
-                                            nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                            print(volumeMid)
-                                            print(volumeAbs)
-                                            print(volume)
-                                            hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                        }
-                                        else -> {
-                                            hasilKalkulator.text = getText(R.string.hasil)
-                                        }
-                                    }
-                                }
-                                else {
-                                    hasilKalkulator.text = getText(R.string.hasil)
-                                }
+                            if (tinggiCek(binding1)) {
+                                judulDataTabel(binding1)
+                                results = soundingCalculator(binding1)
                             } else {
-                                judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
-                                judulTabelFraksi.text = getText(R.string.tabel_fraksi)
-                                judulTabelKalibrasi1.text = getText(R.string.tabel_kalibrasi1)
-                                judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
-                                dataTabel.text = getText(R.string.data_tabel)
+                                resetDataTabel(binding1)
                             }
                         }
                     })
-                    tinggiMeja.addTextChangedListener(object : TextWatcher
-                    {
+
+                    tinggiMeja.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -208,84 +139,16 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()) {
-                                val soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
-                                val soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
-                                soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
-                                dataTabel.text = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
-                                try {
-                                    judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 3))
-                                }
-                                catch (e:Exception) {
-                                    try {
-                                        judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited1), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 2))
-                                    }
-                                    catch (e:Exception) {
-                                        try {
-                                            judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 1))
-                                        }
-                                        catch (e:Exception) {
-                                            judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal)
-                                        }
-                                    }
-                                }
-                                judulTabelKalibrasi1.text = judulTabelKalibrasi.text.toString()
-                                if (judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.toString().length-5,judulTabelKalibrasi.text.toString().length-4).toString().toInt() != 9) {
-                                    judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 100.0) / 100.0).toString())
-                                }
-                                else {
-                                    judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited1), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 10.0) / 10.0).toString())
-                                }
-                                delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                judulTabelFraksi.text = String.format(getString(R.string.tabel_fraksi_edited), delta)
-                                if (tinggiCairan.text.toString().isNotEmpty() and
-                                    tinggiMeja.text.toString().isNotEmpty() and
-                                    suhuCairan.text.toString().isNotEmpty() and
-                                    suhuTetap.text.toString().isNotEmpty() and
-                                    muai.text.toString().isNotEmpty() and
-                                    densityCairan.text.toString().isNotEmpty()) {
-                                    when {
-                                        tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                            volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                            volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                            volume = volumeAbs/1000.0
-                                            nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                            hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                        }
-                                        tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                            volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                            volumeApp = volumeMid
-                                            volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                            volume = volumeAbs/1000.0
-                                            nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                            nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                            print(volumeMid)
-                                            print(volumeAbs)
-                                            print(volume)
-                                            hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                        }
-                                        else -> {
-                                            hasilKalkulator.text = getText(R.string.hasil)
-                                        }
-                                    }
-                                }
-                                else {
-                                    hasilKalkulator.text = getText(R.string.hasil)
-                                }
+                            if (tinggiCek(binding1)) {
+                                judulDataTabel(binding1)
+                                results = soundingCalculator(binding1)
                             } else {
-                                judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
-                                judulTabelFraksi.text = getText(R.string.tabel_fraksi)
-                                judulTabelKalibrasi1.text = getText(R.string.tabel_kalibrasi1)
-                                judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
-                                dataTabel.text = getText(R.string.data_tabel)
+                                resetDataTabel(binding1)
                             }
                         }
                     })
-                    suhuCairan.addTextChangedListener(object : TextWatcher
-                    {
+
+                    suhuCairan.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -293,48 +156,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    suhuTetap.addTextChangedListener(object : TextWatcher
-                    {
+
+                    suhuTetap.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -342,48 +168,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    muai.addTextChangedListener(object : TextWatcher
-                    {
+
+                    muai.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -391,48 +180,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    tabelFraksi.addTextChangedListener(object : TextWatcher
-                    {
+
+                    tabelFraksi.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -440,48 +192,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    tabelKalibrasi.addTextChangedListener(object : TextWatcher
-                    {
+
+                    tabelKalibrasi.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -489,48 +204,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    tabelKalibrasi1.addTextChangedListener(object : TextWatcher
-                    {
+
+                    tabelKalibrasi1.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -538,48 +216,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    tabelKalibrasi2.addTextChangedListener(object : TextWatcher
-                    {
+
+                    tabelKalibrasi2.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -587,48 +228,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
-                    densityCairan.addTextChangedListener(object : TextWatcher
-                    {
+
+                    densityCairan.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         }
 
@@ -636,44 +240,7 @@ class TabFragment(private val title: String) : Fragment() {
                         }
 
                         override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCairan.text.toString().isNotEmpty() and
-                                tinggiMeja.text.toString().isNotEmpty() and
-                                suhuCairan.text.toString().isNotEmpty() and
-                                suhuTetap.text.toString().isNotEmpty() and
-                                muai.text.toString().isNotEmpty() and
-                                densityCairan.text.toString().isNotEmpty()) {
-                                when {
-                                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
-                                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
-                                        delta = dataTabel.text.toString().subSequence(dataTabel.text.toString().length-4,dataTabel.text.toString().length-3).toString()
-                                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+(delta.toDouble()/1000/0.01)*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
-                                        volumeApp = volumeMid
-                                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
-                                        volume = volumeAbs/1000.0
-                                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-                                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
-                                        print(volumeMid)
-                                        print(volumeAbs)
-                                        print(volume)
-                                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
-                                    }
-                                    else -> {
-                                        hasilKalkulator.text = getText(R.string.hasil)
-                                    }
-                                }
-                            }
-                            else {
-                                hasilKalkulator.text = getText(R.string.hasil)
-                            }
+                            results = soundingCalculator(binding1)
                         }
                     })
                 }
@@ -866,9 +433,115 @@ class TabFragment(private val title: String) : Fragment() {
         _binding4 = null
     }
 
-    // Function is used show the list of inserted data
-    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<UserEntity>,
-                                                userDao: UserDao) {
+    private fun soundingCalculator(binding: FragmentOneBinding): List<Double> {
+        var volumeApp = 0.0
+        var volumeAbs = 0.0
+        var volume = 0.0
+        var nilaiHasilKalkulator= 0.0
+        var delta: Double
+        var volumeMid: Double
+        binding.apply {
+            if (calculatorCheck(binding)) {
+                when {
+                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
+                        volumeApp = tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
+                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
+                        volume = volumeAbs/1000.0
+                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
+                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
+                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
+                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
+                    }
+                    tabelKalibrasi1.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
+                        delta = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000 - judulTabelKalibrasi1.text.toString().subSequence(judulTabelKalibrasi1.text.indexOf("(")+1, judulTabelKalibrasi1.text.indexOf(")")-2).toString().toDouble())/0.01
+                        volumeMid = tabelKalibrasi1.text.toString().toDouble()+delta*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi1.text.toString().toDouble())
+                        volumeApp = volumeMid
+                        volumeAbs = volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble()))
+                        volume = volumeAbs/1000.0
+                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
+                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
+                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
+                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString())
+                    }
+                    else -> {
+                        hasilKalkulator.text = getText(R.string.hasil)
+                    }
+                }
+            }
+            else {
+                hasilKalkulator.text = getText(R.string.hasil)
+            }
+        }
+        return listOf(volumeApp, volumeAbs, volume, nilaiHasilKalkulator)
+    }
+
+    private fun resetDataTabel(binding: FragmentOneBinding) {
+        binding.apply {
+            judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
+            judulTabelFraksi.text = getText(R.string.tabel_fraksi)
+            judulTabelKalibrasi1.text = getText(R.string.tabel_kalibrasi1)
+            judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
+            dataTabel.text = getText(R.string.data_tabel)
+        }
+    }
+
+    private fun judulDataTabel(binding: FragmentOneBinding) {
+        var soundingCorrect: Double
+        var satuanmm : String
+        var soundingCorrected: String
+        var soundingCorrectedFinal: String
+        binding.apply {
+            soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
+            soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
+            soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
+            dataTabel.text = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
+            try {
+                judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 3))
+            }
+            catch (e:Exception) {
+                try {
+                    judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited1), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 2))
+                }
+                catch (e:Exception) {
+                    try {
+                        judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 1))
+                    }
+                    catch (e:Exception) {
+                        judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal)
+                    }
+                }
+            }
+            judulTabelKalibrasi1.text = judulTabelKalibrasi.text.toString()
+            if (judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.toString().length-5,judulTabelKalibrasi.text.toString().length-4).toString().toInt() != 9) {
+                judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 100.0) / 100.0).toString())
+            }
+            else {
+                judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited1), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 10.0) / 10.0).toString())
+            }
+            satuanmm = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
+            satuanmm = satuanmm.subSequence(satuanmm.indexOf(".")-1,satuanmm.indexOf(".")).toString()
+            judulTabelFraksi.text = String.format(getString(R.string.tabel_fraksi_edited), satuanmm)
+        }
+    }
+
+    private fun tinggiCek (binding: FragmentOneBinding): Boolean {
+        binding.apply {
+            return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
+        }
+    }
+
+    private fun calculatorCheck(binding: FragmentOneBinding): Boolean {
+        binding.apply {
+            return tinggiCairan.text.toString().isNotEmpty() and
+                    tinggiMeja.text.toString().isNotEmpty() and
+                    suhuCairan.text.toString().isNotEmpty() and
+                    suhuTetap.text.toString().isNotEmpty() and
+                    muai.text.toString().isNotEmpty() and
+                    densityCairan.text.toString().isNotEmpty()
+        }
+    }
+
+    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<UserEntity>, userDao: UserDao) {
 
         if (employeesList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
@@ -891,7 +564,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    //method for saving records in database
     private fun addRecordUser(userDao: UserDao) {
         val name = _binding3?.etName?.text.toString()
         val nip = _binding3?.etNIPId?.text.toString()
@@ -1020,7 +692,6 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.show()
     }
 
-    // Method is used to show the Alert Dialog.
     private fun deleteRecordAlertDialogUser(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         //set title for alert dialog
@@ -1056,8 +727,7 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()  // show the dialog to UI
     }
 
-    private fun setupListOfExporterDataIntoRecyclerView(exporterList:ArrayList<ExporterEntity>,
-                                                        userDao: UserDao) {
+    private fun setupListOfExporterDataIntoRecyclerView(exporterList:ArrayList<ExporterEntity>, userDao: UserDao) {
 
         if (exporterList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
@@ -1148,7 +818,6 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.show()
     }
 
-    // Method is used to show the Alert Dialog.
     private fun deleteRecordAlertDialogExporter(id:Int,userDao: UserDao) {
 
         val builder = AlertDialog.Builder(requireContext())
@@ -1181,8 +850,7 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()  // show the dialog to UI
     }
 
-    private fun setupListOfDataIntoRecyclerViewCompany(companyList:ArrayList<CompanyEntity>,
-                                                userDao: UserDao) {
+    private fun setupListOfDataIntoRecyclerViewCompany(companyList:ArrayList<CompanyEntity>, userDao: UserDao) {
         if (companyList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
             val companyAdapter = CompanyAdapter(companyList,{updateId ->
