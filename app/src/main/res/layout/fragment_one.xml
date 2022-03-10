@@ -563,8 +563,8 @@
                             android:maxLength="18"
                             android:maxLines="1"
                             android:paddingStart="15dp"
-                            android:paddingEnd="0dp"
                             android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
                             android:paddingBottom="14dp"
                             android:textCursorDrawable="@drawable/cursor_color"
                             android:textSize="13sp" />

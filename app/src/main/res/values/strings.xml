@@ -70,4 +70,6 @@
     <string name="update">Update</string>
     <string name="npwp">NPWP</string>
     <string name="alamat">Alamat</string>
+    <string name="raw_data">Raw Data</string>
+    <string name="final_report">Final Report</string>
 </resources>
