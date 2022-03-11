@@ -593,6 +593,55 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/hasil_tinggi_terkoreksi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/tinggi_terkoreksi"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/hasil_volume_app"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/volume_app"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/hasil_volume_obs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/volume_obs"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+
+                    <TextView
+                        android:id="@+id/hasil_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/volume"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+                    <TextView
                         android:id="@+id/hasil_kalkulator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -604,11 +653,23 @@
                         android:textStyle="bold" />
 
                     <ImageView
+                        android:id="@+id/down"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/ic_down"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:contentDescription="@string/detail_arrow"/>
+
+                    <ImageView
+                        android:id="@+id/up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_up"
+                        android:layout_marginBottom="10dp"
+                        android:contentDescription="@string/detail_arrow"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 

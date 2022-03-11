@@ -15,6 +15,15 @@
     <string name="koefisien_tangki">Koefisien/Faktor Muai Tangki</string>
     <string name="simpan_data">SIMPAN DATA</string>
     <string name="hasil">Hasil : 0.000 MT</string>
+    <string name="tinggi_terkoreksi">Tinggi Terkoreksi : 0.000 m</string>
+    <string name="volume_app">Volume App : 0.000 L</string>
+    <string name="volume_obs">Volume Obs : 0.000 L</string>
+    <string name="volume">Volume : 0.000 KL</string>
+    <string name="detail_arrow">Detail</string>
+    <string name="tinggi_terkoreksi_edited">Tinggi Terkoreksi : %s m</string>
+    <string name="volume_app_edited">Volume App : %s L</string>
+    <string name="volume_obs_edited">Volume Obs : %s L</string>
+    <string name="volume_edited">Volume : %s KL</string>
     <string name="tabel_kalibrasi1">Tabel Kalibrasi 1</string>
     <string name="vol_kalibrasi1">Volume Kalibrasi 1 (L)</string>
     <string name="vol_kalibrasi">Volume Kalibrasi (L)</string>
