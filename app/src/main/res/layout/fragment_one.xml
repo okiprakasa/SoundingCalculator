@@ -708,48 +708,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_tanggal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
-                        android:layout_marginTop="14dp"
-                        android:fontFamily="@font/helvetica"
-                        android:gravity="center_horizontal"
-                        android:text="@string/tanggal"
-                        android:textSize="14sp" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
-                        android:background="@drawable/rounded_input">
-
-                        <!-- INPUT -->
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/tanggal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_tanggal"
-                            android:maxLength="18"
-                            android:maxLines="1"
-                            android:paddingStart="15dp"
-                            android:paddingTop="14dp"
-                            android:paddingEnd="0dp"
-                            android:paddingBottom="14dp"
-                            android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
-
-                    </RelativeLayout>
-
-                    <TextView
                         android:id="@+id/judul_waktu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -780,8 +738,6 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/poppins_light"
                             android:hint="@string/enter_waktu"
-                            android:maxLength="18"
-                            android:maxLines="1"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
                             android:paddingEnd="0dp"
@@ -892,7 +848,7 @@
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
                             android:hint="@string/enter_bentuk"
-                            android:inputType="textMultiLine|textCapWords"
+                            android:inputType="textMultiLine"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
                             android:paddingEnd="0dp"

@@ -2,6 +2,7 @@ package bc.okimatra.soundingcalculator
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -25,10 +26,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
-import android.app.TimePickerDialog
-
-
-
 
 
 class TabFragment(private val title: String) : Fragment() {
@@ -84,11 +81,45 @@ class TabFragment(private val title: String) : Fragment() {
                     cal.set(Calendar.YEAR, year)
                     cal.set(Calendar.MONTH, month)
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    updateDateInView()
+                    val timeID = "dd-MM-yyyy"
+                    val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+
+                    val tz = TimeZone.getDefault()
+                    val now = Date()
+                    val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+                        in 6.9..7.8 -> {
+                            "WIB"
+                        }
+                        in 7.9..8.8 -> {
+                            "WITA"
+                        }
+                        in 8.9..9.8 -> {
+                            "WIT"
+                        }
+                        in -13.0..-0.1 -> {
+                            "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                        }
+                        else -> {
+                            "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                        }
+                    }
+
+                    val mcurrentTime = Calendar.getInstance()
+                    val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+                    val minute = mcurrentTime[Calendar.MINUTE]
+                    val mTimePicker = TimePickerDialog(
+                        requireContext(),
+                        { _, selectedHour, selectedMinute -> binding1.waktu.setText(String.format(getString(R.string.format_waktu, sdf.format(cal.time).toString(), selectedHour, selectedMinute, timeZone))) },
+                        hour,
+                        minute,
+                        true
+                    )
+                    mTimePicker.setTitle("Pilih Waktu")
+                    mTimePicker.show()
                 }
 
                 binding1.apply{
-                    tanggal.setOnClickListener {
+                    waktu.setOnClickListener {
                         DatePickerDialog(
                             requireContext(),
                             dateSetListener,
@@ -96,21 +127,6 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.get(Calendar.MONTH),
                             cal.get(Calendar.DAY_OF_MONTH)
                         ).show()
-                    }
-
-                    waktu.setOnClickListener { // TODO Auto-generated method stub
-                        val mcurrentTime = Calendar.getInstance()
-                        val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
-                        val minute = mcurrentTime[Calendar.MINUTE]
-                        val mTimePicker = TimePickerDialog(
-                            requireContext(),
-                            { _, selectedHour, selectedMinute -> waktu.setText(String.format(getString(R.string.format_waktu, selectedHour.toString(), selectedMinute.toString()))) },
-                            hour,
-                            minute,
-                            true
-                        )
-                        mTimePicker.setTitle("Select Time")
-                        mTimePicker.show()
                     }
 
                     interpolasiTab.setOnClickListener {
@@ -472,12 +488,6 @@ class TabFragment(private val title: String) : Fragment() {
         _binding4 = null
     }
 
-    private fun updateDateInView() {
-        val timeID = "dd-MM-yyyy"
-        val sdf = SimpleDateFormat(timeID, Locale.getDefault())
-        binding1.tanggal.setText(sdf.format(cal.time).toString())
-    }
-
     private fun soundingCalculator(binding: FragmentOneBinding): List<Double> {
         var volumeApp = 0.0
         var volumeAbs = 0.0
@@ -742,7 +752,6 @@ class TabFragment(private val title: String) : Fragment() {
         //set title for alert dialog
         //set message for alert dialog
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
-        builder.setIcon(android.R.drawable.ic_dialog_alert)
 
         //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, _ ->

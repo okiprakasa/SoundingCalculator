@@ -67,13 +67,11 @@
     <string name="enter_npwp">Masukkan NPWP Perusahaan</string>
     <string name="enter_name_company">Masukkan Nama Perusahaan</string>
     <string name="name_company">Nama Perusahaan</string>
-    <string name="tanggal">Tanggal Sounding</string>
-    <string name="enter_tanggal">Masukkan Tanggal Sounding</string>
-    <string name="waktu">Jam</string>
-    <string name="format_waktu">%s:%s</string>
-    <string name="enter_waktu">Masukkan Jam Sounding</string>
-    <string name="pibpeb">Nomor PEB/PIB</string>
-    <string name="enter_pibpeb">Masukkan Nomor PEB/PIB</string>
+    <string name="waktu">Waktu Sounding</string>
+    <string name="enter_waktu">Masukkan Waktu Sounding</string>
+    <string name="format_waktu">%s %02d:%02d %s</string>
+    <string name="pibpeb">Nomor Dokumen</string>
+    <string name="enter_pibpeb">PEB/PIB/FORM 3D</string>
     <string name="enter_alamat">Masukkan Alamat Perusahaan</string>
     <string name="update_record">Update Data</string>
     <string name="update">Update</string>
@@ -83,7 +81,7 @@
     <string name="final_report">Final Report</string>
     <string name="produk">Produk</string>
     <string name="jenis_produk">Masukkan Jenis Produk</string>
-    <string name="bentuk">Bentuk</string>
+    <string name="bentuk">Bentuk Fisik/Warna/Bau</string>
     <string name="enter_bentuk">Masukkan Bentuk Barang</string>
     <string name="no_tangki">Nomor Tangki</string>
     <string name="enter_no_tangki">Masukkan Nomor Tangki</string>
