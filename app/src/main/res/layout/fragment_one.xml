@@ -36,7 +36,7 @@
                 android:id="@+id/tab_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="60dp"
                 android:gravity="center_horizontal"
                 android:text=""
                 android:textSize="29sp"
@@ -70,7 +70,7 @@
                         android:id="@+id/judul_tinggi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="43dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -80,9 +80,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -109,7 +109,7 @@
                         android:id="@+id/judul_suhu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="43dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -119,9 +119,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -177,7 +177,7 @@
                         android:id="@+id/judul_suhu_tetap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -187,9 +187,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -216,7 +216,7 @@
                         android:id="@+id/judul_tinggi_meja"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -226,9 +226,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -255,7 +255,7 @@
                         android:id="@+id/judul_koefisien_tangki"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -265,9 +265,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -363,7 +363,6 @@
                         android:textSize="19sp" />
 
                     <LinearLayout
-                        android:id="@+id/fraksi_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -372,7 +371,7 @@
                             android:id="@+id/judul_tabel_kalibrasi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="39dp"
+                            android:layout_marginStart="30dp"
                             android:layout_marginTop="20dp"
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
@@ -382,9 +381,9 @@
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="39dp"
+                            android:layout_marginLeft="30dp"
                             android:layout_marginTop="3dp"
-                            android:layout_marginRight="39dp"
+                            android:layout_marginRight="30dp"
                             android:background="@drawable/rounded_input">
 
                             <!-- INPUT -->
@@ -411,7 +410,7 @@
                             android:id="@+id/judul_tabel_fraksi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="39dp"
+                            android:layout_marginStart="30dp"
                             android:layout_marginTop="14dp"
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
@@ -419,11 +418,12 @@
                             android:textSize="14sp" />
 
                         <RelativeLayout
+                            android:id="@+id/fraksi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="39dp"
+                            android:layout_marginLeft="30dp"
                             android:layout_marginTop="3dp"
-                            android:layout_marginRight="39dp"
+                            android:layout_marginRight="30dp"
                             android:background="@drawable/rounded_input">
 
                             <!-- INPUT -->
@@ -446,72 +446,27 @@
 
                         </RelativeLayout>
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/interpolasi_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/judul_tabel_kalibrasi1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="39dp"
-                            android:layout_marginTop="20dp"
-                            android:fontFamily="@font/helvetica"
-                            android:gravity="center_horizontal"
-                            android:text="@string/tabel_kalibrasi1"
-                            android:textSize="14sp" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="39dp"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginRight="39dp"
-                            android:background="@drawable/rounded_input">
-
-                            <!-- INPUT -->
-                            <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/tabel_kalibrasi1"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@android:color/transparent"
-                                android:fontFamily="@font/poppins_light"
-                                android:hint="@string/vol_kalibrasi1"
-                                android:inputType="numberDecimal"
-                                android:maxLength="18"
-                                android:maxLines="1"
-                                android:paddingStart="15dp"
-                                android:paddingTop="14dp"
-                                android:paddingEnd="0dp"
-                                android:paddingBottom="14dp"
-                                android:textCursorDrawable="@drawable/cursor_color"
-                                android:textSize="13sp" />
-
-                        </RelativeLayout>
-
                         <TextView
                             android:id="@+id/judul_tabel_kalibrasi2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="39dp"
+                            android:layout_marginStart="30dp"
                             android:layout_marginTop="14dp"
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
                             android:text="@string/tabel_kalibrasi2"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone"/>
 
                         <RelativeLayout
+                            android:id="@+id/kalibrasi2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="39dp"
+                            android:layout_marginLeft="30dp"
                             android:layout_marginTop="3dp"
-                            android:layout_marginRight="39dp"
-                            android:background="@drawable/rounded_input">
+                            android:layout_marginRight="30dp"
+                            android:background="@drawable/rounded_input"
+                            android:visibility="gone">
 
                             <!-- INPUT -->
                             <androidx.appcompat.widget.AppCompatEditText
@@ -539,7 +494,7 @@
                         android:id="@+id/judul_density_cairan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -549,9 +504,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -581,9 +536,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-10dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="-10dp"
+                android:layout_marginEnd="30dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="5dp">
 
@@ -596,11 +551,11 @@
                         android:id="@+id/hasil_tinggi_terkoreksi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/tinggi_terkoreksi"
-                        android:textSize="17sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -608,11 +563,11 @@
                         android:id="@+id/hasil_volume_app"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/volume_app"
-                        android:textSize="17sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -620,11 +575,11 @@
                         android:id="@+id/hasil_volume_obs"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/volume_obs"
-                        android:textSize="17sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -633,11 +588,11 @@
                         android:id="@+id/hasil_volume"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="0dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/volume"
-                        android:textSize="17sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -645,7 +600,7 @@
                         android:id="@+id/hasil_kalkulator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/hasil"
@@ -658,6 +613,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/ic_down"
+                        android:layout_marginTop="-5dp"
                         android:layout_marginBottom="10dp"
                         android:contentDescription="@string/detail_arrow"/>
 
@@ -704,7 +660,7 @@
                         android:id="@+id/judul_nama_perusahaan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -714,9 +670,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -742,7 +698,7 @@
                         android:id="@+id/judul_no_tangki"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -752,9 +708,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -778,7 +734,7 @@
                         android:id="@+id/judul_waktu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -788,9 +744,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -807,7 +763,7 @@
                             android:hint="@string/enter_waktu"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
-                            android:paddingEnd="0dp"
+                            android:paddingEnd="5dp"
                             android:paddingBottom="14dp"
                             android:textCursorDrawable="@drawable/cursor_color"
                             android:textSize="13sp" />
@@ -818,7 +774,7 @@
                         android:id="@+id/judul_no_dokumen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -828,9 +784,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -854,7 +810,7 @@
                         android:id="@+id/judul_produk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -864,9 +820,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -892,7 +848,7 @@
                         android:id="@+id/judul_bentuk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="39dp"
+                        android:layout_marginStart="30dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -902,9 +858,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="39dp"
+                        android:layout_marginRight="30dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
