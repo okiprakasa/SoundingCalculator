@@ -1,5 +1,6 @@
 package bc.okimatra.soundingcalculator
 
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -23,8 +24,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.round
+import android.app.TimePickerDialog
+
+
+
 
 
 class TabFragment(private val title: String) : Fragment() {
@@ -40,6 +44,9 @@ class TabFragment(private val title: String) : Fragment() {
 
     private var _binding4: FragmentFourBinding? = null
     private val binding4 get() = _binding4!!
+
+    private var cal = Calendar.getInstance()
+    private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,8 +79,40 @@ class TabFragment(private val title: String) : Fragment() {
         when {
             title === "Calculator" -> {
                 var results: List<Double>
+                dateSetListener = DatePickerDialog.OnDateSetListener {
+                        _, year, month, dayOfMonth ->
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, month)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    updateDateInView()
+                }
 
                 binding1.apply{
+                    tanggal.setOnClickListener {
+                        DatePickerDialog(
+                            requireContext(),
+                            dateSetListener,
+                            cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH),
+                            cal.get(Calendar.DAY_OF_MONTH)
+                        ).show()
+                    }
+
+                    waktu.setOnClickListener { // TODO Auto-generated method stub
+                        val mcurrentTime = Calendar.getInstance()
+                        val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+                        val minute = mcurrentTime[Calendar.MINUTE]
+                        val mTimePicker = TimePickerDialog(
+                            requireContext(),
+                            { _, selectedHour, selectedMinute -> waktu.setText(String.format(getString(R.string.format_waktu, selectedHour.toString(), selectedMinute.toString()))) },
+                            hour,
+                            minute,
+                            true
+                        )
+                        mTimePicker.setTitle("Select Time")
+                        mTimePicker.show()
+                    }
+
                     interpolasiTab.setOnClickListener {
                         interpolasiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -431,6 +470,12 @@ class TabFragment(private val title: String) : Fragment() {
         _binding2 = null
         _binding3 = null
         _binding4 = null
+    }
+
+    private fun updateDateInView() {
+        val timeID = "dd-MM-yyyy"
+        val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+        binding1.tanggal.setText(sdf.format(cal.time).toString())
     }
 
     private fun soundingCalculator(binding: FragmentOneBinding): List<Double> {
@@ -952,7 +997,6 @@ class TabFragment(private val title: String) : Fragment() {
         //set title for alert dialog
         //set message for alert dialog
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
-        builder.setIcon(android.R.drawable.ic_dialog_alert)
 
         //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, _ ->

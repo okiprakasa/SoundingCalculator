@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -22,8 +23,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="232dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,8 +39,8 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center_horizontal"
                 android:text=""
-                android:textStyle="bold"
-                android:textSize="29sp"/>
+                android:textSize="29sp"
+                android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -51,18 +53,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="30dp">
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/data_lapangan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
+                        android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_lapangan"
-                        android:fontFamily="@font/nunito"
-                        android:textSize="19sp"/>
+                        android:textSize="19sp" />
 
                     <TextView
                         android:id="@+id/judul_tinggi"
@@ -70,10 +72,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="43dp"
                         android:layout_marginTop="20dp"
+                        android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/tinggi_cairan"
-                        android:fontFamily="@font/helvetica"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -109,10 +111,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="43dp"
                         android:layout_marginTop="12dp"
-                        android:gravity="center_horizontal"
                         android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
                         android:text="@string/suhu_cairan"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -134,11 +136,11 @@
                             android:maxLength="18"
                             android:maxLines="1"
                             android:paddingStart="15dp"
-                            android:paddingEnd="0dp"
                             android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
                             android:paddingBottom="14dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp"/>
+                            android:textSize="13sp" />
 
                     </RelativeLayout>
 
@@ -150,26 +152,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="30dp">
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/data_tangki"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
+                        android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_tangki"
-                        android:fontFamily="@font/nunito"
-                        android:textSize="19sp"/>
+                        android:textSize="19sp" />
 
                     <TextView
                         android:id="@+id/judul_suhu_tetap"
@@ -177,10 +179,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="39dp"
                         android:layout_marginTop="20dp"
-                        android:gravity="center_horizontal"
                         android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
                         android:text="@string/suhu_tetap"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -216,10 +218,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="39dp"
                         android:layout_marginTop="14dp"
-                        android:gravity="center_horizontal"
                         android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
                         android:text="@string/tinggi_meja"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -241,8 +243,8 @@
                             android:maxLength="18"
                             android:maxLines="1"
                             android:paddingStart="15dp"
-                            android:paddingEnd="0dp"
                             android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
                             android:paddingBottom="14dp"
                             android:textCursorDrawable="@drawable/cursor_color"
                             android:textSize="13sp" />
@@ -255,10 +257,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="39dp"
                         android:layout_marginTop="14dp"
-                        android:gravity="center_horizontal"
                         android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
                         android:text="@string/koefisien_tangki"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -296,57 +298,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="30dp">
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_marginTop="20dp"
                         android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/switch_off"
+                        android:clipToPadding="false"
                         android:elevation="15dp"
-                        android:clipToPadding="false">
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
                         <TextView
                             android:id="@+id/fraksi_tab"
-                            android:text="@string/fraksi"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:paddingTop="5dp"
-                            android:textSize="15sp"
-                            android:paddingBottom="5dp"
-                            android:fontFamily="@font/nunito"
                             android:background="@drawable/switch_on"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
+                            android:fontFamily="@font/nunito"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/fraksi"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/interpolasi_tab"
-                            android:text="@string/interpolasi"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:paddingTop="5dp"
-                            android:textSize="15sp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/login"
                             android:fontFamily="@font/nunito"
-                            android:textStyle="bold"/>
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/interpolasi"
+                            android:textAlignment="center"
+                            android:textColor="@color/login"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -355,10 +357,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_tabel"
-                        android:fontFamily="@font/nunito"
-                        android:textSize="19sp"/>
+                        android:textSize="19sp" />
 
                     <LinearLayout
                         android:id="@+id/fraksi_layout"
@@ -372,10 +374,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="39dp"
                             android:layout_marginTop="20dp"
-                            android:gravity="center_horizontal"
                             android:fontFamily="@font/helvetica"
+                            android:gravity="center_horizontal"
                             android:text="@string/tabel_kalibrasi"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp" />
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -411,10 +413,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="39dp"
                             android:layout_marginTop="14dp"
-                            android:gravity="center_horizontal"
                             android:fontFamily="@font/helvetica"
+                            android:gravity="center_horizontal"
                             android:text="@string/tabel_fraksi"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp" />
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -436,8 +438,8 @@
                                 android:maxLength="18"
                                 android:maxLines="1"
                                 android:paddingStart="15dp"
-                                android:paddingEnd="0dp"
                                 android:paddingTop="14dp"
+                                android:paddingEnd="0dp"
                                 android:paddingBottom="14dp"
                                 android:textCursorDrawable="@drawable/cursor_color"
                                 android:textSize="13sp" />
@@ -452,16 +454,17 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:visibility="gone">
+
                         <TextView
                             android:id="@+id/judul_tabel_kalibrasi1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="39dp"
                             android:layout_marginTop="20dp"
-                            android:gravity="center_horizontal"
                             android:fontFamily="@font/helvetica"
+                            android:gravity="center_horizontal"
                             android:text="@string/tabel_kalibrasi1"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp" />
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -483,8 +486,8 @@
                                 android:maxLength="18"
                                 android:maxLines="1"
                                 android:paddingStart="15dp"
-                                android:paddingEnd="0dp"
                                 android:paddingTop="14dp"
+                                android:paddingEnd="0dp"
                                 android:paddingBottom="14dp"
                                 android:textCursorDrawable="@drawable/cursor_color"
                                 android:textSize="13sp" />
@@ -497,10 +500,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="39dp"
                             android:layout_marginTop="14dp"
-                            android:gravity="center_horizontal"
                             android:fontFamily="@font/helvetica"
+                            android:gravity="center_horizontal"
                             android:text="@string/tabel_kalibrasi2"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp" />
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -522,8 +525,8 @@
                                 android:maxLength="18"
                                 android:maxLines="1"
                                 android:paddingStart="15dp"
-                                android:paddingEnd="0dp"
                                 android:paddingTop="14dp"
+                                android:paddingEnd="0dp"
                                 android:paddingBottom="14dp"
                                 android:textCursorDrawable="@drawable/cursor_color"
                                 android:textSize="13sp" />
@@ -538,10 +541,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="39dp"
                         android:layout_marginTop="14dp"
-                        android:gravity="center_horizontal"
                         android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
                         android:text="@string/density_cairan"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -578,9 +581,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="-10dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="-10dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="5dp">
 
@@ -595,11 +598,310 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="15dp"
+                        android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/hasil"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/data_administrasi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/nunito"
+                        android:gravity="center_horizontal"
+                        android:text="@string/data_administrasi"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:id="@+id/judul_nama_perusahaan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
-                        android:textStyle="bold"
-                        android:textSize="17sp"/>
+                        android:gravity="center_horizontal"
+                        android:text="@string/name_company"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/nama_perusahaan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/enter_name_company"
+                            android:inputType="textMultiLine|textCapWords"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:scrollbars="vertical"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/judul_no_tangki"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/no_tangki"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/no_tangki"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/enter_no_tangki"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/judul_tanggal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/tanggal"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tanggal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/enter_tanggal"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/judul_waktu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/waktu"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/waktu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/enter_waktu"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/judul_no_pibpeb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/pibpeb"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/no_pibpeb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/enter_pibpeb"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/judul_produk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/produk"
+                        android:textSize="14sp"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/produk"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/jenis_produk"
+                            android:inputType="textMultiLine|textCapWords"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:scrollbars="vertical"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/judul_bentuk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="39dp"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/bentuk"
+                        android:textSize="14sp"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="39dp"
+                        android:background="@drawable/rounded_input">
+
+                        <!-- INPUT -->
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/bentuk"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/enter_bentuk"
+                            android:inputType="textMultiLine|textCapWords"
+                            android:paddingStart="15dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="0dp"
+                            android:paddingBottom="14dp"
+                            android:scrollbars="vertical"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -612,16 +914,16 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="100dp"
                 android:layout_marginRight="30dp"
+                android:layout_marginBottom="100dp"
                 android:background="@drawable/rounded_button"
+                android:elevation="5dp"
                 android:fontFamily="@font/nunito"
-                android:textStyle="bold"
                 android:gravity="center"
                 android:text="@string/simpan_data"
-                android:elevation="5dp"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

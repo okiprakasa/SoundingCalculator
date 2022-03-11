@@ -9,9 +9,8 @@ data class SoundingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
     val namaPerusahaan: String="",
-    val hariTanggal: String="",
-    val jam: String="",
-    val nomorDokumen: String="",
+    val waktu: String="",
+    val nomorPEB: String="",
     val produk: String="",
     val lokasi: String="",
     val bentuk: String="",

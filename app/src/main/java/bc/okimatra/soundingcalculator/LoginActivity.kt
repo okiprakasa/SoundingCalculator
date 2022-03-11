@@ -114,6 +114,7 @@ class LoginActivity : AppCompatActivity() {
     }
 }
 
+@Suppress("unused")
 fun nipcheck(str: String): Boolean {
     val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
     val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
