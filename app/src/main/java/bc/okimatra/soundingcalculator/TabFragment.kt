@@ -81,8 +81,10 @@ class TabFragment(private val title: String) : Fragment() {
                     cal.set(Calendar.YEAR, year)
                     cal.set(Calendar.MONTH, month)
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    val timeID = "dd-MM-yyyy"
+                    val timeID = "EE, dd-MMM-yyyy"
                     val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                    val tanggalEng = sdf.format(cal.time).toString()
+                    val tanggalID = dayConverter(monthConverter(tanggalEng))
 
                     val tz = TimeZone.getDefault()
                     val now = Date()
@@ -109,12 +111,13 @@ class TabFragment(private val title: String) : Fragment() {
                     val minute = mcurrentTime[Calendar.MINUTE]
                     val mTimePicker = TimePickerDialog(
                         requireContext(),
-                        { _, selectedHour, selectedMinute -> binding1.waktu.setText(String.format(getString(R.string.format_waktu, sdf.format(cal.time).toString(), selectedHour, selectedMinute, timeZone))) },
+                        R.style.TimePickerTheme,
+                        { _, selectedHour, selectedMinute -> binding1.waktu.setText(String.format(getString(R.string.format_waktu, tanggalID, selectedHour, selectedMinute, timeZone))) },
                         hour,
                         minute,
                         true
                     )
-                    mTimePicker.setTitle("Pilih Waktu")
+//                    mTimePicker.setTitle("Pilih Waktu")
                     mTimePicker.show()
                 }
 
@@ -122,6 +125,7 @@ class TabFragment(private val title: String) : Fragment() {
                     waktu.setOnClickListener {
                         DatePickerDialog(
                             requireContext(),
+                            R.style.TimePickerTheme,
                             dateSetListener,
                             cal.get(Calendar.YEAR),
                             cal.get(Calendar.MONTH),
@@ -163,6 +167,12 @@ class TabFragment(private val title: String) : Fragment() {
                             tabelKalibrasi.text = null
                             tabelKalibrasi1.text = null
                             tabelKalibrasi2.text = null
+                            namaPerusahaan.text = null
+                            noTangki.text = null
+                            waktu.text = null
+                            noDokumen.text = null
+                            produk.text = null
+                            bentuk.text = null
                             Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(requireActivity(), "Tidak Ada Data", Toast.LENGTH_SHORT).show()
@@ -391,25 +401,12 @@ class TabFragment(private val title: String) : Fragment() {
 
                     etNPWPId.addTextChangedListener(object : TextWatcher {
                         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                        }
-
-                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                            textOld = s.toString()
-                        }
-
-                        override fun afterTextChanged(s: Editable) {
                             number = s.toString().replace("_","").replace(".","").replace("-","")
                             cursorPosition = etNPWPId.selectionStart
 
                             if (cursorPosition > number.length) {
                                 etNPWPId.setSelection(number.length)
                             }
-
-//                            if (etNPWPId.hasFocus()) {
-//                                if ((number.isEmpty() && textOld != holder) || etNPWPId.text.toString().isEmpty() || (number.isEmpty() && textOld == holder && s.toString() != holder) ) {
-//                                    etNPWPId.setText(getString(R.string.before_edited))
-//                                }
-//                            }
 
                             if ((numberOld != number || etNPWPId.text.toString().length != 20) && etNPWPId.hasFocus()) {
                                 numberOld = number
@@ -454,6 +451,14 @@ class TabFragment(private val title: String) : Fragment() {
                                 }
                             }
                         }
+
+                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                            textOld = s.toString()
+                        }
+
+                        override fun afterTextChanged(s: Editable) {
+
+                        }
                     })
 
                     etNPWPId.setOnClickListener {
@@ -486,6 +491,14 @@ class TabFragment(private val title: String) : Fragment() {
         _binding2 = null
         _binding3 = null
         _binding4 = null
+    }
+
+    private fun dayConverter(date: String): String {
+        return date.replace("Mon","Senin").replace("Tue","Selasa").replace("Wed","Rabu").replace("Thu","Kamis").replace("Fri","Jumat").replace("Sat","Sabtu").replace("Sun","Minggu")
+    }
+
+    private fun monthConverter(date: String): String {
+        return date.replace("Jan","Januari").replace("Feb","Februari").replace("Mar","Maret").replace("Apr","April").replace("May","Mei").replace("Jun","Juni").replace("Jul","Juli").replace("Aug","Agustus").replace("Sep","September").replace("Oct","Oktober").replace("Nov","November").replace("Dec","December")
     }
 
     private fun soundingCalculator(binding: FragmentOneBinding): List<Double> {

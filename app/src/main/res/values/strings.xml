@@ -70,8 +70,8 @@
     <string name="waktu">Waktu Sounding</string>
     <string name="enter_waktu">Masukkan Waktu Sounding</string>
     <string name="format_waktu">%s %02d:%02d %s</string>
-    <string name="pibpeb">Nomor Dokumen</string>
-    <string name="enter_pibpeb">PEB/PIB/FORM 3D</string>
+    <string name="no_dokumen">Nomor Dokumen</string>
+    <string name="enter_no_dokumen">PEB/PIB/FORM 3D</string>
     <string name="enter_alamat">Masukkan Alamat Perusahaan</string>
     <string name="update_record">Update Data</string>
     <string name="update">Update</string>

@@ -30,7 +30,7 @@ class SplashActivity : AppCompatActivity() {
             topTextSplash.startAnimation(topSplash)
             botTextSplash.startAnimation(botSplash)
         }
-        val splashScreenTimeOut = 1150
+        val splashScreenTimeOut = 650
         val userDao = (application as UserApp).db.userDao()
         var loginIntent = Intent(this@SplashActivity,LoginActivity::class.java)
         lifecycleScope.launch {

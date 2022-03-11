@@ -597,12 +597,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/hasil"
                         android:textSize="17sp"
                         android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_down"
+                        android:layout_marginBottom="10dp"/>
 
                 </LinearLayout>
 
@@ -748,14 +754,14 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_no_pibpeb"
+                        android:id="@+id/judul_no_dokumen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="39dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
-                        android:text="@string/pibpeb"
+                        android:text="@string/no_dokumen"
                         android:textSize="14sp" />
 
                     <RelativeLayout
@@ -768,12 +774,12 @@
 
                         <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/no_pibpeb"
+                            android:id="@+id/no_dokumen"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_pibpeb"
+                            android:hint="@string/enter_no_dokumen"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
                             android:paddingEnd="0dp"
