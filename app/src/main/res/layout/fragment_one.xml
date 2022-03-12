@@ -21,6 +21,7 @@
         />
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -69,7 +70,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -79,9 +80,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -107,7 +108,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -117,9 +118,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -174,7 +175,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -184,9 +185,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -212,7 +213,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -222,9 +223,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -250,7 +251,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -260,9 +261,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -377,9 +378,9 @@
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="25dp"
                             android:layout_marginTop="3dp"
-                            android:layout_marginRight="30dp"
+                            android:layout_marginRight="25dp"
                             android:background="@drawable/rounded_input">
 
                             <!-- INPUT -->
@@ -417,9 +418,9 @@
                             android:id="@+id/fraksi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginLeft="25dp"
                             android:layout_marginTop="3dp"
-                            android:layout_marginRight="30dp"
+                            android:layout_marginRight="25dp"
                             android:background="@drawable/rounded_input">
 
                             <!-- INPUT -->
@@ -489,7 +490,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -499,9 +500,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -632,7 +633,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="5dp"
@@ -656,44 +656,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="20dp"
-                        android:fontFamily="@font/helvetica"
-                        android:gravity="center_horizontal"
-                        android:text="@string/name_company"
-                        android:textSize="14sp" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
-                        android:background="@drawable/rounded_input">
-
-                        <!-- INPUT -->
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/nama_perusahaan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_name_company"
-                            android:inputType="textMultiLine|textCapWords"
-                            android:paddingStart="15dp"
-                            android:paddingTop="14dp"
-                            android:paddingEnd="0dp"
-                            android:paddingBottom="14dp"
-                            android:scrollbars="vertical"
-                            android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
-
-                    </RelativeLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -703,9 +666,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -728,7 +691,41 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/name_company"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="25dp"
+                        android:background="@drawable/rounded_input">
+
+                        <Spinner
+                            android:id="@+id/nama_perusahaan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/rounded_input"
+                            android:fontFamily="@font/poppins_light"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:hint="@string/enter_name_company"
+                            android:scrollbars="vertical"
+                            android:spinnerMode="dropdown"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -738,9 +735,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -767,7 +764,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -777,9 +774,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -802,7 +799,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -812,9 +809,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->
@@ -839,7 +836,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="25dp"
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
@@ -849,9 +846,9 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="25dp"
                         android:background="@drawable/rounded_input">
 
                         <!-- INPUT -->

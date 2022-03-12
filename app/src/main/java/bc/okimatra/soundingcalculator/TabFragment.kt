@@ -6,12 +6,16 @@ import android.app.TimePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -25,6 +29,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.round
 
 
@@ -192,6 +197,9 @@ class TabFragment(private val title: String) : Fragment() {
                         dataAdministrasiLayout.visibility = View.VISIBLE
                         back.visibility = View.VISIBLE
                         simpanHasil.visibility = View.VISIBLE
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            scrollView.fullScroll(ScrollView.FOCUS_UP)
+                        }, 1)
                     }
 
                     back.setOnClickListener {
@@ -203,6 +211,9 @@ class TabFragment(private val title: String) : Fragment() {
                         dataTabelLayout.visibility = View.VISIBLE
                         hasilLayout.visibility = View.VISIBLE
                         next.visibility = View.VISIBLE
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            scrollView.fullScroll(ScrollView.FOCUS_UP)
+                        }, 1)
                     }
 
                     simpanHasil.setOnClickListener {
@@ -216,7 +227,6 @@ class TabFragment(private val title: String) : Fragment() {
                             tabelFraksi.text = null
                             tabelKalibrasi.text = null
                             tabelKalibrasi2.text = null
-                            namaPerusahaan.text = null
                             noTangki.text = null
                             waktu.text = null
                             noDokumen.text = null
@@ -345,13 +355,19 @@ class TabFragment(private val title: String) : Fragment() {
                             results = soundingCalculator(binding1)
                         }
                     })
+
+                    val userDao = (requireActivity().application as UserApp).db.userDao()
+                    lifecycleScope.launch {
+                        userDao.fetchAllCompany().collect {
+                            populateDropdown(ArrayList(it))
+                        }
+                    }
                 }
             }
             title === "User" -> {
                 val userDao = (requireActivity().application as UserApp).db.userDao()
                 lifecycleScope.launch {
                     userDao.fetchAllUser().collect {
-                        Log.d("exactemployee", "$it")
                         val list = ArrayList(it)
                         setupListOfUserDataIntoRecyclerView(list,userDao)
                     }
@@ -672,14 +688,29 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<UserEntity>, userDao: UserDao) {
+    private fun populateDropdown(employeesList:ArrayList<CompanyEntity>) {
+        val items = arrayListOf<String>()
+        if (employeesList.isNotEmpty()) {
+            for (i in 0 until employeesList.size) {
+                items.add(employeesList[i].nama)
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            _binding1?.namaPerusahaan?.adapter = adapter
+        }
+    }
 
+    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<UserEntity>, userDao: UserDao) {
         if (employeesList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
             val itemAdapter = UserAdapter(employeesList,{ updateId ->
                 updateRecordDialogUser(updateId,userDao)
-            }){deleteId->
-                deleteRecordAlertDialogUser(deleteId,userDao)
+            }){deleteId->deleteRecordAlertDialogUser(deleteId,userDao)
             }
             // Set the LayoutManager that this RecyclerView will use.
             _binding3?.rvUserList?.layoutManager = LinearLayoutManager(context)

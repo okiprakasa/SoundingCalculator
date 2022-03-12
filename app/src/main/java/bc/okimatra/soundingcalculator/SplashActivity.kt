@@ -35,10 +35,8 @@ class SplashActivity : AppCompatActivity() {
         var loginIntent = Intent(this@SplashActivity,LoginActivity::class.java)
         lifecycleScope.launch {
             userDao.countAllUser().collect {
-                if(it != null){
-                    if(it > 0) {
-                        loginIntent = Intent(this@SplashActivity,MainActivity::class.java)
-                    }
+                if(it > 0) {
+                    loginIntent = Intent(this@SplashActivity,MainActivity::class.java)
                 }
             }
         }
