@@ -83,8 +83,8 @@ class CompanyAdapter(private val items: ArrayList<CompanyEntity>,
         // Holds the TextView that will add each item to
         val llMain = binding.llMain
         val tvName = binding.tvName
-        val tvNPWP = binding.tvNPWP
-        val tvAlamat = binding.tvAlamat
+        val tvNPWP = binding.barisKedua
+        val tvAlamat = binding.barisKetiga
         val ivEdit = binding.ivEdit
         val ivDelete = binding.ivDelete
     }

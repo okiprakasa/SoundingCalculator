@@ -9,5 +9,6 @@ data class ExporterEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
     val nama: String="",
-    val jabatan: String=""
+    val jabatan: String="",
+    val perusahaan: String=""
         )

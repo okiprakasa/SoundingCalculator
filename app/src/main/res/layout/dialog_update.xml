@@ -27,7 +27,7 @@
         <TextView
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/tvNameLabel"
+            android:id="@+id/judul_nama"
             android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,14 +41,14 @@
             android:layout_marginStart="7dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/judul_nama"
             android:layout_marginTop="-10dp"
-            android:id="@+id/etUpdateName"
+            android:id="@+id/update_nama"
             android:layout_width="0dp"
             android:layout_marginEnd="5dp"
             android:backgroundTint="@color/login"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_name"
+            android:hint="@string/hint_nama"
             android:fontFamily="@font/poppins_light"
             android:textSize="13sp"
             android:autofillHints="name"
@@ -58,8 +58,8 @@
 
         <TextView
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etUpdateName"
-            android:id="@+id/tvNIPLabel"
+            app:layout_constraintTop_toBottomOf="@id/update_nama"
+            android:id="@+id/judul_nip"
             android:layout_width="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -72,15 +72,15 @@
         <androidx.appcompat.widget.AppCompatEditText
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvNIPLabel"
-            android:id="@+id/etUpdateNIPId"
+            app:layout_constraintTop_toBottomOf="@id/judul_nip"
+            android:id="@+id/update_nip"
             android:layout_width="0dp"
             android:layout_marginStart="7dp"
             android:layout_marginTop="-10dp"
             android:layout_height="wrap_content"
             android:inputType="numberSigned"
             android:backgroundTint="@color/login"
-            android:hint="@string/enter_nip"
+            android:hint="@string/hint_nip"
             android:fontFamily="@font/poppins_light"
             android:layout_marginEnd="5dp"
             android:textSize="13sp"
@@ -89,7 +89,7 @@
 
 
         <TextView
-            app:layout_constraintTop_toBottomOf="@id/etUpdateNIPId"
+            app:layout_constraintTop_toBottomOf="@id/update_nip"
             app:layout_constraintEnd_toStartOf="@id/tvCancel"
             android:id="@+id/tvUpdate"
             android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
             android:textStyle="bold" />
 
         <TextView
-            app:layout_constraintTop_toBottomOf="@id/etUpdateNIPId"
+            app:layout_constraintTop_toBottomOf="@id/update_nip"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/tvCancel"
             android:layout_width="wrap_content"

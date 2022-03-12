@@ -26,7 +26,7 @@
         <TextView
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/tvNameLabel"
+            android:id="@+id/judul_nama"
             android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,14 +40,14 @@
             android:layout_marginStart="7dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/judul_nama"
             android:layout_marginTop="-10dp"
-            android:id="@+id/etUpdateName"
+            android:id="@+id/update_nama"
             android:layout_width="0dp"
             android:layout_marginEnd="5dp"
             android:backgroundTint="@color/login"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_nama_eksportir"
+            android:hint="@string/hint_pengguna_jasa"
             android:fontFamily="@font/poppins_light"
             android:textSize="13sp"
             android:autofillHints="name"
@@ -57,8 +57,8 @@
 
         <TextView
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etUpdateName"
-            android:id="@+id/tvJabatanLabel"
+            app:layout_constraintTop_toBottomOf="@id/update_nama"
+            android:id="@+id/judul_jabatan"
             android:layout_width="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -71,24 +71,55 @@
         <androidx.appcompat.widget.AppCompatEditText
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJabatanLabel"
-            android:id="@+id/etUpdateJabatanId"
+            app:layout_constraintTop_toBottomOf="@id/judul_jabatan"
+            android:id="@+id/update_jabatan"
             android:layout_width="0dp"
             android:layout_marginStart="7dp"
             android:layout_marginTop="-10dp"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine|textPersonName"
             android:backgroundTint="@color/login"
-            android:hint="@string/enter_jabatan"
+            android:hint="@string/hint_jabatan"
             android:fontFamily="@font/poppins_light"
             android:layout_marginEnd="5dp"
             android:textSize="13sp"
             android:scrollbars="vertical"
             tools:ignore="Autofill"/>
 
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_jabatan"
+        android:id="@+id/judul_perusahaan"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="@string/perusahaan"
+        android:textSize="15sp" />
+
+    <Spinner
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/judul_perusahaan"
+        android:id="@+id/update_perusahaan"
+        android:layout_width="0dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="-10dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textPersonName"
+        android:backgroundTint="@color/login"
+        android:hint="@string/hint_perusahaan"
+        android:fontFamily="@font/poppins_light"
+        android:layout_marginEnd="5dp"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"/>
+
 
         <TextView
-            app:layout_constraintTop_toBottomOf="@id/etUpdateJabatanId"
+            app:layout_constraintTop_toBottomOf="@id/update_perusahaan"
             app:layout_constraintEnd_toStartOf="@id/tvCancel"
             android:id="@+id/tvUpdate"
             android:layout_width="wrap_content"
@@ -102,7 +133,7 @@
             android:textStyle="bold" />
 
         <TextView
-            app:layout_constraintTop_toBottomOf="@id/etUpdateJabatanId"
+            app:layout_constraintTop_toBottomOf="@id/update_perusahaan"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/tvCancel"
             android:layout_width="wrap_content"

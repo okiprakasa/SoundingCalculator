@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
             thread.start()
 
             btnStart.setOnClickListener {
-                val nama = inputNama.text.toString()
+                val nama = endSpaceRemover(inputNama.text.toString())
                 val nip = inputNip.text.toString()
                 val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
                 val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
@@ -113,7 +113,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 }
-
+fun endSpaceRemover(text:String): String {
+    var newtext = text
+    while (newtext.subSequence(newtext.length-1,newtext.length) == " ") {
+        newtext = newtext.subSequence(0, newtext.length-1).toString()
+    }
+    return newtext
+}
 @Suppress("unused")
 fun nipcheck(str: String): Boolean {
     val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())

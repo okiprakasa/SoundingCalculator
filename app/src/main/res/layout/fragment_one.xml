@@ -678,7 +678,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_no_tangki"
+                            android:hint="@string/hint_no_tangki"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
                             android:paddingEnd="0dp"
@@ -695,7 +695,7 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
-                        android:text="@string/name_company"
+                        android:text="@string/nama_pegawai"
                         android:textSize="14sp" />
 
                     <RelativeLayout
@@ -707,14 +707,48 @@
                         android:background="@drawable/rounded_input">
 
                         <Spinner
-                            android:id="@+id/nama_perusahaan"
+                            android:id="@+id/nama_pegawai"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_input"
                             android:fontFamily="@font/poppins_light"
                             android:paddingTop="7dp"
                             android:paddingBottom="7dp"
-                            android:hint="@string/enter_name_company"
+                            android:hint="@string/hint_nama_pegawai"
+                            android:scrollbars="vertical"
+                            android:spinnerMode="dropdown"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="13sp"/>
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/pengguna_jasa"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="25dp"
+                        android:background="@drawable/rounded_input">
+
+                        <Spinner
+                            android:id="@+id/nama_pengguna_jasa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/rounded_input"
+                            android:fontFamily="@font/poppins_light"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:hint="@string/hint_nama_pengguna_jasa"
                             android:scrollbars="vertical"
                             android:spinnerMode="dropdown"
                             android:textCursorDrawable="@drawable/cursor_color"
@@ -751,7 +785,7 @@
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_waktu"
+                            android:hint="@string/hint_waktu"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
                             android:paddingEnd="5dp"
@@ -786,7 +820,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_no_dokumen"
+                            android:hint="@string/hint_no_dokumen"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
                             android:paddingEnd="0dp"
@@ -858,7 +892,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/enter_bentuk"
+                            android:hint="@string/hint_bentuk"
                             android:inputType="textMultiLine"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
@@ -907,7 +941,10 @@
                 android:text="@string/back"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:ignore="TooManyViews" />
+<!--                android:translationZ="5dp"-->
+<!--                android:stateListAnimator="@null"-->
 
             <Button
                 android:id="@+id/simpan_hasil"
