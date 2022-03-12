@@ -43,6 +43,7 @@
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/data_lapangan_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -57,7 +58,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/data_lapangan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -67,7 +67,6 @@
                         android:textSize="19sp" />
 
                     <TextView
-                        android:id="@+id/judul_tinggi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -106,7 +105,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_suhu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -149,6 +147,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/data_tangki_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -164,7 +163,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/data_tangki"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -174,7 +172,6 @@
                         android:textSize="19sp" />
 
                     <TextView
-                        android:id="@+id/judul_suhu_tetap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -213,7 +210,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_tinggi_meja"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -252,7 +248,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_koefisien_tangki"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -295,6 +290,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/data_tabel_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -491,7 +487,6 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/judul_density_cairan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -534,6 +529,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/hasil_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -632,6 +628,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/data_administrasi_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -657,7 +654,6 @@
                         android:textSize="19sp" />
 
                     <TextView
-                        android:id="@+id/judul_nama_perusahaan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -695,7 +691,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_no_tangki"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -731,7 +726,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_waktu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -771,7 +765,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_no_dokumen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -807,7 +800,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_produk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -845,7 +837,6 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/judul_bentuk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"

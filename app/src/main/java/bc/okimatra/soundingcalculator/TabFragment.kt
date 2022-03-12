@@ -532,9 +532,6 @@ class TabFragment(private val title: String) : Fragment() {
                         volumeApp = roundDigits(tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble())
                         volumeAbs = roundDigits(volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble())))
                         volume = roundDigits(volumeAbs/1000.0)
-//                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-//                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-//                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
                         nilaiHasilKalkulator = roundDigits(volume*densityCairan.text.toString().toDouble())
                         hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString().replace(".",","))
                         hasilVolume.text = String.format(getString(R.string.volume_edited), volume.toString().replace(".",","))
@@ -549,9 +546,6 @@ class TabFragment(private val title: String) : Fragment() {
                         volumeApp = roundDigits(volumeMid)
                         volumeAbs = roundDigits(volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble())))
                         volume = roundDigits(volumeAbs/1000.0)
-//                        nilaiHasilKalkulator = round(volume*densityCairan.text.toString().toDouble()*100000.0)/100000.0
-//                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*10000.0)/10000.0
-//                        nilaiHasilKalkulator = round(nilaiHasilKalkulator*1000.0)/1000.0
                         nilaiHasilKalkulator = roundDigits(volume*densityCairan.text.toString().toDouble())
                         hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString().replace(".",","))
                         hasilVolume.text = String.format(getString(R.string.volume_edited), volume.toString().replace(".",","))
@@ -994,7 +988,7 @@ class TabFragment(private val title: String) : Fragment() {
             name.isEmpty() -> {
                 Toast.makeText(context, "Mohon masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
             }
-            npwp.isEmpty() || npwp == getString(R.string.before_edited) -> {
+            npwp.isEmpty() || "_" in npwp -> {
                 Toast.makeText(context, "Mohon masukkan NPWP Perusahaan", Toast.LENGTH_SHORT).show()
             }
             alamat.isEmpty() -> {
@@ -1028,6 +1022,106 @@ class TabFragment(private val title: String) : Fragment() {
                 binding.etUpdateAlamatId.setText(it.alamat)
             }
         }
+
+        binding.apply {
+
+            var number = ""
+            var numberOld = ""
+            var textOld = ""
+            val holder = "__.___.___._-___.___"
+            var cursorPosition: Int
+            var cursor: Int
+
+            etUpdateNPWPId.setOnFocusChangeListener { _, _ ->
+                if (etUpdateNPWPId.text.toString().isEmpty()) {
+                    etUpdateNPWPId.setText(getString(R.string.before_edited))
+                }
+                if (etUpdateNPWPId.selectionStart > number.length) {
+                    etUpdateNPWPId.setSelection(number.length)
+                }
+            }
+
+            etUpdateName.setOnFocusChangeListener { _, _ ->
+                if (etUpdateNPWPId.text.toString().isEmpty() || etUpdateNPWPId.text.toString() == getString(R.string.before_edited)) {
+                    etUpdateNPWPId.setText("")
+                }
+            }
+
+            etUpdateAlamatId.setOnFocusChangeListener { _, _ ->
+                if (etUpdateNPWPId.text.toString().isEmpty() || etUpdateNPWPId.text.toString() == getString(R.string.before_edited)) {
+                    etUpdateNPWPId.setText("")
+                }
+            }
+
+            etUpdateNPWPId.addTextChangedListener(object : TextWatcher {
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    number = s.toString().replace("_","").replace(".","").replace("-","")
+                    cursorPosition = etUpdateNPWPId.selectionStart
+
+                    if (cursorPosition > number.length) {
+                        etUpdateNPWPId.setSelection(number.length)
+                    }
+
+                    if ((numberOld != number || etUpdateNPWPId.text.toString().length != 20) && etUpdateNPWPId.hasFocus()) {
+                        numberOld = number
+                        cursor = numberOld.length
+                        when (numberOld.length) {
+                            15 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_15),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12)))
+                                cursor += 5
+                            }
+                            in 13..14 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_12),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12),holder.substring(numberOld.length+5)))
+                                cursor += 5
+                            }
+                            in 10..12 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_9),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9),holder.substring(numberOld.length+4)))
+                                cursor += 4
+                            }
+                            9 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_9_exact),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),holder.substring(numberOld.length+3)))
+                                cursor += 3
+                            }
+                            in 6..8 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_5),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5),holder.substring(numberOld.length+2)))
+                                cursor += 2
+                            }
+                            in 3..5 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_2),numberOld.substring(0,2),numberOld.substring(2),holder.substring(numberOld.length+1)))
+                                cursor += 1
+                            }
+                            in 1..2 -> {
+                                etUpdateNPWPId.setText(String.format(getString(R.string.number_0),numberOld.substring(0),holder.substring(numberOld.length)))
+                            }
+                            0 -> {
+                                etUpdateNPWPId.setText(holder)
+                            }
+                            else -> {
+                                etUpdateNPWPId.setText(textOld)
+                            }
+                        }
+                        etUpdateNPWPId.post {
+                            etUpdateNPWPId.setSelection(cursor)
+                        }
+                    }
+                }
+
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                    textOld = s.toString()
+                }
+
+                override fun afterTextChanged(s: Editable) {
+
+                }
+            })
+
+            etUpdateNPWPId.setOnClickListener {
+                if (etUpdateNPWPId.selectionStart > number.length) {
+                    etUpdateNPWPId.setSelection(number.length)
+                }
+            }
+        }
+
         binding.tvUpdate.setOnClickListener {
 
             val name = binding.etUpdateName.text.toString()
@@ -1038,7 +1132,7 @@ class TabFragment(private val title: String) : Fragment() {
                 name.isEmpty() -> {
                     Toast.makeText(context, "Mohon masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
                 }
-                npwp.isEmpty() -> {
+                npwp.isEmpty() || "_" in npwp-> {
                     Toast.makeText(context, "Mohon masukkan NPWP Perusahaan", Toast.LENGTH_SHORT).show()
                 }
                 alamat.isEmpty() -> {
