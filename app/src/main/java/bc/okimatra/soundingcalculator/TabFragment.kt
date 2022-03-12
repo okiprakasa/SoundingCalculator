@@ -183,6 +183,28 @@ class TabFragment(private val title: String) : Fragment() {
                         down.visibility = View.VISIBLE
                     }
 
+                    next.setOnClickListener {
+                        dataLapanganLayout.visibility = View.GONE
+                        dataTangkiLayout.visibility = View.GONE
+                        dataTabelLayout.visibility = View.GONE
+                        hasilLayout.visibility = View.GONE
+                        next.visibility = View.GONE
+                        dataAdministrasiLayout.visibility = View.VISIBLE
+                        back.visibility = View.VISIBLE
+                        simpanHasil.visibility = View.VISIBLE
+                    }
+
+                    back.setOnClickListener {
+                        dataAdministrasiLayout.visibility = View.GONE
+                        back.visibility = View.GONE
+                        simpanHasil.visibility = View.GONE
+                        dataLapanganLayout.visibility = View.VISIBLE
+                        dataTangkiLayout.visibility = View.VISIBLE
+                        dataTabelLayout.visibility = View.VISIBLE
+                        hasilLayout.visibility = View.VISIBLE
+                        next.visibility = View.VISIBLE
+                    }
+
                     simpanHasil.setOnClickListener {
                         if (hasilKalkulator.text.toString() != "Hasil : 0.000 MT") {
                             suhuCairan.text = null
