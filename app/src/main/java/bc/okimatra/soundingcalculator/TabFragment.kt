@@ -535,6 +535,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun soundingCalculator(): List<Double> {
         var volumeKalibrasi2 = 0.0
+        var volumeFraksi = 0.0
         var volumeMid = 0.0
         var volumeApp = 0.0
         var volumeAbs = 0.0
@@ -546,6 +547,7 @@ class TabFragment(private val title: String) : Fragment() {
             if (calculatorCheck()) {
                 when {
                     tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
+                        volumeFraksi = tabelFraksi.text.toString().toDouble()
                         volumeKalibrasi2 = tabelKalibrasi.text.toString().toDouble()
                         volumeMid = volumeKalibrasi2
                         tinggiTerkoreksi = roundDigits((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000)
@@ -583,7 +585,7 @@ class TabFragment(private val title: String) : Fragment() {
                 resetResult()
             }
         }
-        return listOf(volumeKalibrasi2, volumeMid, volumeApp, volumeAbs, volume, nilaiHasilKalkulator)
+        return listOf(volumeFraksi, volumeKalibrasi2, volumeMid, volumeApp, volumeAbs, volume, nilaiHasilKalkulator)
     }
 
     private fun resetResult() {
