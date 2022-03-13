@@ -14,10 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ScrollView
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
@@ -29,10 +26,8 @@ import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToLong
 
@@ -274,6 +269,24 @@ class TabFragment(private val title: String) : Fragment() {
                             Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(requireActivity(), "Tidak Ada Data", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    namaPenggunaJasa.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                            lifecycleScope.launch {
+                                userDao.fetchServiceUserByName(namaPenggunaJasa.selectedItem.toString()).collect {
+                                    lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
+                                }
+                            }
+                        }
+
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            lifecycleScope.launch {
+                                userDao.fetchServiceUserByName(namaPenggunaJasa.selectedItem.toString()).collect {
+                                    lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
+                                }
+                            }
                         }
                     }
 
