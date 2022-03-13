@@ -5,17 +5,17 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.databinding.ItemsRowCompanyBinding
-import bc.okimatra.soundingcalculator.datasetup.CompanyEntity
+import bc.okimatra.soundingcalculator.datasetup.PenggunaJasaEntity
 
 /**
 * We have the @param [items] to represent the list that populates the adapter
  * The @param [updateListener] to listen to the edit icon an get the positions id
  * The @param [deleteListener] to listen to the delete icon and get the positions id
 **/
-class CompanyAdapter(private val items: ArrayList<CompanyEntity>,
-                     private val updateListener:(id:Int)->Unit,
-                     private val deleteListener:(id:Int)->Unit) :
-    RecyclerView.Adapter<CompanyAdapter.ViewHolder>() {
+class PenggunaJasaAdapter(private val items: ArrayList<PenggunaJasaEntity>,
+                          private val updateListener:(id:Int)->Unit,
+                          private val deleteListener:(id:Int)->Unit) :
+    RecyclerView.Adapter<PenggunaJasaAdapter.ViewHolder>() {
 
     /**
      * Inflates the item views which is designed in xml layout file
@@ -44,21 +44,11 @@ class CompanyAdapter(private val items: ArrayList<CompanyEntity>,
         val context = holder.itemView.context
         val item = items[position]
 
-        holder.tvName.text = item.nama
-        holder.tvNPWP.text = item.npwp
-        holder.tvAlamat.text = item.alamat
+        holder.tvName.text = item.nama_pengguna_jasa
+        holder.tvJabatan.text = item.jabatan
+        holder.tvPerusahaan.text = item.perusahaan_pengguna_jasa
 
-        // Updating the background color according to the odd/even positions in list.
-        if (position % 2 == 1 ) {
-            holder.llMain.setBackgroundColor(
-                ContextCompat.getColor(
-                    holder.itemView.context,
-                    R.color.white
-                )
-            )
-        } else {
-            holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
-        }
+        holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
         holder.ivEdit.setOnClickListener {
          updateListener.invoke(item.id)
@@ -83,8 +73,8 @@ class CompanyAdapter(private val items: ArrayList<CompanyEntity>,
         // Holds the TextView that will add each item to
         val llMain = binding.llMain
         val tvName = binding.tvName
-        val tvNPWP = binding.barisKedua
-        val tvAlamat = binding.barisKetiga
+        val tvJabatan = binding.barisKedua
+        val tvPerusahaan = binding.barisKetiga
         val ivEdit = binding.ivEdit
         val ivDelete = binding.ivDelete
     }

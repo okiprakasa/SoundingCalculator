@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import bc.okimatra.soundingcalculator.databinding.LoginPageBinding
 import bc.okimatra.soundingcalculator.datasetup.UserApp
-import bc.okimatra.soundingcalculator.datasetup.UserEntity
+import bc.okimatra.soundingcalculator.datasetup.PegawaiEntity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -102,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
                     else -> {
                         val userDao = (application as UserApp).db.userDao()
                         lifecycleScope.launch {
-                            userDao.insertUser(UserEntity(nama = nama, nip =  nip.toLong()))
+                            userDao.insertUser(PegawaiEntity(nama_pegawai = nama, nip =  nip.toLong()))
                         }
                         val intent = Intent(this@LoginActivity,MainActivity::class.java)
                         startActivity(intent)

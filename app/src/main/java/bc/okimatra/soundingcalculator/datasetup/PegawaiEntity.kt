@@ -1,14 +1,14 @@
 package bc.okimatra.soundingcalculator.datasetup
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 //creating a Data Model Class
-@Entity(tableName = "company-table")
-data class CompanyEntity(
+@Entity(tableName = "user-table")
+data class PegawaiEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
-    val nama: String="",
-    val npwp: String="",
-    val alamat: String=""
+    val nama_pegawai: String="",
+    val nip: Long=0
         )

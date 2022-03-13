@@ -196,7 +196,7 @@ class TabFragment(private val title: String) : Fragment() {
                                 userDao.countAllUser().collect { it1 ->
                                     if (it1>0) {
                                         lifecycleScope.launch {
-                                            userDao.countAllExporter().collect { it2 ->
+                                            userDao.countAllServiceUser().collect { it2 ->
                                                 if (it2>0) {
                                                     dataLapanganLayout.visibility = View.GONE
                                                     dataTangkiLayout.visibility = View.GONE
@@ -215,8 +215,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                         }
                                                     }
                                                     lifecycleScope.launch {
-                                                        userDao.fetchAllExporter().collect {
-                                                            populateDropdownExporter(ArrayList(it), namaPenggunaJasa)
+                                                        userDao.fetchAllServiceUser().collect {
+                                                            populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
                                                         }
                                                     }
                                                 }
@@ -419,9 +419,9 @@ class TabFragment(private val title: String) : Fragment() {
                                     nip.text = null
                                     nama.hint = getText(R.string.hint_pengguna_jasa)
                                     lifecycleScope.launch {
-                                        userDao.fetchAllExporter().collect {
+                                        userDao.fetchAllServiceUser().collect {
                                             val list = ArrayList(it)
-                                            setupListOfExporterDataIntoRecyclerView(list, userDao)
+                                            setupListOfServiceUserDataIntoRecyclerView(list, userDao)
                                         }
                                     }
                                     lifecycleScope.launch {
@@ -450,7 +450,7 @@ class TabFragment(private val title: String) : Fragment() {
                         jabatan.text = null
                         nama.hint = getText(R.string.hint_nama)
                         svUserList.visibility = View.VISIBLE
-                        svExporterList.visibility = View.GONE
+                        svServiceUserList.visibility = View.GONE
                         perusahaanLayout.visibility = View.GONE
                     }
                 }
@@ -460,7 +460,7 @@ class TabFragment(private val title: String) : Fragment() {
                 }
 
                 _binding3?.btnAddPenggunaJasa?.setOnClickListener {
-                    addRecordExporter(userDao)
+                    addRecordServiceUser(userDao)
                 }
 
             }
@@ -733,11 +733,11 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun populateDropdownUser(list:ArrayList<UserEntity>, spinner: Spinner) {
+    private fun populateDropdownUser(list:ArrayList<PegawaiEntity>, spinner: Spinner) {
         val items = arrayListOf<String>()
         if (list.isNotEmpty()) {
             for (i in 0 until list.size) {
-                items.add(list[i].nama)
+                items.add(list[i].nama_pegawai)
             }
             val adapter = activity?.let { it ->
                 ArrayAdapter(
@@ -750,11 +750,11 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun populateDropdownCompany(list:ArrayList<CompanyEntity>, spinner: Spinner) {
+    private fun populateDropdownCompany(list:ArrayList<PerusahaanEntity>, spinner: Spinner) {
         val items = arrayListOf<String>()
         if (list.isNotEmpty()) {
             for (i in 0 until list.size) {
-                items.add(list[i].nama)
+                items.add(list[i].nama_perusahaan)
             }
             val adapter = activity?.let { it ->
                 ArrayAdapter(
@@ -767,11 +767,11 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun populateDropdownExporter(list:ArrayList<ExporterEntity>, spinner: Spinner) {
+    private fun populateDropdownServiceUser(list:ArrayList<PenggunaJasaEntity>, spinner: Spinner) {
         val items = arrayListOf<String>()
         if (list.isNotEmpty()) {
             for (i in 0 until list.size) {
-                items.add(list[i].nama)
+                items.add(list[i].nama_pengguna_jasa)
             }
             val adapter = activity?.let { it ->
                 ArrayAdapter(
@@ -784,10 +784,10 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<UserEntity>, userDao: UserDao) {
+    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<PegawaiEntity>, userDao: UserDao) {
         if (employeesList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
-            val itemAdapter = UserAdapter(employeesList,{ updateId ->
+            val itemAdapter = PegawaiAdapter(employeesList,{ updateId ->
                 updateRecordDialogUser(updateId,userDao)
             }){deleteId->deleteRecordAlertDialogUser(deleteId,userDao)
             }
@@ -796,11 +796,11 @@ class TabFragment(private val title: String) : Fragment() {
             // adapter instance is set to the recyclerview to inflate the items.
             _binding3?.rvUserList?.adapter = itemAdapter
             _binding3?.svUserList?.visibility = View.VISIBLE
-            _binding3?.svExporterList?.visibility = View.GONE
+            _binding3?.svServiceUserList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.GONE
         } else {
             _binding3?.svUserList?.visibility = View.GONE
-            _binding3?.svExporterList?.visibility = View.GONE
+            _binding3?.svServiceUserList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
@@ -849,7 +849,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-                    userDao.insertUser(UserEntity(nama = name, nip = nip.toLong()))
+                    userDao.insertUser(PegawaiEntity(nama_pegawai = name, nip = nip.toLong()))
                     Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
                     _binding3?.nama?.text?.clear()
                     _binding3?.nip?.text?.clear()
@@ -869,7 +869,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         lifecycleScope.launch {
             userDao.fetchUserById(id).collect {
-                binding.updateNama.setText(it.nama)
+                binding.updateNama.setText(it.nama_pegawai)
                 binding.updateNip.setText(it.nip.toString())
             }
         }
@@ -918,7 +918,7 @@ class TabFragment(private val title: String) : Fragment() {
                 }
                 else -> {
                     lifecycleScope.launch {
-                        userDao.updateUser(UserEntity(id, name, nip.toLong()))
+                        userDao.updateUser(PegawaiEntity(id, name, nip.toLong()))
                         Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                             .show()
                         updateDialog.dismiss() // Dialog will be dismissed
@@ -943,7 +943,7 @@ class TabFragment(private val title: String) : Fragment() {
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
                 //calling the deleteEmployee method of DatabaseHandler class to delete record
-                userDao.deleteUser(UserEntity(id))
+                userDao.deleteUser(PegawaiEntity(id))
                 Toast.makeText(
                     context,
                     "Data Berhasil Dihapus",
@@ -967,62 +967,69 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()  // show the dialog to UI
     }
 
-    private fun setupListOfExporterDataIntoRecyclerView(exporterList:ArrayList<ExporterEntity>, userDao: UserDao) {
+    private fun setupListOfServiceUserDataIntoRecyclerView(penggunaJasaList:ArrayList<PenggunaJasaEntity>, userDao: UserDao) {
 
-        if (exporterList.isNotEmpty()) {
+        if (penggunaJasaList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
-            val exporterAdapter = ExporterAdapter(exporterList,{ updateId ->
-                updateRecordDialogExporter(updateId,userDao)
+            val penggunaJasaAdapter = PenggunaJasaAdapter(penggunaJasaList,{ updateId ->
+                updateRecordDialogServiceUser(updateId,userDao)
             }){deleteId->
-                deleteRecordAlertDialogExporter(deleteId,userDao)
+                deleteRecordAlertDialogServiceUser(deleteId,userDao)
             }
             // Set the LayoutManager that this RecyclerView will use.
-            _binding3?.rvExporterList?.layoutManager = LinearLayoutManager(context)
+            _binding3?.rvServiceUserList?.layoutManager = LinearLayoutManager(context)
             // adapter instance is set to the recyclerview to inflate the items.
-            _binding3?.rvExporterList?.adapter = exporterAdapter
-            _binding3?.svExporterList?.visibility = View.VISIBLE
+            _binding3?.rvServiceUserList?.adapter = penggunaJasaAdapter
+            _binding3?.svServiceUserList?.visibility = View.VISIBLE
             _binding3?.svUserList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.GONE
         } else {
             _binding3?.svUserList?.visibility = View.GONE
-            _binding3?.svExporterList?.visibility = View.GONE
+            _binding3?.svServiceUserList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
 
-    private fun addRecordExporter(userDao: UserDao) {
+    private fun addRecordServiceUser(userDao: UserDao) {
         val name = endSpaceRemover(_binding3?.nama?.text.toString())
         val jabatan = endSpaceRemover(_binding3?.jabatan?.text.toString())
         val perusahaan = _binding3?.perusahaan?.selectedItem.toString()
+        var npwpPerusahaan: String
+        var alamatPerusahaan: String
 
-        when {
-            name.isEmpty() -> {
-                Toast.makeText(context, "Mohon Masukkan Nama Pengguna Jasa", Toast.LENGTH_SHORT).show()
-            }
-            jabatan.isEmpty() -> {
-                Toast.makeText(context, "Mohon Masukkan Jabatan Pengguna Jasa", Toast.LENGTH_SHORT).show()
-            }
-            perusahaan.isEmpty() -> {
-                Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                lifecycleScope.launch {
-                    userDao.insertExporter(ExporterEntity(nama = name, jabatan = jabatan, perusahaan = perusahaan))
-                    Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
-                    _binding3?.nama?.text?.clear()
-                    _binding3?.jabatan?.text?.clear()
-                    _binding3?.perusahaan?.selectedItem.toString()
+        lifecycleScope.launch {
+            userDao.fetchCompanyByName(perusahaan).collect {
+                npwpPerusahaan = it.npwp
+                alamatPerusahaan = it.alamat
+                when {
+                    name.isEmpty() -> {
+                        Toast.makeText(context, "Mohon Masukkan Nama Pengguna Jasa", Toast.LENGTH_SHORT).show()
+                    }
+                    jabatan.isEmpty() -> {
+                        Toast.makeText(context, "Mohon Masukkan Jabatan Pengguna Jasa", Toast.LENGTH_SHORT).show()
+                    }
+                    perusahaan.isEmpty() -> {
+                        Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        lifecycleScope.launch {
+                            userDao.insertServiceUser(PenggunaJasaEntity(nama_pengguna_jasa = name, jabatan = jabatan, perusahaan_pengguna_jasa = perusahaan, npwp_perusahaan = npwpPerusahaan, alamat_perusahaan = alamatPerusahaan))
+                            Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
+                            _binding3?.nama?.text?.clear()
+                            _binding3?.jabatan?.text?.clear()
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun updateRecordDialogExporter(id:Int, userDao: UserDao) {
+    private fun updateRecordDialogServiceUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
         /*Set the screen content from a layout resource.
          The resource will be inflated, adding all top-level views to the screen.*/
-        val binding = DialogUpdateExporterBinding.inflate(layoutInflater)
+        val binding = DialogUpdateServiceUserBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -1032,7 +1039,7 @@ class TabFragment(private val title: String) : Fragment() {
                 val items = arrayListOf<String>()
                 if (ArrayList(it).isNotEmpty()) {
                     for (i in 0 until ArrayList(it).size) {
-                        items.add(ArrayList(it)[i].nama)
+                        items.add(ArrayList(it)[i].nama_perusahaan)
                     }
                     val adapter = activity?.let { it2 ->
                         ArrayAdapter(
@@ -1042,10 +1049,10 @@ class TabFragment(private val title: String) : Fragment() {
                         )
                     }
                     lifecycleScope.launch {
-                        userDao.fetchExporterById(id).collect {
-                            binding.updateNama.setText(it.nama)
+                        userDao.fetchServiceUserById(id).collect {
+                            binding.updateNama.setText(it.nama_pengguna_jasa)
                             binding.updateJabatan.setText(it.jabatan)
-                            val spinnerPosition = adapter?.getPosition(it.perusahaan)
+                            val spinnerPosition = adapter?.getPosition(it.perusahaan_pengguna_jasa)
                             if (spinnerPosition != null) {
                                 binding.updatePerusahaan.setSelection(spinnerPosition)
                             }
@@ -1053,8 +1060,8 @@ class TabFragment(private val title: String) : Fragment() {
                     }
                 } else {
                     lifecycleScope.launch {
-                        userDao.fetchExporterById(id).collect {
-                            binding.updateNama.setText(it.nama)
+                        userDao.fetchServiceUserById(id).collect {
+                            binding.updateNama.setText(it.nama_pengguna_jasa)
                             binding.updateJabatan.setText(it.jabatan)
                         }
                     }
@@ -1067,25 +1074,32 @@ class TabFragment(private val title: String) : Fragment() {
             val name = endSpaceRemover(binding.updateNama.text.toString())
             val jabatan = endSpaceRemover(binding.updateJabatan.text.toString())
             val perusahaan = binding.updatePerusahaan.selectedItem.toString()
+            var npwpPerusahaan: String
+            var alamatPerusahaan: String
 
-            when {
-                name.isEmpty() -> {
-                    Toast.makeText(context, "Mohon Masukkan Nama Eksportir", Toast.LENGTH_SHORT).show()
-                }
-                jabatan.isEmpty() -> {
-                    Toast.makeText(context, "Mohon Masukkan Jabatan Eksportir", Toast.LENGTH_SHORT).show()
-                }
-                perusahaan.isEmpty() -> {
-                    Toast.makeText(context, "Mohon Pilih Perusahaan", Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    lifecycleScope.launch {
-                        userDao.updateExporter(ExporterEntity(id, name, jabatan, perusahaan))
-                        Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
-                            .show()
-                        updateDialog.dismiss() // Dialog will be dismissed
+            lifecycleScope.launch {
+                userDao.fetchCompanyByName(perusahaan).collect {
+                    npwpPerusahaan = it.npwp
+                    alamatPerusahaan = it.alamat
+                    when {
+                        name.isEmpty() -> {
+                            Toast.makeText(context, "Mohon Masukkan Nama Eksportir", Toast.LENGTH_SHORT).show()
+                        }
+                        jabatan.isEmpty() -> {
+                            Toast.makeText(context, "Mohon Masukkan Jabatan Eksportir", Toast.LENGTH_SHORT).show()
+                        }
+                        perusahaan.isEmpty() -> {
+                            Toast.makeText(context, "Mohon Pilih Perusahaan", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            lifecycleScope.launch {
+                                userDao.updateServiceUser(PenggunaJasaEntity(id, name, jabatan, perusahaan, npwpPerusahaan, alamatPerusahaan))
+                                Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
+                                    .show()
+                                updateDialog.dismiss() // Dialog will be dismissed
+                            }
+                        }
                     }
-
                 }
             }
         }
@@ -1096,7 +1110,7 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.show()
     }
 
-    private fun deleteRecordAlertDialogExporter(id:Int,userDao: UserDao) {
+    private fun deleteRecordAlertDialogServiceUser(id:Int,userDao: UserDao) {
 
         val builder = AlertDialog.Builder(requireContext())
         //set title for alert dialog
@@ -1107,7 +1121,7 @@ class TabFragment(private val title: String) : Fragment() {
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
                 //calling the deleteEmployee method of DatabaseHandler class to delete record
-                userDao.deleteExporter(ExporterEntity(id))
+                userDao.deleteServiceUser(PenggunaJasaEntity(id))
                 Toast.makeText(
                     context,
                     "Data Berhasil Dihapus",
@@ -1128,10 +1142,10 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()  // show the dialog to UI
     }
 
-    private fun setupListOfDataIntoRecyclerViewCompany(companyList:ArrayList<CompanyEntity>, userDao: UserDao) {
-        if (companyList.isNotEmpty()) {
+    private fun setupListOfDataIntoRecyclerViewCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
+        if (perusahaanList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
-            val companyAdapter = CompanyAdapter(companyList,{updateId ->
+            val companyAdapter = PerusahaanAdapter(perusahaanList,{ updateId ->
                 updateRecordDialogCompany(updateId,userDao)
             }){deleteId->
                 deleteRecordAlertDialogCompany(deleteId,userDao)
@@ -1166,7 +1180,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-                    userDao.insertCompany(CompanyEntity(nama = name, npwp = npwp, alamat = alamat))
+                    userDao.insertCompany(PerusahaanEntity(nama_perusahaan = name, npwp = npwp, alamat = alamat))
                     Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
                     _binding4?.nama?.text?.clear()
                     _binding4?.etNPWPId?.text?.clear()
@@ -1187,7 +1201,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         lifecycleScope.launch {
             userDao.fetchCompanyById(id).collect {
-                binding.updateNama.setText(it.nama)
+                binding.updateNama.setText(it.nama_perusahaan)
                 binding.updateNpwp.setText(it.npwp)
                 binding.etUpdateAlamatId.setText(it.alamat)
             }
@@ -1310,7 +1324,7 @@ class TabFragment(private val title: String) : Fragment() {
                 }
                 else -> {
                     lifecycleScope.launch {
-                        userDao.updateCompany(CompanyEntity(id, name, npwp, alamat))
+                        userDao.updateCompany(PerusahaanEntity(id, name, npwp, alamat))
                         Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                             .show()
                         updateDialog.dismiss() // Dialog will be dismissed
@@ -1335,7 +1349,7 @@ class TabFragment(private val title: String) : Fragment() {
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
                 //calling the deleteEmployee method of DatabaseHandler class to delete record
-                userDao.deleteCompany(CompanyEntity(id))
+                userDao.deleteCompany(PerusahaanEntity(id))
                 Toast.makeText(
                     context,
                     "Data Berhasil Dihapus",

@@ -11,9 +11,9 @@ import androidx.room.RoomDatabase
  */
 @Database(
     entities = [
-        CompanyEntity::class,
-        ExporterEntity::class,
-        UserEntity::class
+        PerusahaanEntity::class,
+        PenggunaJasaEntity::class,
+        PegawaiEntity::class
     ],
     version = 1
 )

@@ -177,7 +177,7 @@
             android:layout_width="0dp"
             android:layout_weight="9"
             android:layout_marginEnd="5dp"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="-13dp"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine|textCapWords"
             android:fontFamily="@font/poppins_light"
@@ -225,7 +225,7 @@
     </ScrollView>
 
     <ScrollView
-        android:id="@+id/svExporterList"
+        android:id="@+id/svServiceUserList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -234,7 +234,7 @@
         android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvExporterList"
+            android:id="@+id/rvServiceUserList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </ScrollView>
