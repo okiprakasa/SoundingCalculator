@@ -14,16 +14,16 @@
     <string name="data_tabel">Data Tabel</string>
     <string name="koefisien_tangki">Koefisien/Faktor Muai Tangki</string>
     <string name="simpan_data">SIMPAN DATA</string>
-    <string name="hasil">Hasil : 0.000 MT</string>
-    <string name="tinggi_terkoreksi">Tinggi Terkoreksi : 0.000 m</string>
-    <string name="volume_app">Volume App : 0.000 L</string>
-    <string name="volume_obs">Volume Obs : 0.000 L</string>
-    <string name="volume">Volume : 0.000 KL</string>
+    <string name="hasil">Hasil: 0.000 MT</string>
+    <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>
+    <string name="volume_app">Volume App: 0.000 L</string>
+    <string name="volume_obs">Volume Obs: 0.000 L</string>
+    <string name="volume">Volume: 0.000 KL</string>
     <string name="detail_arrow">Detail</string>
-    <string name="tinggi_terkoreksi_edited">Tinggi Terkoreksi : %s m</string>
-    <string name="volume_app_edited">Volume App : %s L</string>
-    <string name="volume_obs_edited">Volume Obs : %s L</string>
-    <string name="volume_edited">Volume : %s KL</string>
+    <string name="tinggi_terkoreksi_edited">Tinggi Terkoreksi: %s m</string>
+    <string name="volume_app_edited">Volume App: %s L</string>
+    <string name="volume_obs_edited">Volume Obs: %s L</string>
+    <string name="volume_edited">Volume: %s KL</string>
     <string name="tabel_kalibrasi1">Tabel Kalibrasi 1</string>
     <string name="vol_kalibrasi1">Volume Kalibrasi 1 (L)</string>
     <string name="vol_kalibrasi">Volume Kalibrasi (L)</string>
@@ -45,7 +45,7 @@
     <string name="tabel_kalibrasi_edited3">Tabel Kalibrasi ($s.000 m)</string>
     <string name="tabel_kalibrasi2_edited">"Tabel Kalibrasi ($s0 m)</string>
     <string name="tabel_fraksi_edited">Tabel Fraksi (%s mm)</string>
-    <string name="hasil_akhir_edited">Hasil : %s MT</string>
+    <string name="hasil_akhir_edited">Hasil: %s MT</string>
     <string name="before_edited">__.___.___._-___.___</string>
     <string name="number_15">%s.%s.%s.%s-%s.%s</string>
     <string name="number_12">%s.%s.%s.%s-%s.%s%s</string>
@@ -103,4 +103,5 @@
     <string name="hint_nama_pengguna_jasa">Nama Petugas Pengguna Jasa</string>
     <string name="lokasi_sounding">Lokasi Sounding</string>
     <string name="hint_lokasi_sounding">Masukkan Lokasi Sounding</string>
+    <string name="no_tangki_edited">No Tangki: %s   </string>
 </resources>

@@ -57,7 +57,7 @@
         </LinearLayout>
 
         <ScrollView
-            android:id="@+id/svUserList"
+            android:id="@+id/svSoundingList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
@@ -66,7 +66,7 @@
             android:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvUserList"
+                android:id="@+id/rvSoundingList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </ScrollView>
@@ -103,7 +103,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="75dp"
+        android:layout_marginEnd="10dp"
         android:src="@drawable/ic_add"
         android:backgroundTint="@color/login"
         app:borderWidth="0dp"

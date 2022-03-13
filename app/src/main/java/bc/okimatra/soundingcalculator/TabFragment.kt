@@ -10,7 +10,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,10 +76,10 @@ class TabFragment(private val title: String) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val userDao = (requireActivity().application as UserApp).db.userDao()
         when {
             title === "Calculator" -> {
                 var results: List<Double>
-                val userDao = (requireActivity().application as UserApp).db.userDao()
                 dateSetListener = DatePickerDialog.OnDateSetListener {
                         _, year, month, dayOfMonth ->
                     cal.set(Calendar.YEAR, year)
@@ -361,7 +360,6 @@ class TabFragment(private val title: String) : Fragment() {
                 }
             }
             title === "User" -> {
-                val userDao = (requireActivity().application as UserApp).db.userDao()
                 lifecycleScope.launch {
                     userDao.fetchAllUser().collect {
                         val list = ArrayList(it)
@@ -433,8 +431,6 @@ class TabFragment(private val title: String) : Fragment() {
 
             }
             title === "Company" -> {
-                val userDao = (requireActivity().application as UserApp).db.userDao()
-                
                 binding4.apply {
 
                     var number = ""
@@ -540,13 +536,19 @@ class TabFragment(private val title: String) : Fragment() {
 
                 lifecycleScope.launch {
                     userDao.fetchAllCompany().collect {
-                        Log.d("exactcompanies", "$it")
                         val list = ArrayList(it)
                         setupListOfDataIntoRecyclerViewCompany(list,userDao)
                     }
                 }
             }
             else -> {
+                lifecycleScope.launch {
+                    userDao.fetchAllSounding().collect {
+//                        Log.d("exactcompanies", "$it")
+                        val list = ArrayList(it)
+                        setupListOfDataIntoRecyclerViewSounding(list,userDao)
+                    }
+                }
             }
         }
     }
@@ -1471,5 +1473,25 @@ class TabFragment(private val title: String) : Fragment() {
         // Set other dialog properties
         alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
         alertDialog.show()  // show the dialog to UI
+    }
+
+    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
+        if (soundingList.isNotEmpty()) {
+            // Adapter class is initialized and list is passed in the param.
+            val soundingAdapter = SoundingAdapter(soundingList,{ updateId ->
+                updateRecordDialogCompany(updateId,userDao)
+            }){deleteId->
+                deleteRecordAlertDialogCompany(deleteId,userDao)
+            }
+            // Set the LayoutManager that this RecyclerView will use.
+            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
+            // adapter instance is set to the recyclerview to inflate the items.
+            _binding2?.rvSoundingList?.adapter = soundingAdapter
+            _binding2?.svSoundingList?.visibility = View.VISIBLE
+            _binding2?.tvNoRecordsAvailable?.visibility = View.GONE
+        } else {
+            _binding2?.svSoundingList?.visibility = View.GONE
+            _binding2?.tvNoRecordsAvailable?.visibility = View.VISIBLE
+        }
     }
 }
