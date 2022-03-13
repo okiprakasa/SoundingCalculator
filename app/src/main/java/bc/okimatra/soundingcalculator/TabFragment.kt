@@ -19,6 +19,7 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -28,9 +29,12 @@ import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.round
+import kotlin.math.roundToLong
 
 
 class TabFragment(private val title: String) : Fragment() {
@@ -191,7 +195,7 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     next.setOnClickListener {
-                        if (calculatorCheck(binding1)) {
+                        if (calculatorCheck()) {
                             lifecycleScope.launch {
                                 userDao.countAllUser().collect { it1 ->
                                     if (it1>0) {
@@ -273,123 +277,11 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     }
 
-                    tinggiCairan.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
+                    val listETTinggi = listOf(tinggiCairan, tinggiMeja)
+                    results = calculatorTinggiListener(listETTinggi)
 
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCek(binding1)) {
-                                judulDataTabel(binding1)
-                                results = soundingCalculator(binding1)
-                            } else {
-                                resetDataTabel(binding1)
-                            }
-                        }
-                    })
-
-                    tinggiMeja.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            if (tinggiCek(binding1)) {
-                                judulDataTabel(binding1)
-                                results = soundingCalculator(binding1)
-                            } else {
-                                resetDataTabel(binding1)
-                            }
-                        }
-                    })
-
-                    suhuCairan.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
-
-                    suhuTetap.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
-
-                    muai.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
-
-                    tabelFraksi.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
-
-                    tabelKalibrasi.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
-
-                    tabelKalibrasi2.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
-
-                    densityCairan.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        }
-
-                        override fun afterTextChanged(p0: Editable?) {
-                            results = soundingCalculator(binding1)
-                        }
-                    })
+                    val listET = listOf(suhuCairan, suhuTetap, muai, tabelFraksi, tabelKalibrasi, tabelKalibrasi2, densityCairan)
+                    results = calculatorListener(listET)
                 }
             }
             title === "User" -> {
@@ -591,6 +483,48 @@ class TabFragment(private val title: String) : Fragment() {
         _binding4 = null
     }
 
+    private fun calculatorListener(listEditText: List<AppCompatEditText>): List<Double> {
+        var results1 = listOf<Double>()
+        for (element in listEditText) {
+            element.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    results1 = soundingCalculator()
+                }
+            })
+        }
+        return results1
+    }
+
+    private fun calculatorTinggiListener(listEditText: List<AppCompatEditText>): List<Double> {
+        var results1 = listOf<Double>()
+        for (element in listEditText) {
+            element.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if (tinggiCek()) {
+                        judulDataTabel()
+                        results1 = soundingCalculator()
+                    }
+                    else {
+                        resetDataTabel()
+                    }
+                }
+            })
+        }
+        return results1
+    }
+
     private fun dayConverter(date: String): String {
         return date.replace("Mon","Senin").replace("Tue","Selasa").replace("Wed","Rabu").replace("Thu","Kamis").replace("Fri","Jumat").replace("Sat","Sabtu").replace("Sun","Minggu")
     }
@@ -599,18 +533,21 @@ class TabFragment(private val title: String) : Fragment() {
         return date.replace("Jan","Januari").replace("Feb","Februari").replace("Mar","Maret").replace("Apr","April").replace("May","Mei").replace("Jun","Juni").replace("Jul","Juli").replace("Aug","Agustus").replace("Sep","September").replace("Oct","Oktober").replace("Nov","November").replace("Dec","December")
     }
 
-    private fun soundingCalculator(binding: FragmentOneBinding): List<Double> {
+    private fun soundingCalculator(): List<Double> {
+        var volumeKalibrasi2 = 0.0
+        var volumeMid = 0.0
         var volumeApp = 0.0
         var volumeAbs = 0.0
         var volume = 0.0
-        var nilaiHasilKalkulator= 0.0
+        var nilaiHasilKalkulator = 0.0
         var delta: Double
-        var volumeMid: Double
         var tinggiTerkoreksi: Double
-        binding.apply {
-            if (calculatorCheck(binding)) {
+        binding1.apply {
+            if (calculatorCheck()) {
                 when {
                     tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
+                        volumeKalibrasi2 = tabelKalibrasi.text.toString().toDouble()
+                        volumeMid = volumeKalibrasi2
                         tinggiTerkoreksi = roundDigits((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000)
                         volumeApp = roundDigits(tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble())
                         volumeAbs = roundDigits(volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble())))
@@ -623,6 +560,7 @@ class TabFragment(private val title: String) : Fragment() {
                         hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tinggiTerkoreksi.toString().replace(".",","))
                     }
                     tabelKalibrasi.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
+                        volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
                         tinggiTerkoreksi = roundDigits(tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())
                         delta = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000 - judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.indexOf("(")+1, judulTabelKalibrasi.text.indexOf(")")-2).toString().toDouble())/0.01
                         volumeMid = tabelKalibrasi.text.toString().toDouble()+delta*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi.text.toString().toDouble())
@@ -637,27 +575,29 @@ class TabFragment(private val title: String) : Fragment() {
                         hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tinggiTerkoreksi.toString().replace(".",","))
                     }
                     else -> {
-                        hasilKalkulator.text = getText(R.string.hasil)
-                        hasilVolume.text = getText(R.string.volume)
-                        hasilVolumeApp.text = getText(R.string.volume_app)
-                        hasilVolumeObs.text = getText(R.string.volume_obs)
-                        hasilTinggiTerkoreksi.text = getText(R.string.tinggi_terkoreksi)
+                        resetResult()
                     }
                 }
             }
             else {
-                hasilKalkulator.text = getText(R.string.hasil)
-                hasilVolume.text = getText(R.string.volume)
-                hasilVolumeApp.text = getText(R.string.volume_app)
-                hasilVolumeObs.text = getText(R.string.volume_obs)
-                hasilTinggiTerkoreksi.text = getText(R.string.tinggi_terkoreksi)
+                resetResult()
             }
         }
-        return listOf(volumeApp, volumeAbs, volume, nilaiHasilKalkulator)
+        return listOf(volumeKalibrasi2, volumeMid, volumeApp, volumeAbs, volume, nilaiHasilKalkulator)
     }
 
-    private fun resetDataTabel(binding: FragmentOneBinding) {
-        binding.apply {
+    private fun resetResult() {
+        binding1.apply {
+            hasilKalkulator.text = getText(R.string.hasil)
+            hasilVolume.text = getText(R.string.volume)
+            hasilVolumeApp.text = getText(R.string.volume_app)
+            hasilVolumeObs.text = getText(R.string.volume_obs)
+            hasilTinggiTerkoreksi.text = getText(R.string.tinggi_terkoreksi)
+        }
+    }
+
+    private fun resetDataTabel() {
+        binding1.apply {
             judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
             judulTabelFraksi.text = getText(R.string.tabel_fraksi)
             judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
@@ -665,12 +605,12 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun judulDataTabel(binding: FragmentOneBinding) {
+    private fun judulDataTabel() {
         var soundingCorrect: Double
         var satuanmm : String
         var soundingCorrected: String
         var soundingCorrectedFinal: String
-        binding.apply {
+        binding1.apply {
             soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
             soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
             soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
@@ -705,25 +645,26 @@ class TabFragment(private val title: String) : Fragment() {
             } else if ("0 mm" !in judulTabelFraksi.text.toString() && tabelFraksi.text.toString() == "0") {
                 tabelFraksi.text = null
             }
-            val tingggiTerkoreksi = roundDigits(tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())
-            hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tingggiTerkoreksi.toString().replace(".",","))
+//            val tingggiTerkoreksi = roundDigits(tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())
+//            hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tingggiTerkoreksi.toString().replace(".",","))
         }
     }
 
-    private fun tinggiCek (binding: FragmentOneBinding): Boolean {
-        binding.apply {
+    private fun tinggiCek (): Boolean {
+        binding1.apply {
             return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
         }
     }
 
     private fun roundDigits(number: Double): Double {
-        val number5digits: Double = String.format("%.5f", number).toDouble()
-        val number4digits: Double = String.format("%.4f", number5digits).toDouble()
-        return String.format("%.3f", number4digits).toDouble()
+        val number6digits = (number * 1000000).roundToLong()/1000000.toDouble()
+        val number5digits = (number6digits * 100000).roundToLong()/100000.toDouble()
+        val number4digits = (number5digits * 10000).roundToLong()/10000.toDouble()
+        return (number4digits * 1000).roundToLong()/1000.toDouble()
     }
 
-    private fun calculatorCheck(binding: FragmentOneBinding): Boolean {
-        binding.apply {
+    private fun calculatorCheck(): Boolean {
+        binding1.apply {
             return tinggiCairan.text.toString().isNotEmpty() and
                     tinggiMeja.text.toString().isNotEmpty() and
                     suhuCairan.text.toString().isNotEmpty() and
