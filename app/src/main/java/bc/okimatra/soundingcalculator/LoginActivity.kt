@@ -102,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
                     else -> {
                         val userDao = (application as UserApp).db.userDao()
                         lifecycleScope.launch {
-                            userDao.insertUser(PegawaiEntity(nama_pegawai = nama, nip =  nip.toLong()))
+                            userDao.insertUser(PegawaiEntity(nama_pegawai = nama, nip =  nip))
                         }
                         val intent = Intent(this@LoginActivity,MainActivity::class.java)
                         startActivity(intent)

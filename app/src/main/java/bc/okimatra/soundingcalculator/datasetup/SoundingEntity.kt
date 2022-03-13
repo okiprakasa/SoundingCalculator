@@ -4,13 +4,28 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 //creating a Data Model Class
-@Entity(tableName = "sounding-table")
+@Entity(tableName = "sounding-raw-table")
 data class SoundingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
+    val tinggiCairan: Double,
+    val suhuCairan: Double,
+    val suhuKalibrasiTangki: Double,
+    val tinggiMeja: Double,
+    val faktorMuai: Double,
+    val tinggiCairanTerkoreksi: Double,
+    val volumeKalibrasi1: Double,
+    val densityCairan: Double,
+    val volumeFraksi: Double,
+    val volumeKalibrasi2: Double,
+    val volumeMid: Double,
+    val volumeApp: Double,
+    val volumeObs: Double,
+    val volume: Double,
+    val hasilSounding: Double,
     val noTangki: String="",
     val pegawai_sounding: String="",
-    val nip_pegawai: Long=0,
+    val nip_pegawai: String="",
     val pengguna_jasa_sounding: String="",
     val jabatan_pengguna_jasa: String="",
     val perusahaan_sounding: String="",
@@ -20,18 +35,5 @@ data class SoundingEntity(
     val waktu: String="",
     val nomor_dokumen: String="",
     val produk: String="",
-    val bentuk: String="",
-    val tinggiCairan: Double,
-    val suhuCairan: Double,
-    val suhuKalibrasiTangki: Double,
-    val tinggiMeja: Double,
-    val faktorMuai: Double,
-    val tinggiCairanCorrected: Double = tinggiCairan+tinggiMeja,
-    val tabelKalibrasi1: Double,
-    val densityCairan: Double,
-    val tabelFraksi: Double = 0.0,
-    val tabelKalibrasi2: Double = tabelKalibrasi1,
-    val volumeMid: Double,
-    val volumeApp: Double = tabelFraksi,
-    val hasilSounding: Double
+    val bentuk: String=""
         )

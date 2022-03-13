@@ -9,5 +9,5 @@ data class PegawaiEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
     val nama_pegawai: String="",
-    val nip: Long=0
+    val nip: String=""
         )

@@ -79,7 +79,6 @@ class TabFragment(private val title: String) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         when {
             title === "Calculator" -> {
-                @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
                 var results: List<Double>
                 val userDao = (requireActivity().application as UserApp).db.userDao()
                 dateSetListener = DatePickerDialog.OnDateSetListener {
@@ -87,7 +86,7 @@ class TabFragment(private val title: String) : Fragment() {
                     cal.set(Calendar.YEAR, year)
                     cal.set(Calendar.MONTH, month)
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    val timeID = "EE, dd-MMM-yyyy"
+                    val timeID = "EEEE, dd-MMMM-yyyy"
                     val sdf = SimpleDateFormat(timeID, Locale.getDefault())
                     val tanggalEng = sdf.format(cal.time).toString()
                     val tanggalID = dayConverter(monthConverter(tanggalEng))
@@ -118,12 +117,12 @@ class TabFragment(private val title: String) : Fragment() {
                     val mTimePicker = TimePickerDialog(
                         requireContext(),
                         R.style.TimePickerTheme,
-                        { _, selectedHour, selectedMinute -> binding1.waktu.setText(String.format(getString(R.string.format_waktu, tanggalID, selectedHour, selectedMinute, timeZone))) },
+                        { _, selectedHour, selectedMinute ->
+                            binding1.waktu.setText(String.format(getString(R.string.format_waktu, tanggalID, selectedHour, selectedMinute, timeZone))) },
                         hour,
                         minute,
                         true
                     )
-//                    mTimePicker.setTitle("Pilih Waktu")
                     mTimePicker.show()
                 }
 
@@ -190,7 +189,7 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     next.setOnClickListener {
-                        if (calculatorCheck()) {
+                        if (hasilKalkulator.text.toString() != "Hasil : 0.000 MT") {
                             lifecycleScope.launch {
                                 userDao.countAllUser().collect { it1 ->
                                     if (it1>0) {
@@ -237,39 +236,7 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     back.setOnClickListener {
-                        dataAdministrasiLayout.visibility = View.GONE
-                        back.visibility = View.GONE
-                        simpanHasil.visibility = View.GONE
-                        dataLapanganLayout.visibility = View.VISIBLE
-                        dataTangkiLayout.visibility = View.VISIBLE
-                        dataTabelLayout.visibility = View.VISIBLE
-                        hasilLayout.visibility = View.VISIBLE
-                        next.visibility = View.VISIBLE
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            scrollView.fullScroll(ScrollView.FOCUS_UP)
-                        }, 1)
-                    }
-
-                    simpanHasil.setOnClickListener {
-                        if (hasilKalkulator.text.toString() != "Hasil : 0.000 MT") {
-                            suhuCairan.text = null
-                            suhuTetap.text = null
-                            tinggiMeja.text = null
-                            muai.text = null
-                            densityCairan.text = null
-                            tinggiCairan.text = null
-                            tabelFraksi.text = null
-                            tabelKalibrasi.text = null
-                            tabelKalibrasi2.text = null
-                            noTangki.text = null
-                            waktu.text = null
-                            noDokumen.text = null
-                            produk.text = null
-                            bentuk.text = null
-                            Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(requireActivity(), "Tidak Ada Data", Toast.LENGTH_SHORT).show()
-                        }
+                        backFunction()
                     }
 
                     namaPenggunaJasa.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -295,6 +262,102 @@ class TabFragment(private val title: String) : Fragment() {
 
                     val listET = listOf(suhuCairan, suhuTetap, muai, tabelFraksi, tabelKalibrasi, tabelKalibrasi2, densityCairan)
                     results = calculatorListener(listET)
+
+                    simpanHasil.setOnClickListener {
+                        val nomorTangkiText = _binding1?.noTangki?.text.toString()
+                        val lokasiSoundingText =  _binding1?.lokasiSounding?.text.toString()
+                        val waktuText = _binding1?.waktu?.text.toString()
+                        val bentukText = _binding1?.bentuk?.text.toString()
+                        when {
+                            nomorTangkiText.isEmpty() -> {
+                                Toast.makeText(requireActivity(), "Nomor Tangki Belum Diisi", Toast.LENGTH_SHORT).show()
+                            }
+                            lokasiSoundingText.isEmpty() -> {
+                                Toast.makeText(requireActivity(), "Loksasi Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
+                            }
+                            waktuText.isEmpty() -> {
+                                Toast.makeText(requireActivity(), "Waktu Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
+                            }
+                            bentukText.isEmpty() -> {
+                                Toast.makeText(requireActivity(), "Bentuk Fisik/Warna/Bau Belum Diisi", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                val tinggiCairanAngka = _binding1?.tinggiCairan?.text.toString().toDouble()
+                                val suhuCairanAngka = _binding1?.suhuCairan?.text.toString().toDouble()
+                                val suhuKalibrasiAngka = _binding1?.suhuTetap?.text.toString().toDouble()
+                                val tinggiMejaAngka = _binding1?.tinggiMeja?.text.toString().toDouble()
+                                val koefisienMuai = _binding1?.muai?.text.toString().toDouble()
+                                val volumeKalibrasi = _binding1?.tabelKalibrasi?.text.toString().toDouble()
+                                val densityAngka = _binding1?.densityCairan?.text.toString().toDouble()
+                                val petugasSounding = _binding1?.namaPegawai?.selectedItem.toString()
+                                val penggunaJasa = _binding1?.namaPenggunaJasa?.selectedItem.toString()
+                                val nomorDokumen = _binding1?.noDokumen?.text.toString()
+                                val produk = _binding1?.produk?.text.toString()
+                                results = soundingCalculator()
+                                lifecycleScope.launch {
+                                    userDao.fetchServiceUserByName(penggunaJasa).collect { it3 ->
+                                        val npwp = it3.npwp_perusahaan
+                                        val alamat = it3.alamat_perusahaan
+                                        val perusahaan = it3.perusahaan_pengguna_jasa
+                                        val jabatan = it3.jabatan
+                                        lifecycleScope.launch {
+                                            userDao.fetchUserByName(petugasSounding).collect {
+                                                val nip = it.nip
+                                                lifecycleScope.launch {
+                                                    userDao.insertSounding(SoundingEntity(
+                                                        tinggiCairan = tinggiCairanAngka,
+                                                        suhuCairan = suhuCairanAngka,
+                                                        suhuKalibrasiTangki = suhuKalibrasiAngka,
+                                                        tinggiMeja = tinggiMejaAngka,
+                                                        faktorMuai = koefisienMuai,
+                                                        volumeKalibrasi1 = volumeKalibrasi,
+                                                        densityCairan = densityAngka,
+                                                        tinggiCairanTerkoreksi = results[0],
+                                                        volumeFraksi = results[1],
+                                                        volumeKalibrasi2 = results[2],
+                                                        volumeMid = results[3],
+                                                        volumeApp = results[4],
+                                                        volumeObs = results[5],
+                                                        volume = results[6],
+                                                        hasilSounding = results[7],
+                                                        noTangki = nomorTangkiText,
+                                                        pegawai_sounding = petugasSounding,
+                                                        nip_pegawai = nip,
+                                                        pengguna_jasa_sounding = penggunaJasa,
+                                                        jabatan_pengguna_jasa = jabatan,
+                                                        perusahaan_sounding = perusahaan,
+                                                        npwp_perusahaan_sounding = npwp,
+                                                        alamat_perusahaan_sounding = alamat,
+                                                        lokasi_sounding = lokasiSoundingText,
+                                                        waktu = waktuText,
+                                                        nomor_dokumen = nomorDokumen,
+                                                        produk = produk,
+                                                        bentuk = bentukText
+                                                    ))
+                                                    Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
+                                                    _binding1?.tinggiCairan?.text?.clear()
+                                                    _binding1?.suhuCairan?.text?.clear()
+                                                    _binding1?.suhuTetap?.text?.clear()
+                                                    _binding1?.tinggiMeja?.text?.clear()
+                                                    _binding1?.muai?.text?.clear()
+                                                    _binding1?.tabelKalibrasi?.text?.clear()
+                                                    _binding1?.densityCairan?.text?.clear()
+                                                    _binding1?.tabelFraksi?.text?.clear()
+                                                    _binding1?.tabelKalibrasi2?.text?.clear()
+                                                    _binding1?.noTangki?.text?.clear()
+                                                    _binding1?.lokasiSounding?.text?.clear()
+                                                    _binding1?.waktu?.text?.clear()
+                                                    _binding1?.produk?.text?.clear()
+                                                    _binding1?.bentuk?.text?.clear()
+                                                    backFunction()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             title === "User" -> {
@@ -496,6 +559,22 @@ class TabFragment(private val title: String) : Fragment() {
         _binding4 = null
     }
 
+    private fun backFunction() {
+        binding1.apply {
+            dataAdministrasiLayout.visibility = View.GONE
+            back.visibility = View.GONE
+            simpanHasil.visibility = View.GONE
+            dataLapanganLayout.visibility = View.VISIBLE
+            dataTangkiLayout.visibility = View.VISIBLE
+            dataTabelLayout.visibility = View.VISIBLE
+            hasilLayout.visibility = View.VISIBLE
+            next.visibility = View.VISIBLE
+            Handler(Looper.getMainLooper()).postDelayed({
+                scrollView.fullScroll(ScrollView.FOCUS_UP)
+            }, 1)
+        }
+    }
+
     private fun calculatorListener(listEditText: List<AppCompatEditText>): List<Double> {
         var results1 = listOf<Double>()
         for (element in listEditText) {
@@ -539,11 +618,11 @@ class TabFragment(private val title: String) : Fragment() {
     }
 
     private fun dayConverter(date: String): String {
-        return date.replace("Mon","Senin").replace("Tue","Selasa").replace("Wed","Rabu").replace("Thu","Kamis").replace("Fri","Jumat").replace("Sat","Sabtu").replace("Sun","Minggu")
+        return date.replace("Monday","Senin").replace("Tuesday","Selasa").replace("Wednesday","Rabu").replace("Thursday","Kamis").replace("Friday","Jumat").replace("Saturday","Sabtu").replace("Sunday","Minggu")
     }
 
     private fun monthConverter(date: String): String {
-        return date.replace("Jan","Januari").replace("Feb","Februari").replace("Mar","Maret").replace("Apr","April").replace("May","Mei").replace("Jun","Juni").replace("Jul","Juli").replace("Aug","Agustus").replace("Sep","September").replace("Oct","Oktober").replace("Nov","November").replace("Dec","December")
+        return date.replace("January","Januari").replace("February","Februari").replace("March","Maret").replace("May","Mei").replace("June","Juni").replace("July","Juli").replace("August","Agustus").replace("October","Oktober").replace("December","December")
     }
 
     private fun soundingCalculator(): List<Double> {
@@ -551,54 +630,121 @@ class TabFragment(private val title: String) : Fragment() {
         var volumeFraksi = 0.0
         var volumeMid = 0.0
         var volumeApp = 0.0
-        var volumeAbs = 0.0
+        var volumeObs = 0.0
         var volume = 0.0
         var nilaiHasilKalkulator = 0.0
         var delta: Double
-        var tinggiTerkoreksi: Double
+        var tinggiTerkoreksi = 0.0
         binding1.apply {
             if (calculatorCheck()) {
                 when {
-                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
+                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString()
+                        .isNotEmpty() -> {
                         volumeFraksi = tabelFraksi.text.toString().toDouble()
                         volumeKalibrasi2 = tabelKalibrasi.text.toString().toDouble()
                         volumeMid = volumeKalibrasi2
-                        tinggiTerkoreksi = roundDigits((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000)
-                        volumeApp = roundDigits(tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble())
-                        volumeAbs = roundDigits(volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble())))
-                        volume = roundDigits(volumeAbs/1000.0)
-                        nilaiHasilKalkulator = roundDigits(volume*densityCairan.text.toString().toDouble())
-                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString().replace(".",","))
-                        hasilVolume.text = String.format(getString(R.string.volume_edited), volume.toString().replace(".",","))
-                        hasilVolumeApp.text = String.format(getString(R.string.volume_app_edited), volumeApp.toString().replace(".",","))
-                        hasilVolumeObs.text = String.format(getString(R.string.volume_obs_edited), volumeAbs.toString().replace(".",","))
-                        hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tinggiTerkoreksi.toString().replace(".",","))
+                        tinggiTerkoreksi = roundDigits(
+                            (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
+                                .toDouble()) / 1000
+                        )
+                        volumeApp = roundDigits(
+                            tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString()
+                                .toDouble()
+                        )
+                        volumeObs = roundDigits(
+                            volumeApp * (1.0 + ((suhuCairan.text.toString()
+                                .toDouble() - suhuTetap.text.toString()
+                                .toDouble()) * muai.text.toString().toDouble()))
+                        )
+                        volume = roundDigits(volumeObs / 1000.0)
+                        nilaiHasilKalkulator =
+                            roundDigits(volume * densityCairan.text.toString().toDouble())
+                        hasilKalkulator.text = String.format(
+                            getString(R.string.hasil_akhir_edited),
+                            nilaiHasilKalkulator.toString().replace(".", ",")
+                        )
+                        hasilVolume.text = String.format(
+                            getString(R.string.volume_edited),
+                            volume.toString().replace(".", ",")
+                        )
+                        hasilVolumeApp.text = String.format(
+                            getString(R.string.volume_app_edited),
+                            volumeApp.toString().replace(".", ",")
+                        )
+                        hasilVolumeObs.text = String.format(
+                            getString(R.string.volume_obs_edited),
+                            volumeObs.toString().replace(".", ",")
+                        )
+                        hasilTinggiTerkoreksi.text = String.format(
+                            getString(R.string.tinggi_terkoreksi_edited),
+                            tinggiTerkoreksi.toString().replace(".", ",")
+                        )
                     }
-                    tabelKalibrasi.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
+                    tabelKalibrasi.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString()
+                        .isNotEmpty() -> {
                         volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
-                        tinggiTerkoreksi = roundDigits(tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())
-                        delta = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000 - judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.indexOf("(")+1, judulTabelKalibrasi.text.indexOf(")")-2).toString().toDouble())/0.01
-                        volumeMid = tabelKalibrasi.text.toString().toDouble()+delta*(tabelKalibrasi2.text.toString().toDouble()-tabelKalibrasi.text.toString().toDouble())
+                        tinggiTerkoreksi = roundDigits(
+                            tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
+                                .toDouble()
+                        )
+                        delta =
+                            ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
+                                .toDouble()) / 1000 - judulTabelKalibrasi.text.toString()
+                                .subSequence(
+                                    judulTabelKalibrasi.text.indexOf("(") + 1,
+                                    judulTabelKalibrasi.text.indexOf(")") - 2
+                                ).toString().toDouble()) / 0.01
+                        volumeMid = tabelKalibrasi.text.toString()
+                            .toDouble() + delta * (tabelKalibrasi2.text.toString()
+                            .toDouble() - tabelKalibrasi.text.toString().toDouble())
                         volumeApp = roundDigits(volumeMid)
-                        volumeAbs = roundDigits(volumeApp*(1.0+((suhuCairan.text.toString().toDouble()-suhuTetap.text.toString().toDouble())*muai.text.toString().toDouble())))
-                        volume = roundDigits(volumeAbs/1000.0)
-                        nilaiHasilKalkulator = roundDigits(volume*densityCairan.text.toString().toDouble())
-                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited), nilaiHasilKalkulator.toString().replace(".",","))
-                        hasilVolume.text = String.format(getString(R.string.volume_edited), volume.toString().replace(".",","))
-                        hasilVolumeApp.text = String.format(getString(R.string.volume_app_edited), volumeApp.toString().replace(".",","))
-                        hasilVolumeObs.text = String.format(getString(R.string.volume_obs_edited), volumeAbs.toString().replace(".",","))
-                        hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tinggiTerkoreksi.toString().replace(".",","))
+                        volumeObs = roundDigits(
+                            volumeApp * (1.0 + ((suhuCairan.text.toString()
+                                .toDouble() - suhuTetap.text.toString()
+                                .toDouble()) * muai.text.toString().toDouble()))
+                        )
+                        volume = roundDigits(volumeObs / 1000.0)
+                        nilaiHasilKalkulator =
+                            roundDigits(volume * densityCairan.text.toString().toDouble())
+                        hasilKalkulator.text = String.format(
+                            getString(R.string.hasil_akhir_edited),
+                            nilaiHasilKalkulator.toString().replace(".", ",")
+                        )
+                        hasilVolume.text = String.format(
+                            getString(R.string.volume_edited),
+                            volume.toString().replace(".", ",")
+                        )
+                        hasilVolumeApp.text = String.format(
+                            getString(R.string.volume_app_edited),
+                            volumeApp.toString().replace(".", ",")
+                        )
+                        hasilVolumeObs.text = String.format(
+                            getString(R.string.volume_obs_edited),
+                            volumeObs.toString().replace(".", ",")
+                        )
+                        hasilTinggiTerkoreksi.text = String.format(
+                            getString(R.string.tinggi_terkoreksi_edited),
+                            tinggiTerkoreksi.toString().replace(".", ",")
+                        )
                     }
                     else -> {
                         resetResult()
                     }
                 }
-            }
-            else {
+            } else {
                 resetResult()
             }
         }
-        return listOf(volumeFraksi, volumeKalibrasi2, volumeMid, volumeApp, volumeAbs, volume, nilaiHasilKalkulator)
+        return listOf(
+            tinggiTerkoreksi,
+            volumeFraksi,
+            volumeKalibrasi2,
+            volumeMid,
+            volumeApp,
+            volumeObs,
+            volume,
+            nilaiHasilKalkulator
+        )
     }
 
     private fun resetResult() {
@@ -805,7 +951,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-                    userDao.insertUser(PegawaiEntity(nama_pegawai = name, nip = nip.toLong()))
+                    userDao.insertUser(PegawaiEntity(nama_pegawai = name, nip = nip))
                     Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
                     _binding3?.nama?.text?.clear()
                     _binding3?.nip?.text?.clear()
@@ -826,7 +972,7 @@ class TabFragment(private val title: String) : Fragment() {
         lifecycleScope.launch {
             userDao.fetchUserById(id).collect {
                 binding.updateNama.setText(it.nama_pegawai)
-                binding.updateNip.setText(it.nip.toString())
+                binding.updateNip.setText(it.nip)
             }
         }
         binding.tvUpdate.setOnClickListener {
@@ -874,7 +1020,7 @@ class TabFragment(private val title: String) : Fragment() {
                 }
                 else -> {
                     lifecycleScope.launch {
-                        userDao.updateUser(PegawaiEntity(id, name, nip.toLong()))
+                        userDao.updateUser(PegawaiEntity(id, name, nip))
                         Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                             .show()
                         updateDialog.dismiss() // Dialog will be dismissed

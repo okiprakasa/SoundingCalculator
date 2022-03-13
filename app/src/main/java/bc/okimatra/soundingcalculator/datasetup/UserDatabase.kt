@@ -13,7 +13,8 @@ import androidx.room.RoomDatabase
     entities = [
         PerusahaanEntity::class,
         PenggunaJasaEntity::class,
-        PegawaiEntity::class
+        PegawaiEntity::class,
+        SoundingEntity::class
     ],
     version = 1
 )

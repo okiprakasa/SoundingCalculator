@@ -68,4 +68,22 @@ interface UserDao {
 
     @Query("Select * from `service-user-table` where nama_pengguna_jasa=:name")
     fun fetchServiceUserByName(name:String):Flow<PenggunaJasaEntity>
+
+    @Insert
+    suspend fun insertSounding(soundingEntity: SoundingEntity)
+
+    @Update
+    suspend fun updateSounding(soundingEntity: SoundingEntity)
+
+    @Delete
+    suspend fun deleteSounding(soundingEntity: SoundingEntity)
+
+    @Query("Select count(*) from `sounding-raw-table`")
+    fun countAllSounding():Flow<Int>
+
+    @Query("Select * from `sounding-raw-table` ORDER BY perusahaan_sounding ASC")
+    fun fetchAllSounding():Flow<List<SoundingEntity>>
+
+    @Query("Select * from `sounding-raw-table` where id=:id")
+    fun fetchSoundingById(id:Int):Flow<SoundingEntity>
 }
