@@ -23,68 +23,68 @@
         android:layout_marginTop="15dp"
         android:textStyle="bold" />
 
-        <TextView
-            app:layout_constraintTop_toBottomOf="@id/tvTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/judul_nama"
-            android:textColor="@android:color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/nama"
-            android:fontFamily="@font/helvetica"
-            android:textSize="15sp" />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/judul_nama"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/nama"
+        android:fontFamily="@font/helvetica"
+        android:textSize="15sp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:layout_marginStart="7dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/judul_nama"
-            android:layout_marginTop="-10dp"
-            android:id="@+id/update_nama"
-            android:layout_width="0dp"
-            android:layout_marginEnd="5dp"
-            android:backgroundTint="@color/login"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_pengguna_jasa"
-            android:fontFamily="@font/poppins_light"
-            android:textSize="13sp"
-            android:autofillHints="name"
-            android:inputType="textMultiLine|textPersonName"
-            android:scrollbars="vertical"/>
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_marginStart="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/judul_nama"
+        android:layout_marginTop="-10dp"
+        android:id="@+id/update_nama"
+        android:layout_width="0dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="@color/login"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_pengguna_jasa"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="13sp"
+        android:autofillHints="name"
+        android:inputType="textMultiLine|textPersonName"
+        android:scrollbars="vertical"/>
 
 
-        <TextView
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/update_nama"
-            android:id="@+id/judul_jabatan"
-            android:layout_width="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/helvetica"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="@string/jabatan"
-            android:textSize="15sp" />
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_nama"
+        android:id="@+id/judul_jabatan"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="@string/jabatan"
+        android:textSize="15sp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/judul_jabatan"
-            android:id="@+id/update_jabatan"
-            android:layout_width="0dp"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="-10dp"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine|textPersonName"
-            android:backgroundTint="@color/login"
-            android:hint="@string/hint_jabatan"
-            android:fontFamily="@font/poppins_light"
-            android:layout_marginEnd="5dp"
-            android:textSize="13sp"
-            android:scrollbars="vertical"
-            tools:ignore="Autofill"/>
+    <androidx.appcompat.widget.AppCompatEditText
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/judul_jabatan"
+        android:id="@+id/update_jabatan"
+        android:layout_width="0dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="-10dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textPersonName"
+        android:backgroundTint="@color/login"
+        android:hint="@string/hint_jabatan"
+        android:fontFamily="@font/poppins_light"
+        android:layout_marginEnd="5dp"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"/>
 
     <TextView
         app:layout_constraintStart_toStartOf="parent"
@@ -118,32 +118,32 @@
         tools:ignore="Autofill"/>
 
 
-        <TextView
-            app:layout_constraintTop_toBottomOf="@id/update_perusahaan"
-            app:layout_constraintEnd_toStartOf="@id/tvCancel"
-            android:id="@+id/tvUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="15dp"
-            android:fontFamily="@font/nunito"
-            android:textSize="15sp"
-            android:text="@string/update"
-            android:textColor="@color/login"
-            android:textStyle="bold" />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/update_perusahaan"
+        app:layout_constraintEnd_toStartOf="@id/tvCancel"
+        android:id="@+id/tvUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="15dp"
+        android:fontFamily="@font/nunito"
+        android:textSize="15sp"
+        android:text="@string/update"
+        android:textColor="@color/login"
+        android:textStyle="bold" />
 
-        <TextView
-            app:layout_constraintTop_toBottomOf="@id/update_perusahaan"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/tvCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:fontFamily="@font/nunito"
-            android:padding="15dp"
-            android:text="@android:string/cancel"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/update_perusahaan"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/tvCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:fontFamily="@font/nunito"
+        android:padding="15dp"
+        android:text="@android:string/cancel"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
