@@ -62,7 +62,6 @@
                         android:inputType="numberDecimal"
                         android:maxLength="18"
                         android:maxLines="1"/>
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
