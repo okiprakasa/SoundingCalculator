@@ -157,7 +157,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/tabel_kalibrasi"
-        android:hint="@string/koefisien_tangki"
+        android:hint="@string/tabel_kalibrasi1"
         android:layout_width="match_parent"
         android:layout_marginStart="7dp"
         android:layout_marginEnd="5dp"
@@ -182,7 +182,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/tabel_kalibrasi2"
-        android:hint="@string/koefisien_tangki"
+        android:hint="@string/tabel_kalibrasi2"
         android:layout_width="match_parent"
         android:layout_marginStart="7dp"
         android:layout_marginEnd="5dp"
