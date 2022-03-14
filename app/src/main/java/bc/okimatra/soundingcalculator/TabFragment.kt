@@ -187,7 +187,7 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     next.setOnClickListener {
-                        if (hasilKalkulator.text.toString() != "Hasil : 0.000 MT") {
+                        if (hasilKalkulator.text.toString() != "Hasil: 0.000 MT") {
                             lifecycleScope.launch {
                                 userDao.countAllUser().collect { it1 ->
                                     if (it1>0) {
