@@ -686,8 +686,8 @@ class TabFragment(private val title: String) : Fragment() {
                         .isNotEmpty() -> {
                         volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
                         tinggiTerkoreksi = roundDigits(
-                            tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
-                                .toDouble()/1000
+                            (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
+                                .toDouble()) / 1000
                         )
                         delta =
                             ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
@@ -1631,9 +1631,9 @@ class TabFragment(private val title: String) : Fragment() {
 //                }
 //            }
 //        }
-//        binding.tvCancel.setOnClickListener{
-//            updateDialog.dismiss()
-//        }
+        binding.simpanHasil.setOnClickListener{
+            updateDialog.dismiss()
+        }
         updateDialog.show()
     }
 }

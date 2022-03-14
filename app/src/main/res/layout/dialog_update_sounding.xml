@@ -56,59 +56,25 @@
                         android:textSize="19sp" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_margin="15dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginTop="20dp"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        >
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:hint="@string/tinggi_cairan"
-                            android:id="@+id/name_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:ems="10"
-                            android:text="@={myViewModel.inputName}"
-                            android:inputType="textPersonName"
-                            />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="20dp"
-                        android:fontFamily="@font/helvetica"
-                        android:gravity="center_horizontal"
-                        android:text="@string/tinggi_cairan"
-                        android:textSize="14sp" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginEnd="25dp"
-                        android:background="@drawable/rounded_input">
-
-                        <!-- INPUT -->
-                        <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/tinggi_cairan"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/poppins_light"
-                            android:hint="@string/tinggi_cairan"
-                            android:inputType="numberDecimal"
-                            android:maxLength="18"
-                            android:maxLines="1"
-                            android:paddingStart="15dp"
-                            android:paddingTop="14dp"
-                            android:paddingEnd="0dp"
-                            android:paddingBottom="14dp"
+                            android:fontFamily="@font/helvetica"
+                            android:inputType="textPersonName"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"/>
 
-                    </RelativeLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
