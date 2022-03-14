@@ -8,13 +8,13 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "bc.okimatra.soundingcalculator"
+        applicationId 'bc.okimatra.soundingcalculator'
         minSdk 21
         targetSdk 32
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     buildTypes {
@@ -37,29 +37,27 @@ android {
 }
 
 dependencies {
-    def roomVersion = "2.4.2"
-    def kotlinVersion = "1.6.0"
     // Room and Lifecycle dependencies
-    implementation "androidx.room:room-runtime:$roomVersion"
-    implementation("androidx.room:room-ktx:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation 'androidx.room:room-runtime:2.4.2'
+    implementation 'androidx.room:room-ktx:2.4.2'
+    annotationProcessor 'androidx.room:room-compiler:2.4.2'
+    kapt 'androidx.room:room-compiler:2.4.2'
     implementation 'android.arch.persistence.room:runtime:1.1.1'
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinVersion"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
 
     // Coroutine Lifecycle Scopes
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
 
     implementation 'com.cuberto.bubbleicontabbarandroid:bubbleicontabbarandroid:1.0.2'
     implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
     implementation 'androidx.cardview:cardview:1.0.0'
 
-    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation 'androidx.activity:activity-ktx:1.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
