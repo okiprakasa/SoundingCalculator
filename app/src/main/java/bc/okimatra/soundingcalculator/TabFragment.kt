@@ -1477,7 +1477,7 @@ class TabFragment(private val title: String) : Fragment() {
         if (soundingList.isNotEmpty()) {
             // Adapter class is initialized and list is passed in the param.
             val soundingAdapter = SoundingAdapter(soundingList,{ updateId ->
-                updateRecordDialogCompany(updateId,userDao)
+                updateRecordDialogSounding(updateId,userDao)
             }){deleteId->
                 deleteRecordAlertDialogCompany(deleteId,userDao)
             }
@@ -1491,5 +1491,149 @@ class TabFragment(private val title: String) : Fragment() {
             _binding2?.svSoundingList?.visibility = View.GONE
             _binding2?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
+    }
+
+    private fun updateRecordDialogSounding(id:Int, userDao: UserDao) {
+        val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
+        updateDialog.setCancelable(false)
+        val binding = DialogUpdateSoundingBinding.inflate(layoutInflater)
+        updateDialog.setContentView(binding.root)
+        updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        lifecycleScope.launch {
+            userDao.fetchSoundingById(id).collect {
+                binding.tinggiCairan.setText(it.tinggiCairan.toString())
+            }
+        }
+
+//        binding.apply {
+//
+//            var number = ""
+//            var numberOld = ""
+//            var textOld = ""
+//            val holder = "__.___.___._-___.___"
+//            var cursorPosition: Int
+//            var cursor: Int
+//
+//            updateNpwp.setOnFocusChangeListener { _, _ ->
+//                if (updateNpwp.text.toString().isEmpty()) {
+//                    updateNpwp.setText(getString(R.string.before_edited))
+//                }
+//                if (updateNpwp.selectionStart > number.length) {
+//                    updateNpwp.setSelection(number.length)
+//                }
+//            }
+//
+//            updateNama.setOnFocusChangeListener { _, _ ->
+//                if (updateNpwp.text.toString().isEmpty() || updateNpwp.text.toString() == getString(R.string.before_edited)) {
+//                    updateNpwp.setText("")
+//                }
+//            }
+//
+//            etUpdateAlamatId.setOnFocusChangeListener { _, _ ->
+//                if (updateNpwp.text.toString().isEmpty() || updateNpwp.text.toString() == getString(R.string.before_edited)) {
+//                    updateNpwp.setText("")
+//                }
+//            }
+//
+//            updateNpwp.addTextChangedListener(object : TextWatcher {
+//                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//                    number = s.toString().replace("_","").replace(".","").replace("-","")
+//                    cursorPosition = updateNpwp.selectionStart
+//
+//                    if (cursorPosition > number.length) {
+//                        updateNpwp.setSelection(number.length)
+//                    }
+//
+//                    if ((numberOld != number || updateNpwp.text.toString().length != 20) && updateNpwp.hasFocus()) {
+//                        numberOld = number
+//                        cursor = numberOld.length
+//                        when (numberOld.length) {
+//                            15 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_15),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12)))
+//                                cursor += 5
+//                            }
+//                            in 13..14 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_12),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12),holder.substring(numberOld.length+5)))
+//                                cursor += 5
+//                            }
+//                            in 10..12 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_9),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9),holder.substring(numberOld.length+4)))
+//                                cursor += 4
+//                            }
+//                            9 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_9_exact),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),holder.substring(numberOld.length+3)))
+//                                cursor += 3
+//                            }
+//                            in 6..8 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_5),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5),holder.substring(numberOld.length+2)))
+//                                cursor += 2
+//                            }
+//                            in 3..5 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_2),numberOld.substring(0,2),numberOld.substring(2),holder.substring(numberOld.length+1)))
+//                                cursor += 1
+//                            }
+//                            in 1..2 -> {
+//                                updateNpwp.setText(String.format(getString(R.string.number_0),numberOld.substring(0),holder.substring(numberOld.length)))
+//                            }
+//                            0 -> {
+//                                updateNpwp.setText(holder)
+//                            }
+//                            else -> {
+//                                updateNpwp.setText(textOld)
+//                            }
+//                        }
+//                        updateNpwp.post {
+//                            updateNpwp.setSelection(cursor)
+//                        }
+//                    }
+//                }
+//
+//                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+//                    textOld = s.toString()
+//                }
+//
+//                override fun afterTextChanged(s: Editable) {
+//
+//                }
+//            })
+//
+//            updateNpwp.setOnClickListener {
+//                if (updateNpwp.selectionStart > number.length) {
+//                    updateNpwp.setSelection(number.length)
+//                }
+//            }
+//        }
+//
+//        binding.tvUpdate.setOnClickListener {
+//
+//            val name = endSpaceRemover(binding.updateNama.text.toString())
+//            val npwp = binding.updateNpwp.text.toString()
+//            val alamat = endSpaceRemover(binding.etUpdateAlamatId.text.toString())
+//
+//            when {
+//                name.isEmpty() -> {
+//                    Toast.makeText(context, "Mohon masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
+//                }
+//                npwp.isEmpty() || "_" in npwp-> {
+//                    Toast.makeText(context, "Mohon masukkan NPWP Perusahaan", Toast.LENGTH_SHORT).show()
+//                }
+//                alamat.isEmpty() -> {
+//                    Toast.makeText(context, "Mohon masukkan Alamat Perusahaan", Toast.LENGTH_SHORT).show()
+//                }
+//                else -> {
+//                    lifecycleScope.launch {
+//                        userDao.updateCompany(PerusahaanEntity(id, name, npwp, alamat))
+//                        Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
+//                            .show()
+//                        updateDialog.dismiss() // Dialog will be dismissed
+//                    }
+//                }
+//            }
+//        }
+//        binding.tvCancel.setOnClickListener{
+//            updateDialog.dismiss()
+//        }
+        updateDialog.show()
     }
 }
