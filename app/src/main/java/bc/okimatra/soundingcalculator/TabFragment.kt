@@ -1433,15 +1433,15 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        lifecycleScope.launch {
-            userDao.fetchSoundingById(id).collect {
-                binding.tinggiCairan.setText(it.tinggiCairan.toString())
-            }
-        }
-
-        binding.simpanHasil.setOnClickListener{
-            updateDialog.dismiss()
-        }
+//        lifecycleScope.launch {
+//            userDao.fetchSoundingById(id).collect {
+//                binding.tinggiCairan.setText(it.tinggiCairan.toString())
+//            }
+//        }
+//
+//        binding.simpanHasil.setOnClickListener{
+//            updateDialog.dismiss()
+//        }
         updateDialog.show()
     }
 }

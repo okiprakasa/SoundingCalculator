@@ -65,4 +65,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$roomVersion"
     implementation 'com.cuberto.bubbleicontabbarandroid:bubbleicontabbarandroid:1.0.2'
     implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
 }
