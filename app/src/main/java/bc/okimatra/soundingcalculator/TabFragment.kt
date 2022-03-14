@@ -601,10 +601,8 @@ class TabFragment(private val title: String) : Fragment() {
             element.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
-
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
-
                 override fun afterTextChanged(p0: Editable?) {
                     if (tinggiCek()) {
                         judulDataTabel()
@@ -888,14 +886,11 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<PegawaiEntity>, userDao: UserDao) {
         if (employeesList.isNotEmpty()) {
-            // Adapter class is initialized and list is passed in the param.
             val itemAdapter = PegawaiAdapter(employeesList,{ updateId ->
                 updateRecordDialogUser(updateId,userDao)
             }){deleteId->deleteRecordAlertDialogUser(deleteId,userDao)
             }
-            // Set the LayoutManager that this RecyclerView will use.
             _binding3?.rvUserList?.layoutManager = LinearLayoutManager(context)
-            // adapter instance is set to the recyclerview to inflate the items.
             _binding3?.rvUserList?.adapter = itemAdapter
             _binding3?.svUserList?.visibility = View.VISIBLE
             _binding3?.svServiceUserList?.visibility = View.GONE
@@ -914,7 +909,6 @@ class TabFragment(private val title: String) : Fragment() {
         val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
         val year = sdfyear.format(Calendar.getInstance().time)
         val date = sdfdate.format(Calendar.getInstance().time)
-
         when {
             name.isEmpty() -> {
                 Toast.makeText(context, "Mohon Masukkan Nama Anda", Toast.LENGTH_SHORT).show()
@@ -963,12 +957,9 @@ class TabFragment(private val title: String) : Fragment() {
     private fun updateRecordDialogUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
-        /*Set the screen content from a layout resource.
-         The resource will be inflated, adding all top-level views to the screen.*/
         val binding = DialogUpdateBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
         lifecycleScope.launch {
             userDao.fetchUserById(id).collect {
                 binding.updateNama.setText(it.nama_pegawai)
@@ -976,14 +967,12 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
         binding.tvUpdate.setOnClickListener {
-
             val name = endSpaceRemover(binding.updateNama.text.toString())
             val nip = binding.updateNip.text.toString()
             val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
             val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
             val year = sdfyear.format(Calendar.getInstance().time)
             val date = sdfdate.format(Calendar.getInstance().time)
-
             when {
                 name.isEmpty() -> {
                     Toast.makeText(context, "Mohon masukkan Nama Anda", Toast.LENGTH_SHORT).show()
@@ -1023,7 +1012,7 @@ class TabFragment(private val title: String) : Fragment() {
                         userDao.updateUser(PegawaiEntity(id, name, nip))
                         Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                             .show()
-                        updateDialog.dismiss() // Dialog will be dismissed
+                        updateDialog.dismiss()
                     }
                 }
             }
@@ -1031,56 +1020,39 @@ class TabFragment(private val title: String) : Fragment() {
         binding.tvCancel.setOnClickListener{
             updateDialog.dismiss()
         }
-        //Start the dialog and display it on screen.
         updateDialog.show()
     }
 
     private fun deleteRecordAlertDialogUser(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
-        //set title for alert dialog
-        //set message for alert dialog
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
-
-        //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
-                //calling the deleteEmployee method of DatabaseHandler class to delete record
                 userDao.deleteUser(PegawaiEntity(id))
                 Toast.makeText(
                     context,
                     "Data Berhasil Dihapus",
                     Toast.LENGTH_SHORT
                 ).show()
-
-                dialogInterface.dismiss() // Dialog will be dismissed
+                dialogInterface.dismiss()
             }
-
         }
-
-
-        //performing negative action
         builder.setNegativeButton("No") { dialogInterface, _ ->
-            dialogInterface.dismiss() // Dialog will be dismissed
+            dialogInterface.dismiss()
         }
-        // Create the AlertDialog
         val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
-        alertDialog.show()  // show the dialog to UI
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun setupListOfServiceUserDataIntoRecyclerView(penggunaJasaList:ArrayList<PenggunaJasaEntity>, userDao: UserDao) {
-
         if (penggunaJasaList.isNotEmpty()) {
-            // Adapter class is initialized and list is passed in the param.
             val penggunaJasaAdapter = PenggunaJasaAdapter(penggunaJasaList,{ updateId ->
                 updateRecordDialogServiceUser(updateId,userDao)
             }){deleteId->
                 deleteRecordAlertDialogServiceUser(deleteId,userDao)
             }
-            // Set the LayoutManager that this RecyclerView will use.
             _binding3?.rvServiceUserList?.layoutManager = LinearLayoutManager(context)
-            // adapter instance is set to the recyclerview to inflate the items.
             _binding3?.rvServiceUserList?.adapter = penggunaJasaAdapter
             _binding3?.svServiceUserList?.visibility = View.VISIBLE
             _binding3?.svUserList?.visibility = View.GONE
@@ -1098,7 +1070,6 @@ class TabFragment(private val title: String) : Fragment() {
         val perusahaan = _binding3?.perusahaan?.selectedItem.toString()
         var npwpPerusahaan: String
         var alamatPerusahaan: String
-
         lifecycleScope.launch {
             userDao.fetchCompanyByName(perusahaan).collect {
                 npwpPerusahaan = it.npwp
@@ -1129,8 +1100,6 @@ class TabFragment(private val title: String) : Fragment() {
     private fun updateRecordDialogServiceUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
-        /*Set the screen content from a layout resource.
-         The resource will be inflated, adding all top-level views to the screen.*/
         val binding = DialogUpdateServiceUserBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1172,7 +1141,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
 
         binding.tvUpdate.setOnClickListener {
-
             val name = endSpaceRemover(binding.updateNama.text.toString())
             val jabatan = endSpaceRemover(binding.updateJabatan.text.toString())
             val perusahaan = binding.updatePerusahaan.selectedItem.toString()
@@ -1198,28 +1166,23 @@ class TabFragment(private val title: String) : Fragment() {
                                 userDao.updateServiceUser(PenggunaJasaEntity(id, name, jabatan, perusahaan, npwpPerusahaan, alamatPerusahaan))
                                 Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                                     .show()
-                                updateDialog.dismiss() // Dialog will be dismissed
+                                updateDialog.dismiss()
                             }
                         }
                     }
                 }
             }
         }
+
         binding.tvCancel.setOnClickListener{
             updateDialog.dismiss()
         }
-        //Start the dialog and display it on screen.
         updateDialog.show()
     }
 
     private fun deleteRecordAlertDialogServiceUser(id:Int,userDao: UserDao) {
-
         val builder = AlertDialog.Builder(requireContext())
-        //set title for alert dialog
-        //set message for alert dialog
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
-
-        //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
                 //calling the deleteEmployee method of DatabaseHandler class to delete record
@@ -1229,32 +1192,25 @@ class TabFragment(private val title: String) : Fragment() {
                     "Data Berhasil Dihapus",
                     Toast.LENGTH_SHORT
                 ).show()
-                dialogInterface.dismiss() // Dialog will be dismissed
+                dialogInterface.dismiss()
             }
         }
-
-        //performing negative action
         builder.setNegativeButton("No") { dialogInterface, _ ->
-            dialogInterface.dismiss() // Dialog will be dismissed
+            dialogInterface.dismiss()
         }
-        // Create the AlertDialog
         val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
-        alertDialog.show()  // show the dialog to UI
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun setupListOfDataIntoRecyclerViewCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
         if (perusahaanList.isNotEmpty()) {
-            // Adapter class is initialized and list is passed in the param.
             val companyAdapter = PerusahaanAdapter(perusahaanList,{ updateId ->
                 updateRecordDialogCompany(updateId,userDao)
             }){deleteId->
                 deleteRecordAlertDialogCompany(deleteId,userDao)
             }
-            // Set the LayoutManager that this RecyclerView will use.
             _binding4?.rvItemsList?.layoutManager = LinearLayoutManager(context)
-            // adapter instance is set to the recyclerview to inflate the items.
             _binding4?.rvItemsList?.adapter = companyAdapter
             _binding4?.svItemList?.visibility = View.VISIBLE
             _binding4?.tvNoRecordsAvailable?.visibility = View.GONE
@@ -1269,7 +1225,6 @@ class TabFragment(private val title: String) : Fragment() {
         val name = endSpaceRemover(_binding4?.nama?.text.toString())
         val npwp = _binding4?.etNPWPId?.text.toString()
         val alamat = endSpaceRemover(_binding4?.etAlamatId?.text.toString())
-
         when {
             name.isEmpty() -> {
                 Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
@@ -1295,8 +1250,6 @@ class TabFragment(private val title: String) : Fragment() {
     private fun updateRecordDialogCompany(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
-        /*Set the screen content from a layout resource.
-         The resource will be inflated, adding all top-level views to the screen.*/
         val binding = DialogUpdateCompanyBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1310,7 +1263,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
 
         binding.apply {
-
             var number = ""
             var numberOld = ""
             var textOld = ""
@@ -1343,11 +1295,9 @@ class TabFragment(private val title: String) : Fragment() {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     number = s.toString().replace("_","").replace(".","").replace("-","")
                     cursorPosition = updateNpwp.selectionStart
-
                     if (cursorPosition > number.length) {
                         updateNpwp.setSelection(number.length)
                     }
-
                     if ((numberOld != number || updateNpwp.text.toString().length != 20) && updateNpwp.hasFocus()) {
                         numberOld = number
                         cursor = numberOld.length
@@ -1397,7 +1347,6 @@ class TabFragment(private val title: String) : Fragment() {
                 }
 
                 override fun afterTextChanged(s: Editable) {
-
                 }
             })
 
@@ -1409,11 +1358,9 @@ class TabFragment(private val title: String) : Fragment() {
         }
 
         binding.tvUpdate.setOnClickListener {
-
             val name = endSpaceRemover(binding.updateNama.text.toString())
             val npwp = binding.updateNpwp.text.toString()
             val alamat = endSpaceRemover(binding.etUpdateAlamatId.text.toString())
-
             when {
                 name.isEmpty() -> {
                     Toast.makeText(context, "Mohon masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
@@ -1429,7 +1376,7 @@ class TabFragment(private val title: String) : Fragment() {
                         userDao.updateCompany(PerusahaanEntity(id, name, npwp, alamat))
                         Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                             .show()
-                        updateDialog.dismiss() // Dialog will be dismissed
+                        updateDialog.dismiss()
                     }
                 }
             }
@@ -1437,53 +1384,39 @@ class TabFragment(private val title: String) : Fragment() {
         binding.tvCancel.setOnClickListener{
             updateDialog.dismiss()
         }
-        //Start the dialog and display it on screen.
         updateDialog.show()
     }
 
     private fun deleteRecordAlertDialogCompany(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
-        //set title for alert dialog
-        //set message for alert dialog
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
-
-        //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
-                //calling the deleteEmployee method of DatabaseHandler class to delete record
                 userDao.deleteCompany(PerusahaanEntity(id))
                 Toast.makeText(
                     context,
                     "Data Berhasil Dihapus",
                     Toast.LENGTH_SHORT
                 ).show()
-
-                dialogInterface.dismiss() // Dialog will be dismissed
+                dialogInterface.dismiss()
             }
         }
-
-        //performing negative action
         builder.setNegativeButton("No") { dialogInterface, _ ->
-            dialogInterface.dismiss() // Dialog will be dismissed
+            dialogInterface.dismiss()
         }
-        // Create the AlertDialog
         val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
-        alertDialog.show()  // show the dialog to UI
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
         if (soundingList.isNotEmpty()) {
-            // Adapter class is initialized and list is passed in the param.
             val soundingAdapter = SoundingAdapter(soundingList,{ updateId ->
                 updateRecordDialogSounding(updateId,userDao)
             }){deleteId->
                 deleteRecordAlertDialogCompany(deleteId,userDao)
             }
-            // Set the LayoutManager that this RecyclerView will use.
             _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
-            // adapter instance is set to the recyclerview to inflate the items.
             _binding2?.rvSoundingList?.adapter = soundingAdapter
             _binding2?.svSoundingList?.visibility = View.VISIBLE
             _binding2?.tvNoRecordsAvailable?.visibility = View.GONE
@@ -1506,131 +1439,6 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
 
-//        binding.apply {
-//
-//            var number = ""
-//            var numberOld = ""
-//            var textOld = ""
-//            val holder = "__.___.___._-___.___"
-//            var cursorPosition: Int
-//            var cursor: Int
-//
-//            updateNpwp.setOnFocusChangeListener { _, _ ->
-//                if (updateNpwp.text.toString().isEmpty()) {
-//                    updateNpwp.setText(getString(R.string.before_edited))
-//                }
-//                if (updateNpwp.selectionStart > number.length) {
-//                    updateNpwp.setSelection(number.length)
-//                }
-//            }
-//
-//            updateNama.setOnFocusChangeListener { _, _ ->
-//                if (updateNpwp.text.toString().isEmpty() || updateNpwp.text.toString() == getString(R.string.before_edited)) {
-//                    updateNpwp.setText("")
-//                }
-//            }
-//
-//            etUpdateAlamatId.setOnFocusChangeListener { _, _ ->
-//                if (updateNpwp.text.toString().isEmpty() || updateNpwp.text.toString() == getString(R.string.before_edited)) {
-//                    updateNpwp.setText("")
-//                }
-//            }
-//
-//            updateNpwp.addTextChangedListener(object : TextWatcher {
-//                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-//                    number = s.toString().replace("_","").replace(".","").replace("-","")
-//                    cursorPosition = updateNpwp.selectionStart
-//
-//                    if (cursorPosition > number.length) {
-//                        updateNpwp.setSelection(number.length)
-//                    }
-//
-//                    if ((numberOld != number || updateNpwp.text.toString().length != 20) && updateNpwp.hasFocus()) {
-//                        numberOld = number
-//                        cursor = numberOld.length
-//                        when (numberOld.length) {
-//                            15 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_15),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12)))
-//                                cursor += 5
-//                            }
-//                            in 13..14 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_12),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12),holder.substring(numberOld.length+5)))
-//                                cursor += 5
-//                            }
-//                            in 10..12 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_9),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9),holder.substring(numberOld.length+4)))
-//                                cursor += 4
-//                            }
-//                            9 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_9_exact),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),holder.substring(numberOld.length+3)))
-//                                cursor += 3
-//                            }
-//                            in 6..8 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_5),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5),holder.substring(numberOld.length+2)))
-//                                cursor += 2
-//                            }
-//                            in 3..5 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_2),numberOld.substring(0,2),numberOld.substring(2),holder.substring(numberOld.length+1)))
-//                                cursor += 1
-//                            }
-//                            in 1..2 -> {
-//                                updateNpwp.setText(String.format(getString(R.string.number_0),numberOld.substring(0),holder.substring(numberOld.length)))
-//                            }
-//                            0 -> {
-//                                updateNpwp.setText(holder)
-//                            }
-//                            else -> {
-//                                updateNpwp.setText(textOld)
-//                            }
-//                        }
-//                        updateNpwp.post {
-//                            updateNpwp.setSelection(cursor)
-//                        }
-//                    }
-//                }
-//
-//                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-//                    textOld = s.toString()
-//                }
-//
-//                override fun afterTextChanged(s: Editable) {
-//
-//                }
-//            })
-//
-//            updateNpwp.setOnClickListener {
-//                if (updateNpwp.selectionStart > number.length) {
-//                    updateNpwp.setSelection(number.length)
-//                }
-//            }
-//        }
-//
-//        binding.tvUpdate.setOnClickListener {
-//
-//            val name = endSpaceRemover(binding.updateNama.text.toString())
-//            val npwp = binding.updateNpwp.text.toString()
-//            val alamat = endSpaceRemover(binding.etUpdateAlamatId.text.toString())
-//
-//            when {
-//                name.isEmpty() -> {
-//                    Toast.makeText(context, "Mohon masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
-//                }
-//                npwp.isEmpty() || "_" in npwp-> {
-//                    Toast.makeText(context, "Mohon masukkan NPWP Perusahaan", Toast.LENGTH_SHORT).show()
-//                }
-//                alamat.isEmpty() -> {
-//                    Toast.makeText(context, "Mohon masukkan Alamat Perusahaan", Toast.LENGTH_SHORT).show()
-//                }
-//                else -> {
-//                    lifecycleScope.launch {
-//                        userDao.updateCompany(PerusahaanEntity(id, name, npwp, alamat))
-//                        Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
-//                            .show()
-//                        updateDialog.dismiss() // Dialog will be dismissed
-//                    }
-//                }
-//            }
-//        }
         binding.simpanHasil.setOnClickListener{
             updateDialog.dismiss()
         }

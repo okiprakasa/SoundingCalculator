@@ -898,7 +898,8 @@
                             android:paddingBottom="14dp"
                             android:scrollbars="vertical"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            tools:ignore="TooManyViews" />
 
                     </RelativeLayout>
 

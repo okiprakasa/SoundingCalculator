@@ -38,7 +38,8 @@ android {
 
 dependencies {
     def roomVersion = "2.4.1"
-    def activityVersion = '1.4.0'
+    def activityVersion = "1.4.0"
+    def kotlinVersion = "1.6.0"
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$roomVersion"
     //kotlin extensions for coroutine support with room
@@ -57,8 +58,8 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:$roomVersion"
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinVersion"
     // Coroutine Lifecycle Scopes
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$roomVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$roomVersion"
