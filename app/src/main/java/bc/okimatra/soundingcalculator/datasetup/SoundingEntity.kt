@@ -1,7 +1,11 @@
 package bc.okimatra.soundingcalculator.datasetup
 
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import java.util.*
 
 //creating a Data Model Class
 @Entity(tableName = "sounding-raw-table")
@@ -35,5 +39,9 @@ data class SoundingEntity(
     val waktu: String="",
     val nomor_dokumen: String="",
     val produk: String="",
-    val bentuk: String=""
+    val bentuk: String="",
+//    @NonNull
+    @ColumnInfo(name = "date")
+//    @TypeConverters(DateTypeConverter::class)
+    val waktuDate: Long
         )

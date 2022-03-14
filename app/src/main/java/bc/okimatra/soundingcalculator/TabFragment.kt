@@ -331,7 +331,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                         waktu = waktuText,
                                                         nomor_dokumen = nomorDokumen,
                                                         produk = produk,
-                                                        bentuk = bentukText
+                                                        bentuk = bentukText,
+                                                        waktuDate = Date().time
                                                     ))
                                                     Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                                                     _binding1?.tinggiCairan?.text?.clear()
@@ -687,7 +688,7 @@ class TabFragment(private val title: String) : Fragment() {
                         volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
                         tinggiTerkoreksi = roundDigits(
                             tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
-                                .toDouble()
+                                .toDouble()/1000
                         )
                         delta =
                             ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()

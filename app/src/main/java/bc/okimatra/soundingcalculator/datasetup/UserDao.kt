@@ -81,7 +81,7 @@ interface UserDao {
     @Query("Select count(*) from `sounding-raw-table`")
     fun countAllSounding():Flow<Int>
 
-    @Query("Select * from `sounding-raw-table` ORDER BY perusahaan_sounding ASC")
+    @Query("Select * from `sounding-raw-table` ORDER BY date DESC")
     fun fetchAllSounding():Flow<List<SoundingEntity>>
 
     @Query("Select * from `sounding-raw-table` where id=:id")
