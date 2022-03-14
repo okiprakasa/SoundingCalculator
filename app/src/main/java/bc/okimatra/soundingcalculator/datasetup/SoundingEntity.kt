@@ -40,8 +40,6 @@ data class SoundingEntity(
     val nomor_dokumen: String="",
     val produk: String="",
     val bentuk: String="",
-//    @NonNull
     @ColumnInfo(name = "date")
-//    @TypeConverters(DateTypeConverter::class)
     val waktuDate: Long
         )

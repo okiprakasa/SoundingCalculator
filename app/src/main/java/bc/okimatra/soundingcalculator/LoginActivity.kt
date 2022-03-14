@@ -115,8 +115,10 @@ class LoginActivity : AppCompatActivity() {
 }
 fun endSpaceRemover(text:String): String {
     var newtext = text
-    while (newtext.subSequence(newtext.length-1,newtext.length) == " ") {
-        newtext = newtext.subSequence(0, newtext.length-1).toString()
+    if (text.isNotEmpty()) {
+        while (newtext.subSequence(newtext.length-1,newtext.length) == " ") {
+            newtext = newtext.subSequence(0, newtext.length-1).toString()
+        }
     }
     return newtext
 }

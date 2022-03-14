@@ -53,7 +53,6 @@ class TabFragment(private val title: String) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        retainInstance = true
         return when {
             title === "Calculator" -> {
                 _binding1 = FragmentOneBinding.inflate(inflater, container, false)
@@ -263,16 +262,16 @@ class TabFragment(private val title: String) : Fragment() {
                     results = calculatorListener(listET)
 
                     simpanHasil.setOnClickListener {
-                        val nomorTangkiText = _binding1?.noTangki?.text.toString()
-                        val lokasiSoundingText =  _binding1?.lokasiSounding?.text.toString()
+                        val nomorTangkiText = endSpaceRemover(_binding1?.noTangki?.text.toString())
+                        val lokasiSoundingText =  endSpaceRemover(_binding1?.lokasiSounding?.text.toString())
                         val waktuText = _binding1?.waktu?.text.toString()
-                        val bentukText = _binding1?.bentuk?.text.toString()
+                        val bentukText = endSpaceRemover(_binding1?.bentuk?.text.toString())
                         when {
                             nomorTangkiText.isEmpty() -> {
                                 Toast.makeText(requireActivity(), "Nomor Tangki Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             lokasiSoundingText.isEmpty() -> {
-                                Toast.makeText(requireActivity(), "Loksasi Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireActivity(), "Lokasi Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             waktuText.isEmpty() -> {
                                 Toast.makeText(requireActivity(), "Waktu Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
@@ -290,8 +289,8 @@ class TabFragment(private val title: String) : Fragment() {
                                 val densityAngka = _binding1?.densityCairan?.text.toString().toDouble()
                                 val petugasSounding = _binding1?.namaPegawai?.selectedItem.toString()
                                 val penggunaJasa = _binding1?.namaPenggunaJasa?.selectedItem.toString()
-                                val nomorDokumen = _binding1?.noDokumen?.text.toString()
-                                val produk = _binding1?.produk?.text.toString()
+                                val nomorDokumen = endSpaceRemover(_binding1?.noDokumen?.text.toString())
+                                val produk = endSpaceRemover(_binding1?.produk?.text.toString())
                                 results = soundingCalculator()
                                 lifecycleScope.launch {
                                     userDao.fetchServiceUserByName(penggunaJasa).collect { it3 ->
@@ -809,8 +808,6 @@ class TabFragment(private val title: String) : Fragment() {
             } else if ("0 mm" !in judulTabelFraksi.text.toString() && tabelFraksi.text.toString() == "0") {
                 tabelFraksi.text = null
             }
-//            val tingggiTerkoreksi = roundDigits(tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())
-//            hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited), tingggiTerkoreksi.toString().replace(".",","))
         }
     }
 
