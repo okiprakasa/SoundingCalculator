@@ -80,7 +80,7 @@
     <string name="hint_waktu">Masukkan Waktu Sounding</string>
     <string name="format_waktu">%s %02d:%02d %s</string>
     <string name="no_dokumen">Nomor Dokumen</string>
-    <string name="hint_no_dokumen">PEB/PIB/FORM 3D</string>
+    <string name="hint_no_dokumen">FORM 3D/PEB/PIB (Tidak Wajib)</string>
     <string name="hint_alamat">Masukkan Alamat Perusahaan</string>
     <string name="update_record">Update Data</string>
     <string name="update">Update</string>
@@ -89,7 +89,7 @@
     <string name="raw_data">Raw Data</string>
     <string name="final_report">Final Report</string>
     <string name="produk">Produk</string>
-    <string name="jenis_produk">Masukkan Jenis Produk</string>
+    <string name="hint_produk">Jenis Produk (Tidak Wajib)</string>
     <string name="bentuk">Bentuk Fisik/Warna/Bau</string>
     <string name="hint_bentuk">Masukkan Bentuk Barang</string>
     <string name="no_tangki">Nomor Tangki</string>
@@ -103,4 +103,7 @@
     <string name="lokasi_sounding">Lokasi Sounding</string>
     <string name="hint_lokasi_sounding">Masukkan Lokasi Sounding</string>
     <string name="no_tangki_edited">No Tangki: %s   </string>
+    <string name="delete">Delete</string>
+    <string name="judul_hapus">Hapus Data</string>
+    <string name="hint_hapus_sounding">Apakah Anda yakin akan menghapus data sounding Tangki: %s %s pada %s?</string>
 </resources>

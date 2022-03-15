@@ -890,7 +890,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/jenis_produk"
+                            android:hint="@string/hint_produk"
                             android:inputType="textMultiLine|textCapWords"
                             android:paddingStart="15dp"
                             android:paddingTop="14dp"
