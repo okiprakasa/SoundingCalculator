@@ -76,16 +76,17 @@
                 android:id="@+id/input_nama"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints="name"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_light"
                 android:hint="@string/nama"
+                android:inputType="textCapWords"
                 android:maxLines="1"
                 android:paddingStart="17dp"
                 android:paddingTop="15dp"
                 android:paddingEnd="0dp"
                 android:paddingBottom="15dp"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:inputType="textPersonName"
                 android:textSize="13sp" />
 
         </RelativeLayout>

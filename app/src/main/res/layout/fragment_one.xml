@@ -75,7 +75,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/tinggi_cairan"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
 
                     <RelativeLayout
                         android:layout_width="wrap_content"

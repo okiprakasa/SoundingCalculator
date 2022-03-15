@@ -575,52 +575,83 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun calculatorListener(listEditText: List<AppCompatEditText>): List<Double> {
-        var results1 = listOf<Double>()
-        for (element in listEditText) {
-            element.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                    results1 = soundingCalculator()
-                }
-            })
+    private fun resetResult() {
+        binding1.apply {
+            hasilKalkulator.text = getText(R.string.hasil)
+            hasilVolume.text = getText(R.string.volume)
+            hasilVolumeApp.text = getText(R.string.volume_app)
+            hasilVolumeObs.text = getText(R.string.volume_obs)
+            hasilTinggiTerkoreksi.text = getText(R.string.tinggi_terkoreksi)
         }
-        return results1
     }
 
-    private fun calculatorTinggiListener(listEditText: List<AppCompatEditText>): List<Double> {
-        var results1 = listOf<Double>()
-        for (element in listEditText) {
-            element.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-                override fun afterTextChanged(p0: Editable?) {
-                    if (tinggiCek()) {
-                        judulDataTabel()
-                        results1 = soundingCalculator()
-                    }
-                    else {
-                        resetDataTabel()
-                    }
-                }
-            })
+    private fun resetDataTabel() {
+        binding1.apply {
+            judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
+            judulTabelFraksi.text = getText(R.string.tabel_fraksi)
+            judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
+            dataTabel.text = getText(R.string.data_tabel)
         }
-        return results1
     }
 
-    private fun dayConverter(date: String): String {
-        return date.replace("Monday","Senin").replace("Tuesday","Selasa").replace("Wednesday","Rabu").replace("Thursday","Kamis").replace("Friday","Jumat").replace("Saturday","Sabtu").replace("Sunday","Minggu")
+    private fun calculatorCheck(): Boolean {
+        binding1.apply {
+            return tinggiCairan.text.toString().isNotEmpty() and
+                    tinggiMeja.text.toString().isNotEmpty() and
+                    suhuCairan.text.toString().isNotEmpty() and
+                    suhuTetap.text.toString().isNotEmpty() and
+                    muai.text.toString().isNotEmpty() and
+                    densityCairan.text.toString().isNotEmpty()
+        }
     }
 
-    private fun monthConverter(date: String): String {
-        return date.replace("January","Januari").replace("February","Februari").replace("March","Maret").replace("May","Mei").replace("June","Juni").replace("July","Juli").replace("August","Agustus").replace("October","Oktober").replace("December","December")
+    private fun judulDataTabel() {
+        var soundingCorrect: Double
+        var satuanmm : String
+        var soundingCorrected: String
+        var soundingCorrectedFinal: String
+        binding1.apply {
+            soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
+            soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
+            soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
+            dataTabel.text = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
+            try {
+                judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 3))
+            }
+            catch (e:Exception) {
+                try {
+                    judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited1), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 2))
+                }
+                catch (e:Exception) {
+                    try {
+                        judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 1))
+                    }
+                    catch (e:Exception) {
+                        judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited2), soundingCorrectedFinal)
+                    }
+                }
+            }
+            if (judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.toString().length-5,judulTabelKalibrasi.text.toString().length-4).toString().toInt() != 9) {
+                judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 100.0) / 100.0).toString())
+            }
+            else {
+                judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited1), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 10.0) / 10.0).toString())
+            }
+            satuanmm = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
+            satuanmm = satuanmm.subSequence(satuanmm.indexOf(".")-1,satuanmm.indexOf(".")).toString()
+            judulTabelFraksi.text = String.format(getString(R.string.tabel_fraksi_edited), satuanmm)
+            if ("0 mm" in judulTabelFraksi.text.toString()) {
+                tabelFraksi.setText("0")
+            } else if ("0 mm" !in judulTabelFraksi.text.toString() && tabelFraksi.text.toString() == "0") {
+                tabelFraksi.text = null
+            }
+        }
+    }
+
+    private fun tinggiCek (): Boolean {
+        binding1.apply {
+            return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
+        }
     }
 
     private fun soundingCalculator(): List<Double> {
@@ -745,8 +776,48 @@ class TabFragment(private val title: String) : Fragment() {
         )
     }
 
-    private fun resetResult() {
-        binding1.apply {
+    private fun calculatorListener(listEditText: List<AppCompatEditText>): List<Double> {
+        var results1 = listOf<Double>()
+        for (element in listEditText) {
+            element.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    results1 = soundingCalculator()
+                }
+            })
+        }
+        return results1
+    }
+
+    private fun calculatorTinggiListener(listEditText: List<AppCompatEditText>): List<Double> {
+        var results1 = listOf<Double>()
+        for (element in listEditText) {
+            element.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+                override fun afterTextChanged(p0: Editable?) {
+                    if (tinggiCek()) {
+                        judulDataTabel()
+                        results1 = soundingCalculator()
+                    }
+                    else {
+                        resetDataTabel()
+                    }
+                }
+            })
+        }
+        return results1
+    }
+
+    private fun resetResulUpdate(binding: DialogUpdateSoundingBinding) {
+        binding.apply {
             hasilKalkulator.text = getText(R.string.hasil)
             hasilVolume.text = getText(R.string.volume)
             hasilVolumeApp.text = getText(R.string.volume_app)
@@ -755,25 +826,30 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun resetDataTabel() {
-        binding1.apply {
+    private fun resetDataTabelUdpate(binding: DialogUpdateSoundingBinding) {
+        binding.apply {
             judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
             judulTabelFraksi.text = getText(R.string.tabel_fraksi)
             judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
-            dataTabel.text = getText(R.string.data_tabel)
         }
     }
 
-    private fun judulDataTabel() {
-        var soundingCorrect: Double
+    private fun calculatorCheckUpdate(binding: DialogUpdateSoundingBinding): Boolean {
+        binding.apply {
+            return tinggiCairan.text.toString().isNotEmpty() and
+                    tinggiMeja.text.toString().isNotEmpty() and
+                    suhuCairan.text.toString().isNotEmpty() and
+                    suhuTetap.text.toString().isNotEmpty() and
+                    faktorMuai.text.toString().isNotEmpty() and
+                    densityCairan.text.toString().isNotEmpty()
+        }
+    }
+
+    private fun judulDataTabelUpdate(binding: DialogUpdateSoundingBinding) {
         var satuanmm : String
-        var soundingCorrected: String
         var soundingCorrectedFinal: String
-        binding1.apply {
-            soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
+        binding.apply {
             soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
-            soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
-            dataTabel.text = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
             try {
                 judulTabelKalibrasi.text = String.format(getString(R.string.tabel_kalibrasi_edited), soundingCorrectedFinal.subSequence(0,soundingCorrectedFinal.indexOf(".") + 3))
             }
@@ -807,10 +883,121 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun tinggiCek (): Boolean {
-        binding1.apply {
+    private fun tinggiCekUpdate(binding: DialogUpdateSoundingBinding): Boolean {
+        binding.apply {
             return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
         }
+    }
+
+    private fun soundingCalculatorUpdate(binding: DialogUpdateSoundingBinding): List<Double> {
+        var volumeKalibrasi2 = 0.0
+        var volumeFraksi = 0.0
+        var volumeMid = 0.0
+        var volumeApp = 0.0
+        var volumeObs = 0.0
+        var volume = 0.0
+        var nilaiHasilKalkulator = 0.0
+        var delta: Double
+        var tinggiTerkoreksi = 0.0
+        binding.apply {
+            if (calculatorCheckUpdate(binding)) {
+                when {
+                    tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString().isNotEmpty() -> {
+                        volumeFraksi = tabelFraksi.text.toString().toDouble()
+                        volumeKalibrasi2 = tabelKalibrasi.text.toString().toDouble()
+                        volumeMid = volumeKalibrasi2
+                        tinggiTerkoreksi = roundDigits((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000)
+                        volumeApp = roundDigits(tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble())
+                        volumeObs = roundDigits(volumeApp * (1.0 + ((suhuCairan.text.toString().toDouble() - suhuTetap.text.toString().toDouble()) * faktorMuai.text.toString().toDouble())))
+                        volume = roundDigits(volumeObs / 1000.0)
+                        nilaiHasilKalkulator = roundDigits(volume * densityCairan.text.toString().toDouble())
+                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited),nilaiHasilKalkulator.toString().replace(".", ","))
+                        hasilVolume.text = String.format(getString(R.string.volume_edited),volume.toString().replace(".", ","))
+                        hasilVolumeApp.text = String.format(getString(R.string.volume_app_edited),volumeApp.toString().replace(".", ","))
+                        hasilVolumeObs.text = String.format(getString(R.string.volume_obs_edited),volumeObs.toString().replace(".", ","))
+                        hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited),tinggiTerkoreksi.toString().replace(".", ","))
+                    }
+                    tabelKalibrasi.text.toString().isNotEmpty() and tabelKalibrasi2.text.toString().isNotEmpty() -> {
+                        volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
+                        tinggiTerkoreksi = roundDigits((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000)
+                        delta =((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000 - judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.indexOf("(") + 1,judulTabelKalibrasi.text.indexOf(")") - 2).toString().toDouble()) / 0.01
+                        volumeMid = tabelKalibrasi.text.toString().toDouble() + delta * (tabelKalibrasi2.text.toString().toDouble() - tabelKalibrasi.text.toString().toDouble())
+                        volumeApp = roundDigits(volumeMid)
+                        volumeObs = roundDigits(volumeApp * (1.0 + ((suhuCairan.text.toString().toDouble() - suhuTetap.text.toString().toDouble()) * faktorMuai.text.toString().toDouble())))
+                        volume = roundDigits(volumeObs / 1000.0)
+                        nilaiHasilKalkulator =roundDigits(volume * densityCairan.text.toString().toDouble())
+                        hasilKalkulator.text = String.format(getString(R.string.hasil_akhir_edited),nilaiHasilKalkulator.toString().replace(".", ","))
+                        hasilVolume.text = String.format(getString(R.string.volume_edited),volume.toString().replace(".", ","))
+                        hasilVolumeApp.text = String.format(getString(R.string.volume_app_edited),volumeApp.toString().replace(".", ","))
+                        hasilVolumeObs.text = String.format(getString(R.string.volume_obs_edited),volumeObs.toString().replace(".", ","))
+                        hasilTinggiTerkoreksi.text = String.format(getString(R.string.tinggi_terkoreksi_edited),tinggiTerkoreksi.toString().replace(".", ","))
+                    }
+                    else -> {
+                        resetResulUpdate(binding)
+                    }
+                }
+            } else {
+                resetResulUpdate(binding)
+            }
+        }
+        return listOf(
+            tinggiTerkoreksi,
+            volumeFraksi,
+            volumeKalibrasi2,
+            volumeMid,
+            volumeApp,
+            volumeObs,
+            volume,
+            nilaiHasilKalkulator
+        )
+    }
+
+    private fun calculatorListenerUpdate(listEditText: List<AppCompatEditText>, binding: DialogUpdateSoundingBinding): List<Double> {
+        var results1 = listOf<Double>()
+        for (element in listEditText) {
+            element.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    results1 = soundingCalculatorUpdate(binding)
+                }
+            })
+        }
+        return results1
+    }
+
+    private fun calculatorTinggiListenerUpdate(listEditText: List<AppCompatEditText>, binding: DialogUpdateSoundingBinding): List<Double> {
+        var results1 = listOf<Double>()
+        for (element in listEditText) {
+            element.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+                override fun afterTextChanged(p0: Editable?) {
+                    if (tinggiCekUpdate(binding)) {
+                        judulDataTabelUpdate(binding)
+                        results1 = soundingCalculatorUpdate(binding)
+                    }
+                    else {
+                        resetDataTabelUdpate(binding)
+                    }
+                }
+            })
+        }
+        return results1
+    }
+
+    private fun dayConverter(date: String): String {
+        return date.replace("Monday","Senin").replace("Tuesday","Selasa").replace("Wednesday","Rabu").replace("Thursday","Kamis").replace("Friday","Jumat").replace("Saturday","Sabtu").replace("Sunday","Minggu")
+    }
+
+    private fun monthConverter(date: String): String {
+        return date.replace("January","Januari").replace("February","Februari").replace("March","Maret").replace("May","Mei").replace("June","Juni").replace("July","Juli").replace("August","Agustus").replace("October","Oktober").replace("December","December")
     }
 
     private fun roundDigits(number: Double): Double {
@@ -818,17 +1005,6 @@ class TabFragment(private val title: String) : Fragment() {
         val number5digits = (number6digits * 100000).roundToLong()/100000.toDouble()
         val number4digits = (number5digits * 10000).roundToLong()/10000.toDouble()
         return (number4digits * 1000).roundToLong()/1000.toDouble()
-    }
-
-    private fun calculatorCheck(): Boolean {
-        binding1.apply {
-            return tinggiCairan.text.toString().isNotEmpty() and
-                    tinggiMeja.text.toString().isNotEmpty() and
-                    suhuCairan.text.toString().isNotEmpty() and
-                    suhuTetap.text.toString().isNotEmpty() and
-                    muai.text.toString().isNotEmpty() and
-                    densityCairan.text.toString().isNotEmpty()
-        }
     }
 
     private fun populateDropdownUser(list:ArrayList<PegawaiEntity>, spinner: Spinner) {
@@ -1432,74 +1608,144 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.apply {
-            lifecycleScope.launch {
-                userDao.fetchSoundingById(id).collect { it1 ->
-                    tinggiCairan.setText(it1.tinggi_cairan.toBigDecimal().toPlainString())
-                    suhuCairan.setText(it1.suhu_cairan.toBigDecimal().toPlainString())
-                    suhuTetap.setText(it1.suhu_kalibrasi_tangki.toBigDecimal().toPlainString())
-                    tinggiMeja.setText(it1.tinggi_meja.toBigDecimal().toPlainString())
-                    faktorMuai.setText(it1.faktor_muai.toBigDecimal().toPlainString())
-                    tabelKalibrasi.setText(it1.volume_kalibrasi1.toBigDecimal().toPlainString())
-                    if (it1.volume_kalibrasi1 == it1.volume_kalibrasi2) {
-                        tabelKalibrasi2.setText("")
-                        tabelFraksi.setText(it1.volume_fraksi.toBigDecimal().toPlainString())
-                    } else {
-                        tabelKalibrasi2.setText(it1.volume_kalibrasi2.toBigDecimal().toPlainString())
-                        tabelFraksi.setText("")
-                    }
-                    densityCairan.setText(it1.density_cairan.toBigDecimal().toPlainString())
-                    noTangki.setText(it1.no_tangki)
-                    lokasiSounding.setText(it1.lokasi_sounding)
-                    waktu.setText(it1.waktu)
-                    noDokumen.setText(it1.nomor_dokumen)
-                    produk.setText(it1.produk)
-                    bentuk.setText(it1.bentuk)
-                    lifecycleScope.launch {
-                        userDao.fetchAllUser().collect { it ->
-                            populateDropdownUser(ArrayList(it), namaPegawai)
-                            val items = arrayListOf<String>()
-                            if (ArrayList(it).isNotEmpty()) {
-                                for (i in 0 until ArrayList(it).size) {
-                                    items.add(ArrayList(it)[i].nama_pegawai)
-                                }
-                                val adapter = activity?.let { it2 ->
-                                    ArrayAdapter(
-                                        it2,
-                                        R.layout.dropdown_layout,
-                                        items
-                                    )
-                                }
-                                lifecycleScope.launch {
-                                    userDao.fetchUserById(id).collect {
-                                        val spinnerPosition = adapter?.getPosition(it.nama_pegawai)
-                                        if (spinnerPosition != null) {
-                                            namaPegawai.setSelection(spinnerPosition)
+            var results: List<Double>
+            val listETTinggi = listOf(tinggiCairan, tinggiMeja)
+            val listET = listOf(suhuCairan, suhuTetap, faktorMuai, tabelFraksi, tabelKalibrasi, tabelKalibrasi2, densityCairan)
+
+            results = calculatorTinggiListenerUpdate(listETTinggi, binding)
+            results = calculatorListenerUpdate(listET, binding)
+
+            tvNext.setOnClickListener {
+                visibilityGone(listOf(judulTinggiCairan,judulSuhuCairan,judulSuhuTetap,judulTinggiMeja,judulFaktorMuai,tvNext,tvCancel), listOf(tinggiCairan,suhuCairan, suhuTetap, tinggiMeja, faktorMuai))
+                visibilityVisible(listOf(fraksiTab,interpolasiTab,tvNext2,tvBack,judulTabelKalibrasi,judulTabelFraksi,judulDensityCairan), listOf(tabelKalibrasi,tabelFraksi,densityCairan))
+                tabLayout.visibility = View.VISIBLE
+            }
+
+            tvBack.setOnClickListener {
+                visibilityGone(listOf(fraksiTab,interpolasiTab,tvNext2,tvBack,judulTabelKalibrasi,judulTabelKalibrasi2,judulTabelFraksi,judulDensityCairan), listOf(tabelKalibrasi,tabelKalibrasi2,tabelFraksi,densityCairan))
+                visibilityVisible(listOf(judulTinggiCairan,judulSuhuCairan,judulSuhuTetap,judulTinggiMeja,judulFaktorMuai,tvNext,tvCancel), listOf(tinggiCairan,suhuCairan, suhuTetap, tinggiMeja, faktorMuai))
+                tabLayout.visibility = View.GONE
+            }
+
+            tvCancel.setOnClickListener{
+                updateDialog.dismiss()
+            }
+
+            interpolasiTab.setOnClickListener {
+                interpolasiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                fraksiTab.background = null
+                fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                judulTabelFraksi.visibility = View.GONE
+                tabelFraksi.visibility = View.GONE
+                if ("m" !in judulTabelKalibrasi.text.toString()) {
+                    judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi1)
+                }
+                tabelKalibrasi.hint = getText(R.string.vol_kalibrasi1)
+                judulTabelKalibrasi2.visibility = View.VISIBLE
+                tabelKalibrasi2.visibility = View.VISIBLE
+                tabelFraksi.text = null
+            }
+
+            fraksiTab.setOnClickListener {
+                fraksiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                interpolasiTab.background = null
+                interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                judulTabelKalibrasi2.visibility = View.GONE
+                tabelKalibrasi2.visibility = View.GONE
+                if ("m" !in judulTabelKalibrasi.text.toString()) {
+                    judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
+                }
+                tabelKalibrasi.hint = getText(R.string.vol_kalibrasi)
+                judulTabelFraksi.visibility = View.VISIBLE
+                tabelFraksi.visibility = View.VISIBLE
+                tabelKalibrasi2.text = null
+            }
+
+            up.setOnClickListener {
+                hasilVolume.visibility = View.GONE
+                hasilVolumeApp.visibility = View.GONE
+                hasilVolumeObs.visibility = View.GONE
+                hasilTinggiTerkoreksi.visibility = View.GONE
+                up.visibility = View.GONE
+                down.visibility = View.VISIBLE
+            }
+
+            down.setOnClickListener {
+                hasilVolume.visibility = View.VISIBLE
+                hasilVolumeApp.visibility = View.VISIBLE
+                hasilVolumeObs.visibility = View.VISIBLE
+                hasilTinggiTerkoreksi.visibility = View.VISIBLE
+                up.visibility = View.VISIBLE
+                down.visibility = View.GONE
+            }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                lifecycleScope.launch {
+                    userDao.fetchSoundingById(id).collect { it1 ->
+                        tinggiCairan.setText(zeroRemover(it1.tinggi_cairan.toBigDecimal().toPlainString()))
+                        suhuCairan.setText(zeroRemover(it1.suhu_cairan.toBigDecimal().toPlainString()))
+                        suhuTetap.setText(zeroRemover(it1.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()))
+                        tinggiMeja.setText(zeroRemover(it1.tinggi_meja.toBigDecimal().toPlainString()))
+                        faktorMuai.setText(zeroRemover(it1.faktor_muai.toBigDecimal().toPlainString()))
+                        tabelKalibrasi.setText(zeroRemover(it1.volume_kalibrasi1.toBigDecimal().toPlainString()))
+                        tabelKalibrasi2.setText(zeroRemover(it1.volume_kalibrasi2.toBigDecimal().toPlainString()))
+                        tabelFraksi.setText(zeroRemover(it1.volume_fraksi.toBigDecimal().toPlainString()))
+                        densityCairan.setText(zeroRemover(it1.density_cairan.toBigDecimal().toPlainString()))
+                        noTangki.setText(it1.no_tangki)
+                        lokasiSounding.setText(it1.lokasi_sounding)
+                        waktu.setText(it1.waktu)
+                        noDokumen.setText(it1.nomor_dokumen)
+                        produk.setText(it1.produk)
+                        bentuk.setText(it1.bentuk)
+                        lifecycleScope.launch {
+                            userDao.fetchAllUser().collect { it ->
+                                populateDropdownUser(ArrayList(it), namaPegawai)
+                                val items = arrayListOf<String>()
+                                if (ArrayList(it).isNotEmpty()) {
+                                    for (i in 0 until ArrayList(it).size) {
+                                        items.add(ArrayList(it)[i].nama_pegawai)
+                                    }
+                                    val adapter = activity?.let { it2 ->
+                                        ArrayAdapter(
+                                            it2,
+                                            R.layout.dropdown_layout,
+                                            items
+                                        )
+                                    }
+                                    lifecycleScope.launch {
+                                        userDao.fetchUserById(id).collect {
+                                            val spinnerPosition = adapter?.getPosition(it.nama_pegawai)
+                                            if (spinnerPosition != null) {
+                                                namaPegawai.setSelection(spinnerPosition)
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    lifecycleScope.launch {
-                        userDao.fetchAllServiceUser().collect { it ->
-                            populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
-                            val items = arrayListOf<String>()
-                            if (ArrayList(it).isNotEmpty()) {
-                                for (i in 0 until ArrayList(it).size) {
-                                    items.add(ArrayList(it)[i].nama_pengguna_jasa)
-                                }
-                                val adapter = activity?.let { it2 ->
-                                    ArrayAdapter(
-                                        it2,
-                                        R.layout.dropdown_layout,
-                                        items
-                                    )
-                                }
-                                lifecycleScope.launch {
-                                    userDao.fetchServiceUserById(id).collect {
-                                        val spinnerPosition = adapter?.getPosition(it.nama_pengguna_jasa)
-                                        if (spinnerPosition != null) {
-                                            namaPenggunaJasa.setSelection(spinnerPosition)
+                        lifecycleScope.launch {
+                            userDao.fetchAllServiceUser().collect { it ->
+                                populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
+                                val items = arrayListOf<String>()
+                                if (ArrayList(it).isNotEmpty()) {
+                                    for (i in 0 until ArrayList(it).size) {
+                                        items.add(ArrayList(it)[i].nama_pengguna_jasa)
+                                    }
+                                    val adapter = activity?.let { it2 ->
+                                        ArrayAdapter(
+                                            it2,
+                                            R.layout.dropdown_layout,
+                                            items
+                                        )
+                                    }
+                                    lifecycleScope.launch {
+                                        userDao.fetchServiceUserById(id).collect {
+                                            val spinnerPosition = adapter?.getPosition(it.nama_pengguna_jasa)
+                                            if (spinnerPosition != null) {
+                                                namaPenggunaJasa.setSelection(spinnerPosition)
+                                            }
                                         }
                                     }
                                 }
@@ -1507,23 +1753,8 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     }
                 }
-            }
-
-            tvNext.setOnClickListener {
-                visibilityGone(listOf(judulTinggiCairan,judulSuhuCairan,judulSuhuTetap,judulTinggiMeja,judulFaktorMuai,tvNext,tvCancel), listOf(tinggiCairan,suhuCairan, suhuTetap, tinggiMeja, faktorMuai))
-                visibilityVisible(listOf(fraksiTab,interpolasiTab,tvNext2,tvBack,judulTabelKalibrasi,judulTabelKalibrasi2,judulTabelFraksi,judulDensityCairan), listOf(tabelKalibrasi,tabelKalibrasi2,tabelFraksi,densityCairan))
-            }
-
-            tvBack.setOnClickListener {
-                visibilityGone(listOf(fraksiTab,interpolasiTab,tvNext2,tvBack,judulTabelKalibrasi,judulTabelKalibrasi2,judulTabelFraksi,judulDensityCairan), listOf(tabelKalibrasi,tabelKalibrasi2,tabelFraksi,densityCairan))
-                visibilityVisible(listOf(judulTinggiCairan,judulSuhuCairan,judulSuhuTetap,judulTinggiMeja,judulFaktorMuai,tvNext,tvCancel), listOf(tinggiCairan,suhuCairan, suhuTetap, tinggiMeja, faktorMuai))
-            }
-
-            tvCancel.setOnClickListener{
-                updateDialog.dismiss()
-            }
+            }, 10)
         }
-
         updateDialog.show()
     }
     private fun visibilityGone(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {
@@ -1541,6 +1772,18 @@ class TabFragment(private val title: String) : Fragment() {
         }
         for (textView in listTextView) {
             textView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun zeroRemover(text: String): String {
+        return if (text.length > 1) {
+            if (text.subSequence(text.length-2,text.length) == ".0") {
+                (text.subSequence(0, text.length-2).toString())
+            } else {
+                text
+            }
+        } else {
+            text
         }
     }
 }
