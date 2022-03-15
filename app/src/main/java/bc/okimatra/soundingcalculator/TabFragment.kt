@@ -1379,11 +1379,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfDataIntoRecyclerViewCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
         if (perusahaanList.isNotEmpty()) {
-            val companyAdapter = PerusahaanAdapter(perusahaanList,{ updateId ->
-                updateRecordDialogCompany(updateId,userDao)
-            }){deleteId->
-                deleteRecordAlertDialogCompany(deleteId,userDao)
-            }
+            val companyAdapter = PerusahaanAdapter(perusahaanList, { updateId ->updateRecordDialogCompany(updateId,userDao)}) {deleteId->deleteRecordAlertDialogCompany(deleteId,userDao)}
             _binding4?.rvItemsList?.layoutManager = LinearLayoutManager(context)
             _binding4?.rvItemsList?.adapter = companyAdapter
             _binding4?.svItemList?.visibility = View.VISIBLE
@@ -1585,11 +1581,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
         if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{ updateId ->
-                updateRecordDialogSounding(updateId,userDao)
-            }){deleteId->
-                deleteRecordAlertDialogCompany(deleteId,userDao)
-            }
+            val soundingAdapter = SoundingAdapter(soundingList,{ updateId ->updateRecordDialogSounding(updateId,userDao)}) {deleteId->deleteRecordAlertDialogCompany(deleteId,userDao)}
             _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvSoundingList?.adapter = soundingAdapter
             _binding2?.svSoundingList?.visibility = View.VISIBLE
@@ -1757,6 +1749,7 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
+
     private fun visibilityGone(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {
         for (editText in listEditText) {
             editText.visibility = View.GONE
