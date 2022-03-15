@@ -255,7 +255,7 @@
                         android:layout_marginTop="14dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
-                        android:text="@string/koefisien_tangki"
+                        android:text="@string/faktor_muai"
                         android:textSize="14sp" />
 
                     <RelativeLayout
@@ -273,7 +273,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/poppins_light"
-                            android:hint="@string/koefisien_tangki"
+                            android:hint="@string/faktor_muai"
                             android:inputType="numberDecimal"
                             android:maxLength="18"
                             android:maxLines="1"
@@ -425,7 +425,7 @@
 
                             <!-- INPUT -->
                             <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/tabel_Fraksi"
+                                android:id="@+id/tabel_fraksi"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@android:color/transparent"

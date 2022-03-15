@@ -85,6 +85,7 @@
                 android:paddingEnd="0dp"
                 android:paddingBottom="15dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:inputType="textPersonName"
                 android:textSize="13sp" />
 
         </RelativeLayout>

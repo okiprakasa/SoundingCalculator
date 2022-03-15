@@ -39,7 +39,6 @@
             android:layout_marginEnd="5dp"
             android:hint="@string/hint_perusahaan"
             android:autofillHints="name"
-            android:inputType="textMultiLine|textPersonName"
             android:scrollbars="vertical"/>
     </LinearLayout>
 

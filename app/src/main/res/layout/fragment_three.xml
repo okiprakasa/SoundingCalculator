@@ -80,7 +80,7 @@
             android:layout_marginEnd="5dp"
             android:hint="@string/hint_nama"
             android:autofillHints="name"
-            android:inputType="textMultiLine|textPersonName"
+            android:inputType="textPersonName"
             android:scrollbars="vertical"/>
     </LinearLayout>
 

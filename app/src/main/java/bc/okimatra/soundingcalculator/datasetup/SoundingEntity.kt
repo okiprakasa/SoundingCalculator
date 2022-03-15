@@ -1,33 +1,29 @@
 package bc.okimatra.soundingcalculator.datasetup
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import java.util.*
 
-//creating a Data Model Class
 @Entity(tableName = "sounding-raw-table")
 data class SoundingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
-    val tinggiCairan: Double,
-    val suhuCairan: Double,
-    val suhuKalibrasiTangki: Double,
-    val tinggiMeja: Double,
-    val faktorMuai: Double,
-    val tinggiCairanTerkoreksi: Double,
-    val volumeKalibrasi1: Double,
-    val densityCairan: Double,
-    val volumeFraksi: Double,
-    val volumeKalibrasi2: Double,
-    val volumeMid: Double,
-    val volumeApp: Double,
-    val volumeObs: Double,
+    val tinggi_cairan: Double,
+    val suhu_cairan: Double,
+    val suhu_kalibrasi_tangki: Double,
+    val tinggi_meja: Double,
+    val faktor_muai: Double,
+    val tinggi_cairan_terkoreksi: Double,
+    val volume_kalibrasi1: Double,
+    val density_cairan: Double,
+    val volume_fraksi: Double,
+    val volume_kalibrasi2: Double,
+    val volume_mid: Double,
+    val volume_app: Double,
+    val volume_obs: Double,
     val volume: Double,
-    val hasilSounding: Double,
-    val noTangki: String="",
+    val hasil_sounding: Double,
+    val no_tangki: String="",
     val pegawai_sounding: String="",
     val nip_pegawai: String="",
     val pengguna_jasa_sounding: String="",
@@ -41,5 +37,5 @@ data class SoundingEntity(
     val produk: String="",
     val bentuk: String="",
     @ColumnInfo(name = "date")
-    val waktuDate: Long
+    val waktu_date: Long
         )

@@ -25,10 +25,10 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         val item = items[position]
 
         holder.tvNama.text = item.perusahaan_sounding
-        holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,item.noTangki))
+        holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,item.no_tangki))
         holder.tvWaktu.text = item.waktu.replace("-"," ")
         holder.tvBentuk.text = item.bentuk
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited,item.hasilSounding.toString()))
+        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited,item.hasil_sounding.toString()))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 

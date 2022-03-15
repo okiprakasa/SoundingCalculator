@@ -8,11 +8,10 @@
     <string name="tabel_fraksi">Tabel Fraksi</string>
     <string name="density_cairan">Density Cairan (MT/KL)</string>
     <string name="suhu_tetap">Suhu Kalibrasi Tangki (°C)</string>
-    <string name="faktor_muai">0.0000348</string>
     <string name="suhu_tangki">40</string>
     <string name="data_tangki">Data Tangki</string>
     <string name="data_tabel">Data Tabel</string>
-    <string name="koefisien_tangki">Koefisien/Faktor Muai Tangki</string>
+    <string name="faktor_muai">Koefisien/Faktor Muai Tangki</string>
     <string name="simpan_data">SIMPAN DATA</string>
     <string name="hasil">Hasil: 0.000 MT</string>
     <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>

@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/rounded"
     android:padding="10dp">
 
     <TextView
+        android:id="@+id/judul_tinggi_cairan"
         android:text="@string/tinggi_cairan"
         android:textColor="@android:color/black"
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/login"
@@ -35,8 +35,10 @@
         android:scrollbars="vertical"/>
 
     <TextView
+        android:id="@+id/judul_suhu_cairan"
         android:text="@string/suhu_cairan"
         android:layout_width="wrap_content"
+        android:layout_marginTop="-5dp"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
@@ -49,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
@@ -60,9 +62,11 @@
         tools:ignore="Autofill"/>
 
     <TextView
+        android:id="@+id/judul_suhu_tetap"
         android:text="@string/suhu_tetap"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
@@ -74,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
@@ -85,9 +89,11 @@
         tools:ignore="Autofill"/>
 
     <TextView
+        android:id="@+id/judul_tinggi_meja"
         android:text="@string/tinggi_meja"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
@@ -99,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
@@ -110,21 +116,23 @@
         tools:ignore="Autofill"/>
 
     <TextView
-        android:text="@string/koefisien_tangki"
+        android:id="@+id/judul_faktor_muai"
+        android:text="@string/faktor_muai"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="15sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/koefisien_tangki"
-        android:hint="@string/koefisien_tangki"
+        android:id="@+id/faktor_muai"
+        android:hint="@string/faktor_muai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
@@ -134,14 +142,61 @@
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
+    <LinearLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/switch_off"
+        android:clipToPadding="false"
+        android:elevation="15dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fraksi_tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/switch_on"
+            android:fontFamily="@font/nunito"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/fraksi"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/interpolasi_tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/interpolasi"
+            android:textAlignment="center"
+            android:textColor="@color/login"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
     <TextView
-        android:text="@string/tabel_kalibrasi1"
+        android:id="@+id/judul_tabel_kalibrasi"
+        android:text="@string/tabel_kalibrasi"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/tabel_kalibrasi"
@@ -149,7 +204,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
@@ -157,16 +212,49 @@
         android:fontFamily="@font/poppins_light"
         android:textSize="13sp"
         android:scrollbars="vertical"
-        tools:ignore="Autofill"/>
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
 
     <TextView
-        android:text="@string/tabel_kalibrasi2"
+        android:id="@+id/judul_tabel_fraksi"
+        android:text="@string/tabel_fraksi"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/tabel_fraksi"
+        android:hint="@string/tabel_fraksi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="10dp"
+        android:inputType="numberDecimal"
+        android:backgroundTint="@color/login"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/judul_tabel_kalibrasi2"
+        android:text="@string/tabel_kalibrasi2"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/tabel_kalibrasi2"
@@ -174,7 +262,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
@@ -182,9 +270,40 @@
         android:fontFamily="@font/poppins_light"
         android:textSize="13sp"
         android:scrollbars="vertical"
-        tools:ignore="Autofill"/>
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/judul_density_cairan"
+        android:text="@string/density_cairan"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/density_cairan"
+        android:hint="@string/density_cairan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="10dp"
+        android:inputType="numberDecimal"
+        android:backgroundTint="@color/login"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/judul_no_tangki"
         android:text="@string/no_tangki"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
@@ -200,7 +319,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/login"
@@ -211,6 +330,7 @@
         android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/judul_nama_pegawai"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/helvetica"
@@ -225,7 +345,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/login"
@@ -236,6 +356,7 @@
         android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/judul_nama_pengguna_jasa"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/helvetica"
@@ -250,7 +371,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/login"
@@ -261,6 +382,34 @@
         android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/judul_lokasi_sounding"
+        android:text="@string/lokasi_sounding"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/lokasi_sounding"
+        android:hint="@string/lokasi_sounding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/login"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/judul_waktu"
         android:text="@string/waktu"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
@@ -276,7 +425,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:clickable="false"
@@ -291,6 +440,7 @@
         android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/judul_no_dokumen"
         android:text="@string/no_dokumen"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
@@ -306,7 +456,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/login"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/judul_produk"
+        android:text="@string/produk"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/produk"
+        android:hint="@string/produk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/login"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/judul_bentuk"
+        android:text="@string/bentuk"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/bentuk"
+        android:hint="@string/bentuk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/login"
@@ -346,6 +550,20 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/tvNext2"
+            android:text="@string/next"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/login"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tvUpdate"

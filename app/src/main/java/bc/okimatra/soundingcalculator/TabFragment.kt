@@ -29,7 +29,6 @@ import java.util.*
 import kotlin.math.round
 import kotlin.math.roundToLong
 
-
 class TabFragment(private val title: String) : Fragment() {
 
     private var _binding1: FragmentOneBinding? = null
@@ -186,7 +185,7 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     next.setOnClickListener {
-                        if (hasilKalkulator.text.toString() != "Hasil : 0.000 MT") {
+                        if (hasilKalkulator.text.toString() != "Hasil: 0.000 MT") {
                             lifecycleScope.launch {
                                 userDao.countAllUser().collect { it1 ->
                                     if (it1>0) {
@@ -302,22 +301,22 @@ class TabFragment(private val title: String) : Fragment() {
                                                 val nip = it.nip
                                                 lifecycleScope.launch {
                                                     userDao.insertSounding(SoundingEntity(
-                                                        tinggiCairan = tinggiCairanAngka,
-                                                        suhuCairan = suhuCairanAngka,
-                                                        suhuKalibrasiTangki = suhuKalibrasiAngka,
-                                                        tinggiMeja = tinggiMejaAngka,
-                                                        faktorMuai = koefisienMuai,
-                                                        volumeKalibrasi1 = volumeKalibrasi,
-                                                        densityCairan = densityAngka,
-                                                        tinggiCairanTerkoreksi = results[0],
-                                                        volumeFraksi = results[1],
-                                                        volumeKalibrasi2 = results[2],
-                                                        volumeMid = results[3],
-                                                        volumeApp = results[4],
-                                                        volumeObs = results[5],
+                                                        tinggi_cairan = tinggiCairanAngka,
+                                                        suhu_cairan = suhuCairanAngka,
+                                                        suhu_kalibrasi_tangki = suhuKalibrasiAngka,
+                                                        tinggi_meja = tinggiMejaAngka,
+                                                        faktor_muai = koefisienMuai,
+                                                        volume_kalibrasi1 = volumeKalibrasi,
+                                                        density_cairan = densityAngka,
+                                                        tinggi_cairan_terkoreksi = results[0],
+                                                        volume_fraksi = results[1],
+                                                        volume_kalibrasi2 = results[2],
+                                                        volume_mid = results[3],
+                                                        volume_app = results[4],
+                                                        volume_obs = results[5],
                                                         volume = results[6],
-                                                        hasilSounding = results[7],
-                                                        noTangki = nomorTangkiText,
+                                                        hasil_sounding = results[7],
+                                                        no_tangki = nomorTangkiText,
                                                         pegawai_sounding = petugasSounding,
                                                         nip_pegawai = nip,
                                                         pengguna_jasa_sounding = penggunaJasa,
@@ -330,7 +329,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                         nomor_dokumen = nomorDokumen,
                                                         produk = produk,
                                                         bentuk = bentukText,
-                                                        waktuDate = Date().time
+                                                        waktu_date = Date().time
                                                     ))
                                                     Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                                                     _binding1?.tinggiCairan?.text?.clear()
@@ -1432,15 +1431,116 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-//        lifecycleScope.launch {
-//            userDao.fetchSoundingById(id).collect {
-//                binding.tinggiCairan.setText(it.tinggiCairan.toString())
-//            }
-//        }
-//
-//        binding.simpanHasil.setOnClickListener{
-//            updateDialog.dismiss()
-//        }
+        binding.apply {
+            lifecycleScope.launch {
+                userDao.fetchSoundingById(id).collect { it1 ->
+                    tinggiCairan.setText(it1.tinggi_cairan.toBigDecimal().toPlainString())
+                    suhuCairan.setText(it1.suhu_cairan.toBigDecimal().toPlainString())
+                    suhuTetap.setText(it1.suhu_kalibrasi_tangki.toBigDecimal().toPlainString())
+                    tinggiMeja.setText(it1.tinggi_meja.toBigDecimal().toPlainString())
+                    faktorMuai.setText(it1.faktor_muai.toBigDecimal().toPlainString())
+                    tabelKalibrasi.setText(it1.volume_kalibrasi1.toBigDecimal().toPlainString())
+                    if (it1.volume_kalibrasi1 == it1.volume_kalibrasi2) {
+                        tabelKalibrasi2.setText("")
+                        tabelFraksi.setText(it1.volume_fraksi.toBigDecimal().toPlainString())
+                    } else {
+                        tabelKalibrasi2.setText(it1.volume_kalibrasi2.toBigDecimal().toPlainString())
+                        tabelFraksi.setText("")
+                    }
+                    densityCairan.setText(it1.density_cairan.toBigDecimal().toPlainString())
+                    noTangki.setText(it1.no_tangki)
+                    lokasiSounding.setText(it1.lokasi_sounding)
+                    waktu.setText(it1.waktu)
+                    noDokumen.setText(it1.nomor_dokumen)
+                    produk.setText(it1.produk)
+                    bentuk.setText(it1.bentuk)
+                    lifecycleScope.launch {
+                        userDao.fetchAllUser().collect { it ->
+                            populateDropdownUser(ArrayList(it), namaPegawai)
+                            val items = arrayListOf<String>()
+                            if (ArrayList(it).isNotEmpty()) {
+                                for (i in 0 until ArrayList(it).size) {
+                                    items.add(ArrayList(it)[i].nama_pegawai)
+                                }
+                                val adapter = activity?.let { it2 ->
+                                    ArrayAdapter(
+                                        it2,
+                                        R.layout.dropdown_layout,
+                                        items
+                                    )
+                                }
+                                lifecycleScope.launch {
+                                    userDao.fetchUserById(id).collect {
+                                        val spinnerPosition = adapter?.getPosition(it.nama_pegawai)
+                                        if (spinnerPosition != null) {
+                                            namaPegawai.setSelection(spinnerPosition)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    lifecycleScope.launch {
+                        userDao.fetchAllServiceUser().collect { it ->
+                            populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
+                            val items = arrayListOf<String>()
+                            if (ArrayList(it).isNotEmpty()) {
+                                for (i in 0 until ArrayList(it).size) {
+                                    items.add(ArrayList(it)[i].nama_pengguna_jasa)
+                                }
+                                val adapter = activity?.let { it2 ->
+                                    ArrayAdapter(
+                                        it2,
+                                        R.layout.dropdown_layout,
+                                        items
+                                    )
+                                }
+                                lifecycleScope.launch {
+                                    userDao.fetchServiceUserById(id).collect {
+                                        val spinnerPosition = adapter?.getPosition(it.nama_pengguna_jasa)
+                                        if (spinnerPosition != null) {
+                                            namaPenggunaJasa.setSelection(spinnerPosition)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            tvNext.setOnClickListener {
+                visibilityGone(listOf(judulTinggiCairan,judulSuhuCairan,judulSuhuTetap,judulTinggiMeja,judulFaktorMuai,tvNext,tvCancel), listOf(tinggiCairan,suhuCairan, suhuTetap, tinggiMeja, faktorMuai))
+                visibilityVisible(listOf(fraksiTab,interpolasiTab,tvNext2,tvBack,judulTabelKalibrasi,judulTabelKalibrasi2,judulTabelFraksi,judulDensityCairan), listOf(tabelKalibrasi,tabelKalibrasi2,tabelFraksi,densityCairan))
+            }
+
+            tvBack.setOnClickListener {
+                visibilityGone(listOf(fraksiTab,interpolasiTab,tvNext2,tvBack,judulTabelKalibrasi,judulTabelKalibrasi2,judulTabelFraksi,judulDensityCairan), listOf(tabelKalibrasi,tabelKalibrasi2,tabelFraksi,densityCairan))
+                visibilityVisible(listOf(judulTinggiCairan,judulSuhuCairan,judulSuhuTetap,judulTinggiMeja,judulFaktorMuai,tvNext,tvCancel), listOf(tinggiCairan,suhuCairan, suhuTetap, tinggiMeja, faktorMuai))
+            }
+
+            tvCancel.setOnClickListener{
+                updateDialog.dismiss()
+            }
+        }
+
         updateDialog.show()
+    }
+    private fun visibilityGone(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {
+        for (editText in listEditText) {
+            editText.visibility = View.GONE
+        }
+        for (textView in listTextView) {
+            textView.visibility = View.GONE
+        }
+    }
+
+    private fun visibilityVisible(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {
+        for (editText in listEditText) {
+            editText.visibility = View.VISIBLE
+        }
+        for (textView in listTextView) {
+            textView.visibility = View.VISIBLE
+        }
     }
 }
