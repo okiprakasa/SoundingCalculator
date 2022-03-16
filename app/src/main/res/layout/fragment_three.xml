@@ -12,17 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2"
+        android:weightSum="3"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
-
         android:background="@drawable/switch_off"
         android:elevation="15dp"
         android:clipToPadding="false">
 
         <TextView
             android:id="@+id/pegawai_tab"
-            android:text="@string/pegawai"
+            android:text="@string/user"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,8 +35,22 @@
             android:textColor="@color/white"/>
 
         <TextView
+            android:id="@+id/perusahaan_tab"
+            android:text="@string/company"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:textSize="15sp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/login"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"/>
+
+        <TextView
             android:id="@+id/pengguna_jasa_tab"
-            android:text="@string/pengguna_jasa"
+            android:text="@string/exporter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -154,6 +167,81 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/npwp_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvNPWPLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/npwp"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:backgroundTint="@color/login"
+            android:id="@+id/etNPWPId"
+            android:layout_width="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:inputType="number"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:maxLength="21"
+            android:hint="@string/hint_npwp"
+            tools:ignore="Autofill"/>
+        <!--            android:digits="1234567890.-"-->
+        <!--            -->
+        <!--            android:inputType="textNoSuggestions"-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/alamat_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvAlamatLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/alamat"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:backgroundTint="@color/login"
+            android:id="@+id/etAlamatId"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:hint="@string/hint_alamat"
+            tools:ignore="Autofill"
+            android:gravity="center_vertical"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/perusahaan_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -182,7 +270,6 @@
             android:inputType="textMultiLine|textCapWords"
             android:fontFamily="@font/poppins_light"
             android:textSize="12sp"
-            android:hint="@string/hint_perusahaan"
             tools:ignore="Autofill"/>
     </LinearLayout>
 
@@ -199,6 +286,18 @@
 
     <Button
         android:id="@+id/btnAddPenggunaJasa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:background="@drawable/rounded_button"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/tambah_data"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btnAddCompany"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
@@ -237,6 +336,22 @@
             android:id="@+id/rvServiceUserList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/svCompanyList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCompanyList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </ScrollView>
 
     <TextView

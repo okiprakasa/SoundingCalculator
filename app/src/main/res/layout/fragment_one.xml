@@ -683,6 +683,7 @@
                             android:paddingTop="14dp"
                             android:paddingEnd="0dp"
                             android:paddingBottom="14dp"
+                            android:maxLines="1"
                             android:textCursorDrawable="@drawable/cursor_color"
                             android:textSize="13sp" />
 

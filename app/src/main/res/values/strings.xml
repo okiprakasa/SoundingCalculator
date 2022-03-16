@@ -106,4 +106,6 @@
     <string name="delete">Delete</string>
     <string name="judul_hapus">Hapus Data</string>
     <string name="hint_hapus_sounding">Apakah Anda yakin akan menghapus data sounding Tangki: %s %s pada %s?</string>
+    <string name="exporter">Exporter</string>
+    <string name="user">User</string>
 </resources>

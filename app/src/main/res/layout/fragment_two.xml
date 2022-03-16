@@ -41,7 +41,7 @@
                 android:textColor="@color/white"/>
 
             <TextView
-                android:id="@+id/report_tab"
+                android:id="@+id/final_tab"
                 android:text="@string/final_report"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
         </ScrollView>
 
         <ScrollView
-            android:id="@+id/svExporterList"
+            android:id="@+id/svFinalList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
@@ -81,7 +81,7 @@
             android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvExporterList"
+                android:id="@+id/rvFinalList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </ScrollView>

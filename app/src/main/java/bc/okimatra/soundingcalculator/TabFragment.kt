@@ -40,9 +40,6 @@ class TabFragment(private val title: String) : Fragment() {
     private var _binding3: FragmentThreeBinding? = null
     private val binding3 get() = _binding3!!
 
-    private var _binding4: FragmentFourBinding? = null
-    private val binding4 get() = _binding4!!
-
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
@@ -60,13 +57,9 @@ class TabFragment(private val title: String) : Fragment() {
                 _binding2 = FragmentTwoBinding.inflate(inflater, container, false)
                 binding2.root
             }
-            title === "User" -> {
+            else -> {
                 _binding3 = FragmentThreeBinding.inflate(inflater, container, false)
                 binding3.root
-            }
-            else -> {
-                _binding4 = FragmentFourBinding.inflate(inflater, container, false)
-                binding4.root
             }
         }
     }
@@ -366,70 +359,6 @@ class TabFragment(private val title: String) : Fragment() {
 
                 binding3.apply {
 
-                    penggunaJasaTab.setOnClickListener {
-                        lifecycleScope.launch {
-                            userDao.countAllCompany().collect { it1 ->
-                                if (it1>0) {
-                                    penggunaJasaTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                                    penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                                    pegawaiTab.background = null
-                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                                    penggunajasaLayout.visibility = View.VISIBLE
-                                    btnAddUser.visibility = View.GONE
-                                    btnAddPenggunaJasa.visibility = View.VISIBLE
-                                    pegawaiLayout.visibility = View.GONE
-                                    perusahaanLayout.visibility = View.VISIBLE
-                                    nip.text = null
-                                    nama.hint = getText(R.string.hint_pengguna_jasa)
-                                    lifecycleScope.launch {
-                                        userDao.fetchAllServiceUser().collect {
-                                            val list = ArrayList(it)
-                                            setupListOfServiceUserDataIntoRecyclerView(list, userDao)
-                                        }
-                                    }
-                                    lifecycleScope.launch {
-                                        userDao.fetchAllCompany().collect {
-                                            populateDropdownCompany(ArrayList(it), perusahaan)
-                                        }
-                                    }
-                                }
-                                else {
-                                    Toast.makeText(context, "Mohon Tambahkan Data Perusahaan Terlebih Dahulu Pada Tab Companies", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-
-                    }
-
-                    pegawaiTab.setOnClickListener {
-                        pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                        penggunaJasaTab.background = null
-                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        btnAddUser.visibility = View.VISIBLE
-                        btnAddPenggunaJasa.visibility = View.GONE
-                        pegawaiLayout.visibility = View.VISIBLE
-                        penggunajasaLayout.visibility = View.GONE
-                        jabatan.text = null
-                        nama.hint = getText(R.string.hint_nama)
-                        svUserList.visibility = View.VISIBLE
-                        svServiceUserList.visibility = View.GONE
-                        perusahaanLayout.visibility = View.GONE
-                    }
-                }
-
-                _binding3?.btnAddUser?.setOnClickListener {
-                    addRecordUser(userDao)
-                }
-
-                _binding3?.btnAddPenggunaJasa?.setOnClickListener {
-                    addRecordServiceUser(userDao)
-                }
-
-            }
-            title === "Company" -> {
-                binding4.apply {
-
                     var number = ""
                     var numberOld = ""
                     var textOld = ""
@@ -442,8 +371,8 @@ class TabFragment(private val title: String) : Fragment() {
                             etNPWPId.setText(getString(R.string.before_edited))
                         }
                         if (etNPWPId.selectionStart > number.length) {
-                                etNPWPId.setSelection(number.length)
-                            }
+                            etNPWPId.setSelection(number.length)
+                        }
                     }
 
                     nama.setOnFocusChangeListener { _, _ ->
@@ -525,18 +454,107 @@ class TabFragment(private val title: String) : Fragment() {
                             etNPWPId.setSelection(number.length)
                         }
                     }
+
+                    penggunaJasaTab.setOnClickListener {
+                        lifecycleScope.launch {
+                            userDao.countAllCompany().collect { it1 ->
+                                if (it1>0) {
+                                    penggunaJasaTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                                    penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                                    pegawaiTab.background = null
+                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    perusahaanTab.background = null
+                                    perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    pegawaiLayout.visibility = View.GONE //NIP
+                                    btnAddUser.visibility = View.GONE
+                                    npwpLayout.visibility = View.GONE
+                                    alamatLayout.visibility = View.GONE
+                                    btnAddCompany.visibility = View.GONE
+                                    penggunajasaLayout.visibility = View.VISIBLE //Jabatan
+                                    btnAddPenggunaJasa.visibility = View.VISIBLE
+                                    perusahaanLayout.visibility = View.VISIBLE //Perusahaan
+                                    nama.hint = getText(R.string.hint_pengguna_jasa)
+                                    svCompanyList.visibility = View.GONE
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllServiceUser().collect {
+                                            val list = ArrayList(it)
+                                            setupListOfServiceUserDataIntoRecyclerView(list, userDao)
+                                        }
+                                    }
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllCompany().collect {
+                                            populateDropdownCompany(ArrayList(it), perusahaan)
+                                        }
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(context, "Mohon Tambahkan Data Perusahaan Terlebih Dahulu Pada Tab Company", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+
+                    pegawaiTab.setOnClickListener {
+                        pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        penggunaJasaTab.background = null
+                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        perusahaanTab.background = null
+                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        npwpLayout.visibility = View.GONE
+                        alamatLayout.visibility = View.GONE
+                        btnAddCompany.visibility = View.GONE
+                        penggunajasaLayout.visibility = View.GONE
+                        btnAddPenggunaJasa.visibility = View.GONE
+                        btnAddUser.visibility = View.VISIBLE
+                        pegawaiLayout.visibility = View.VISIBLE
+                        nama.hint = getText(R.string.hint_nama)
+                        svUserList.visibility = View.VISIBLE
+                        svServiceUserList.visibility = View.GONE
+                        perusahaanLayout.visibility = View.GONE
+                        svCompanyList.visibility = View.GONE
+                    }
+
+                    perusahaanTab.setOnClickListener {
+                        perusahaanTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        penggunaJasaTab.background = null
+                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        pegawaiTab.background = null
+                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        npwpLayout.visibility = View.VISIBLE
+                        alamatLayout.visibility = View.VISIBLE
+                        btnAddCompany.visibility = View.VISIBLE
+                        penggunajasaLayout.visibility = View.GONE
+                        btnAddPenggunaJasa.visibility = View.GONE
+                        btnAddUser.visibility = View.GONE
+                        pegawaiLayout.visibility = View.GONE
+                        svServiceUserList.visibility = View.GONE
+                        perusahaanLayout.visibility = View.GONE
+                        nama.hint = getText(R.string.hint_perusahaan)
+                        svUserList.visibility = View.GONE
+                        lifecycleScope.launch {
+                            userDao.fetchAllCompany().collect {
+                                val list = ArrayList(it)
+                                setupListOfDataIntoRecyclerViewCompany(list, userDao)
+                            }
+                        }
+                        svCompanyList.visibility = View.VISIBLE
+                    }
                 }
 
-                _binding4?.btnAdd?.setOnClickListener {
+                _binding3?.btnAddCompany?.setOnClickListener {
                     addRecordCompany(userDao)
                 }
 
-                lifecycleScope.launch {
-                    userDao.fetchAllCompany().collect {
-                        val list = ArrayList(it)
-                        setupListOfDataIntoRecyclerViewCompany(list,userDao)
-                    }
+                _binding3?.btnAddUser?.setOnClickListener {
+                    addRecordUser(userDao)
                 }
+
+                _binding3?.btnAddPenggunaJasa?.setOnClickListener {
+                    addRecordServiceUser(userDao)
+                }
+
             }
             else -> {
                 lifecycleScope.launch {
@@ -544,6 +562,37 @@ class TabFragment(private val title: String) : Fragment() {
 //                        Log.d("exactcompanies", "$it")
                         val list = ArrayList(it)
                         setupListOfDataIntoRecyclerViewSounding(list,userDao)
+                    }
+                }
+                binding2.apply{
+                    rawDataTab.setOnClickListener {
+                        rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        finalTab.background = null
+                        finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        fabRawData.visibility = View.GONE
+                        svSoundingList.visibility = View.VISIBLE
+                        tvNoRecordsAvailable.visibility = View.GONE
+                        svFinalList.visibility = View.GONE
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            lifecycleScope.launch {
+                                userDao.fetchAllSounding().collect {
+//                        Log.d("exactcompanies", "$it")
+                                    val list = ArrayList(it)
+                                    setupListOfDataIntoRecyclerViewSounding(list,userDao)
+                                }
+                            }
+                        }, 10)
+                    }
+
+                    finalTab.setOnClickListener {
+                        finalTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        rawDataTab.background = null
+                        rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        fabRawData.visibility = View.VISIBLE
+                        tvNoRecordsAvailable.visibility = View.VISIBLE
+                        svSoundingList.visibility = View.GONE
                     }
                 }
             }
@@ -555,7 +604,6 @@ class TabFragment(private val title: String) : Fragment() {
         _binding1 = null
         _binding2 = null
         _binding3 = null
-        _binding4 = null
     }
 
     private fun backFunction() {
@@ -595,12 +643,17 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun calculatorCheck(): Boolean {
         binding1.apply {
-            return tinggiCairan.text.toString().isNotEmpty() and
-                    tinggiMeja.text.toString().isNotEmpty() and
-                    suhuCairan.text.toString().isNotEmpty() and
-                    suhuTetap.text.toString().isNotEmpty() and
-                    muai.text.toString().isNotEmpty() and
-                    densityCairan.text.toString().isNotEmpty()
+            val checkResult: Boolean = try {
+                tinggiCairan.text.toString().toDouble() > 0.0 &&
+                        tinggiMeja.text.toString().toDouble() > 0.0 &&
+                        suhuCairan.text.toString().toDouble() > 0.0 &&
+                        suhuTetap.text.toString().toDouble() > 0.0 &&
+                        muai.text.toString().toDouble() > 0.0 &&
+                        densityCairan.text.toString().toDouble() > 0.0
+            } catch (e: Exception) {
+                false
+            }
+            return checkResult
         }
     }
 
@@ -835,12 +888,17 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun calculatorCheckUpdate(binding: DialogUpdateSoundingBinding): Boolean {
         binding.apply {
-            return tinggiCairan.text.toString().isNotEmpty() and
-                    tinggiMeja.text.toString().isNotEmpty() and
-                    suhuCairan.text.toString().isNotEmpty() and
-                    suhuTetap.text.toString().isNotEmpty() and
-                    faktorMuai.text.toString().isNotEmpty() and
-                    densityCairan.text.toString().isNotEmpty()
+            val checkResult: Boolean = try {
+                tinggiCairan.text.toString().toDouble() > 0.0 &&
+                        tinggiMeja.text.toString().toDouble() > 0.0 &&
+                        suhuCairan.text.toString().toDouble() > 0.0 &&
+                        suhuTetap.text.toString().toDouble() > 0.0 &&
+                        faktorMuai.text.toString().toDouble() > 0.0 &&
+                        densityCairan.text.toString().toDouble() > 0.0
+            } catch (e: Exception) {
+                false
+            }
+            return checkResult
         }
     }
 
@@ -1379,21 +1437,20 @@ class TabFragment(private val title: String) : Fragment() {
     private fun setupListOfDataIntoRecyclerViewCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
         if (perusahaanList.isNotEmpty()) {
             val companyAdapter = PerusahaanAdapter(perusahaanList, { updateId ->updateRecordDialogCompany(updateId,userDao)}) {deleteId->deleteRecordAlertDialogCompany(deleteId,userDao)}
-            _binding4?.rvItemsList?.layoutManager = LinearLayoutManager(context)
-            _binding4?.rvItemsList?.adapter = companyAdapter
-            _binding4?.svItemList?.visibility = View.VISIBLE
-            _binding4?.tvNoRecordsAvailable?.visibility = View.GONE
+            _binding3?.rvCompanyList?.layoutManager = LinearLayoutManager(context)
+            _binding3?.rvCompanyList?.adapter = companyAdapter
+            _binding3?.svCompanyList?.visibility = View.VISIBLE
+            _binding3?.tvNoRecordsAvailable?.visibility = View.GONE
         } else {
-
-            _binding4?.svItemList?.visibility = View.GONE
-            _binding4?.tvNoRecordsAvailable?.visibility = View.VISIBLE
+            _binding3?.svCompanyList?.visibility = View.GONE
+            _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
 
     private fun addRecordCompany(userDao: UserDao) {
-        val name = endSpaceRemover(_binding4?.nama?.text.toString())
-        val npwp = _binding4?.etNPWPId?.text.toString()
-        val alamat = endSpaceRemover(_binding4?.etAlamatId?.text.toString())
+        val name = endSpaceRemover(_binding3?.nama?.text.toString())
+        val npwp = _binding3?.etNPWPId?.text.toString()
+        val alamat = endSpaceRemover(_binding3?.etAlamatId?.text.toString())
         when {
             name.isEmpty() -> {
                 Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
@@ -1408,9 +1465,9 @@ class TabFragment(private val title: String) : Fragment() {
                 lifecycleScope.launch {
                     userDao.insertCompany(PerusahaanEntity(nama_perusahaan = name, npwp = npwp, alamat = alamat))
                     Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
-                    _binding4?.nama?.text?.clear()
-                    _binding4?.etNPWPId?.text?.clear()
-                    _binding4?.etAlamatId?.text?.clear()
+                    _binding3?.nama?.text?.clear()
+                    _binding3?.etNPWPId?.text?.clear()
+                    _binding3?.etAlamatId?.text?.clear()
                 }
             }
         }
@@ -1703,16 +1760,16 @@ class TabFragment(private val title: String) : Fragment() {
                         bentuk.setText(it1.bentuk)
                         waktuDate = it1.waktu_date
                         lifecycleScope.launch {
-                            userDao.fetchAllUser().collect { it ->
-                                populateDropdownUser(ArrayList(it), namaPegawai)
+                            userDao.fetchAllUser().collect { it2 ->
+                                populateDropdownUser(ArrayList(it2), namaPegawai)
                                 val items = arrayListOf<String>()
-                                if (ArrayList(it).isNotEmpty()) {
-                                    for (i in 0 until ArrayList(it).size) {
-                                        items.add(ArrayList(it)[i].nama_pegawai)
+                                if (ArrayList(it2).isNotEmpty()) {
+                                    for (i in 0 until ArrayList(it2).size) {
+                                        items.add(ArrayList(it2)[i].nama_pegawai)
                                     }
-                                    val adapter = activity?.let { it2 ->
+                                    val adapter = activity?.let { it ->
                                         ArrayAdapter(
-                                            it2,
+                                            it,
                                             R.layout.dropdown_layout,
                                             items
                                         )
@@ -1729,16 +1786,16 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }
                         lifecycleScope.launch {
-                            userDao.fetchAllServiceUser().collect { it ->
-                                populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
+                            userDao.fetchAllServiceUser().collect { it1 ->
+                                populateDropdownServiceUser(ArrayList(it1), namaPenggunaJasa)
                                 val items = arrayListOf<String>()
-                                if (ArrayList(it).isNotEmpty()) {
-                                    for (i in 0 until ArrayList(it).size) {
-                                        items.add(ArrayList(it)[i].nama_pengguna_jasa)
+                                if (ArrayList(it1).isNotEmpty()) {
+                                    for (i in 0 until ArrayList(it1).size) {
+                                        items.add(ArrayList(it1)[i].nama_pengguna_jasa)
                                     }
-                                    val adapter = activity?.let { it2 ->
+                                    val adapter = activity?.let { it ->
                                         ArrayAdapter(
-                                            it2,
+                                            it,
                                             R.layout.dropdown_layout,
                                             items
                                         )
@@ -1931,30 +1988,25 @@ class TabFragment(private val title: String) : Fragment() {
     }
 
     private fun deleteRecordAlertDialogSounding(id:Int,userDao: UserDao) {
-        val deleteDialog = Dialog(requireContext(), R.style.Theme_Dialog)
-        deleteDialog.setCancelable(false)
-        val binding = DialogDeleteBinding.inflate(layoutInflater)
-        deleteDialog.setContentView(binding.root)
-        deleteDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        lifecycleScope.launch {
-            userDao.fetchSoundingById(id).collect {
-                binding.deskripsi.text = String.format(getString(R.string.hint_hapus_sounding, it.no_tangki, it.perusahaan_sounding, it.waktu.replace("-"," ")))
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
+        builder.setPositiveButton("Yes") { dialogInterface, _ ->
+            lifecycleScope.launch {
+                userDao.deleteSounding(SoundingEntity(id))
+                Toast.makeText(
+                    context,
+                    "Data Berhasil Dihapus",
+                    Toast.LENGTH_SHORT
+                ).show()
+                dialogInterface.dismiss()
             }
         }
-        binding.apply {
-            tvDelete.setOnClickListener {
-                lifecycleScope.launch {
-                    userDao.deleteSounding(SoundingEntity(id))
-                    Toast.makeText(requireContext(),"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show()
-                    deleteDialog.dismiss()
-                }
-            }
-
-            tvCancel.setOnClickListener {
-                deleteDialog.dismiss()
-            }
+        builder.setNegativeButton("No") { dialogInterface, _ ->
+            dialogInterface.dismiss()
         }
-        deleteDialog.show()
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun emptyCheck(listEditText: List<AppCompatEditText>): Boolean{
