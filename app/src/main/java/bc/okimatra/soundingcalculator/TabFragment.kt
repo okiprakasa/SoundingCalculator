@@ -2304,11 +2304,7 @@ class TabFragment(private val title: String) : Fragment() {
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
                 userDao.deleteSounding(SoundingEntity(id))
-                Toast.makeText(
-                    context,
-                    "Data Berhasil Dihapus",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context,"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show()
                 dialogInterface.dismiss()
             }
         }
