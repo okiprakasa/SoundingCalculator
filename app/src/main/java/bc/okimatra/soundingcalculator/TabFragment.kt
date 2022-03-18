@@ -579,28 +579,9 @@ class TabFragment(private val title: String) : Fragment() {
 
             }
             else -> {
-                Dexter.withContext(requireActivity())
-                    .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .withListener(object : PermissionListener {
-                        override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
-                            binding2.btnAdd.setOnClickListener {
-                                createPDFFile(
-                                    Common.getAppPath(requireActivity()) + "test_pdf.pdf"
-                                )
-                            }
-                        }
-
-                        override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
-                        override fun onPermissionRationaleShouldBeShown(
-                            permissionRequest: PermissionRequest,
-                            permissionToken: PermissionToken
-                        ) {
-                        }
-                    })
-                    .check()
                 lifecycleScope.launch {
                     userDao.fetchAllSounding().collect {
-//                        Log.d("exactcompanies", "$it")
+                        Log.d("okimatra", "$it")
                         val list = ArrayList(it)
                         setupListOfDataIntoRecyclerViewSounding(list,userDao)
                     }
@@ -1444,11 +1425,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfServiceUserDataIntoRecyclerView(penggunaJasaList:ArrayList<PenggunaJasaEntity>, userDao: UserDao) {
         if (penggunaJasaList.isNotEmpty()) {
-            val penggunaJasaAdapter = PenggunaJasaAdapter(penggunaJasaList,{ updateId ->
-                updateRecordDialogServiceUser(updateId,userDao)
-            }){deleteId->
-                deleteRecordAlertDialogServiceUser(deleteId,userDao)
-            }
+            val penggunaJasaAdapter = PenggunaJasaAdapter(penggunaJasaList,{updateId -> updateRecordDialogServiceUser(updateId,userDao)},{deleteId->deleteRecordAlertDialogServiceUser(deleteId,userDao)})
             _binding3?.rvServiceUserList?.layoutManager = LinearLayoutManager(context)
             _binding3?.rvServiceUserList?.adapter = penggunaJasaAdapter
             _binding3?.svServiceUserList?.visibility = View.VISIBLE
@@ -2208,7 +2185,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
         if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{ updateId ->updateRecordDialogSounding(updateId,userDao)}) {deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)}
+            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfRecordAlertDialogSounding(pdfId,userDao)})
             _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvSoundingList?.adapter = soundingAdapter
             _binding2?.svSoundingList?.visibility = View.VISIBLE
@@ -2216,6 +2193,108 @@ class TabFragment(private val title: String) : Fragment() {
         } else {
             _binding2?.svSoundingList?.visibility = View.GONE
             _binding2?.tvNoRecordsAvailable?.visibility = View.VISIBLE
+        }
+    }
+
+    private fun pdfRecordAlertDialogSounding(id: Int, userDao: UserDao) {
+        lifecycleScope.launch {
+            userDao.fetchSoundingById(id).collect {
+                Dexter.withContext(requireActivity())
+                    .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .withListener(object : PermissionListener {
+                        override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
+                            val path =Common.getAppPath(requireActivity()) + "test_pdf.pdf"
+                            val date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+                            if (File(path).exists()) File(path).delete()
+                            try {
+                                val document = Document()
+                                //Save
+                                PdfWriter.getInstance(document, FileOutputStream(path))
+                                //open to write
+                                document.open()
+                                //Settings
+                                document.pageSize = PageSize.A4.rotate()
+                                document.addCreationDate()
+                                document.addAuthor("okimatra")
+                                document.addCreator("okimatra")
+
+                                //Font Settings
+                                val colorAccent = BaseColor(0, 153, 204, 255)
+                                val fontSizeHeader = 20.0f
+                                val valueFontSize = 26.0f
+
+                                //Custom font
+                                val fontName = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+
+                                //create title of document
+                                val titleFont = Font(fontName, 20.0f, Font.NORMAL, BaseColor.BLACK)
+                                addNewItem(document, "Laporan Hitung Barang Curah Bea Cukai", Element.ALIGN_CENTER, titleFont)
+
+                                // Add more
+                                val orderNumberFont = Font(fontName, fontSizeHeader, Font.NORMAL, colorAccent)
+                                addNewItem(document, "order number", Element.ALIGN_LEFT, orderNumberFont)
+                                val orderNumberValueFont = Font(fontName, valueFontSize, Font.NORMAL, BaseColor.BLACK)
+                                addNewItem(document, "#525263", Element.ALIGN_LEFT, orderNumberValueFont)
+                                addLineSeparator(document)
+                                addNewItem(document, "Order Date", Element.ALIGN_LEFT, orderNumberFont)
+                                addNewItem(document, date, Element.ALIGN_LEFT, orderNumberValueFont)
+                                addLineSeparator(document)
+                                addNewItem(document, "Account name", Element.ALIGN_LEFT, orderNumberFont)
+                                addNewItem(document, it.pengguna_jasa_sounding, Element.ALIGN_LEFT, orderNumberValueFont)
+                                addLineSeparator(document)
+
+                                //Add product order detail
+                                addLineSpace(document)
+                                addNewItem(document, "Product details", Element.ALIGN_CENTER, titleFont)
+                                addLineSeparator(document)
+
+                                //item 1
+                                addNewItemWithLeftAndRight(
+                                    document,
+                                    "Burger",
+                                    "(1.0%)",
+                                    titleFont,
+                                    orderNumberValueFont
+                                )
+                                addNewItemWithLeftAndRight(document, "20", "1200.0", titleFont, orderNumberValueFont)
+                                addLineSeparator(document)
+
+                                //item 2
+                                addNewItemWithLeftAndRight(document, "Pizza", "(0.0%)", titleFont, orderNumberValueFont)
+                                addNewItemWithLeftAndRight(document, "12", "1520.0", titleFont, orderNumberValueFont)
+                                addLineSeparator(document)
+
+                                //item 3
+                                addNewItemWithLeftAndRight(
+                                    document,
+                                    "Sandwich",
+                                    "(0.0%)",
+                                    titleFont,
+                                    orderNumberValueFont
+                                )
+                                addNewItemWithLeftAndRight(document, "10", "1000.0", titleFont, orderNumberValueFont)
+                                addLineSeparator(document)
+
+                                //Total
+                                addLineSpace(document)
+                                addLineSpace(document)
+                                addNewItemWithLeftAndRight(document, "total", "8500", titleFont, orderNumberValueFont)
+                                document.close()
+                                printPDF()
+                            } catch (e: FileNotFoundException) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissionRequest: PermissionRequest,
+                            permissionToken: PermissionToken
+                        ) {
+                        }
+                    })
+                    .check()
+            }
         }
     }
 

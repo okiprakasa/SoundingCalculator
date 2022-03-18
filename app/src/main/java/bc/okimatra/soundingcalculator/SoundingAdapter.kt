@@ -10,7 +10,8 @@ import bc.okimatra.soundingcalculator.datasetup.SoundingEntity
 
 class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
                       private val updateListener:(id:Int)->Unit,
-                      private val deleteListener:(id:Int)->Unit) :
+                      private val deleteListener:(id:Int)->Unit,
+                      private val pdfListener:(id:Int)->Unit) :
     RecyclerView.Adapter<SoundingAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +39,10 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
 
         holder.ivDelete.setOnClickListener {
           deleteListener.invoke(item.id)
+        }
+
+        holder.ivPdf.setOnClickListener {
+            pdfListener.invoke(item.id)
         }
 
         holder.ivDown.setOnClickListener {
@@ -68,5 +73,6 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         val ivDelete = binding.ivDelete
         val ivUp = binding.ivUp
         val ivDown = binding.ivDown
+        val ivPdf = binding.ivPdf
     }
 }
