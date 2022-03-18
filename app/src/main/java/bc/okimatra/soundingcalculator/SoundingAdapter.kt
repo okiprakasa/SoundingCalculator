@@ -56,6 +56,10 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
             holder.ivDown.visibility = View.VISIBLE
             holder.ivUp.visibility = View.GONE
         }
+
+        holder.background.setOnClickListener {
+            pdfListener.invoke(item.id)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -74,5 +78,6 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         val ivUp = binding.ivUp
         val ivDown = binding.ivDown
         val ivPdf = binding.ivPdf
+        val background = binding.background
     }
 }
