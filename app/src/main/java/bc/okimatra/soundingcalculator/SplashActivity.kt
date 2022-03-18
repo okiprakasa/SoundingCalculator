@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import bc.okimatra.soundingcalculator.databinding.ActivitySplashBinding
 import bc.okimatra.soundingcalculator.datasetup.UserApp
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")

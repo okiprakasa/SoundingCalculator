@@ -56,6 +56,17 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_light"
+            android:background="@drawable/rounded_button"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:text="@string/tambah_data"/>
+
         <ScrollView
             android:id="@+id/svSoundingList"
             android:layout_width="match_parent"
@@ -63,7 +74,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="60dp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSoundingList"
@@ -109,7 +120,7 @@
         android:backgroundTint="@color/login"
         app:borderWidth="0dp"
         android:contentDescription="@string/raw_data"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabFinalReport"

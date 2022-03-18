@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="bc.okimatra.soundingcalculator">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:name=".datasetup.UserApp"
@@ -36,6 +40,16 @@
             android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity">
         </activity>
+        <provider
+            android:authorities="bc.okimatra.soundingcalculator.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:name="androidx.core.content.FileProvider">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>
