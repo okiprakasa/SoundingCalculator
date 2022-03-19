@@ -26,20 +26,14 @@ class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
         holder.tvName.text = item.nama_pegawai
         holder.tvNIP.text = item.nip
 
-        // Updating the background color according to the odd/even positions in list.
-        if (position % 2 == 1 ) {
-            holder.llMain.setBackgroundColor(
-                ContextCompat.getColor(
-                    holder.itemView.context,
-                    R.color.white
-                )
-            )
-        } else {
-            holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
-        }
+        holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
         holder.ivEdit.setOnClickListener {
          updateListener.invoke(item.id)
+        }
+
+        holder.llMain.setOnClickListener {
+            updateListener.invoke(item.id)
         }
 
         holder.ivDelete.setOnClickListener {

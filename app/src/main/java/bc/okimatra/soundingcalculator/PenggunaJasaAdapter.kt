@@ -33,6 +33,10 @@ class PenggunaJasaAdapter(private val items: ArrayList<PenggunaJasaEntity>,
          updateListener.invoke(item.id)
         }
 
+        holder.llMain.setOnClickListener {
+            updateListener.invoke(item.id)
+        }
+
         holder.ivDelete.setOnClickListener {
           deleteListener.invoke(item.id)
         }

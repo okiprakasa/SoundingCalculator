@@ -27,20 +27,14 @@ class PerusahaanAdapter(private val items: ArrayList<PerusahaanEntity>,
         holder.tvNPWP.text = item.npwp
         holder.tvAlamat.text = item.alamat
 
-        // Updating the background color according to the odd/even positions in list.
-        if (position % 2 == 1 ) {
-            holder.llMain.setBackgroundColor(
-                ContextCompat.getColor(
-                    holder.itemView.context,
-                    R.color.white
-                )
-            )
-        } else {
-            holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
-        }
+        holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
         holder.ivEdit.setOnClickListener {
          updateListener.invoke(item.id)
+        }
+
+        holder.llMain.setOnClickListener {
+            updateListener.invoke(item.id)
         }
 
         holder.ivDelete.setOnClickListener {
