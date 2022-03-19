@@ -56,6 +56,17 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/generatePdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_light"
+            android:background="@drawable/rounded_button"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:text="@string/tambah_data"/>
+
         <ScrollView
             android:id="@+id/svSoundingList"
             android:layout_width="match_parent"
