@@ -8,9 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.print.PrintAttributes
-import android.print.PrintDocumentAdapter
-import android.print.PrintManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -19,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -30,7 +26,6 @@ import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,16 +41,11 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.itextpdf.text.*
 import com.itextpdf.text.pdf.*
-import com.itextpdf.text.pdf.draw.LineSeparator
-import com.itextpdf.text.pdf.draw.VerticalPositionMark
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.karumi.dexter.listener.single.PermissionListener
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 
@@ -657,62 +647,6 @@ class TabFragment(private val title: String) : Fragment() {
                         tvNoRecordsAvailable.visibility = View.VISIBLE
                         svSoundingList.visibility = View.GONE
                     }
-
-                    initData()
-                    generatePdf.setOnClickListener {
-                        Dexter.withContext(requireActivity())
-                            .withPermissions(
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            ).withListener(object : MultiplePermissionsListener {
-                                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-
-                                    if (report.areAllPermissionsGranted()) {
-
-                                        appFontRegular.color = BaseColor.WHITE
-                                        appFontRegular.size = 10f
-                                        val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                        val outPath = requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
-                                        Log.d("loc", outPath)
-                                        val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
-                                        doc.open()
-                                        //Header Column Init with width nad no. of columns
-                                        initInvoiceHeader(doc)
-                                        doc.setMargins(0f, 0f, paddingEdge, paddingEdge)
-                                        initBillDetails(doc)
-                                        addLine(writer)
-                                        initTableHeader(doc)
-                                        initItemsTable(doc)
-                                        initPriceDetails(doc)
-                                        initFooter(doc)
-                                        doc.close()
-
-                                        val file = File(outPath)
-                                        val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
-//                                        val path: Uri = FileProvider.getUriForFile(requireActivity(),BuildConfig.APPLICATION_ID + ".provider",file)
-                                        try {
-                                            val intent = Intent(Intent.ACTION_VIEW)
-                                            intent.setDataAndType(path, "application/pdf")
-                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                            startActivity(intent)
-                                        } catch (e: ActivityNotFoundException) {
-                                            Toast.makeText(requireActivity(), "No PDF Viewer", Toast.LENGTH_SHORT).show()
-                                        }
-
-
-                                    } else {
-                                        Toast.makeText(requireActivity(), "Permission Not Granted", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-
-                                override fun onPermissionRationaleShouldBeShown(
-                                    permissions: List<PermissionRequest>,
-                                    token: PermissionToken
-                                ) {
-                                    token.continuePermissionRequest()
-                                }
-                            }).check()
-                    }
                 }
             }
         }
@@ -1162,47 +1096,7 @@ class TabFragment(private val title: String) : Fragment() {
         doc.add(headerTable)
     }
 
-    @Throws(DocumentException::class)
-    private fun addNewItem(document: Document, text: String, align: Int, font: Font) {
-        val chunk = Chunk(text, font)
-        val paragraph = Paragraph(chunk)
-        paragraph.alignment = align
-        document.add(paragraph)
-    }
-
-    @Throws(DocumentException::class)
-    private fun addNewItemWithLeftAndRight(document: Document, textLeft: String, textRight: String, textLeftFont: Font, textRightFont: Font) {
-        val chunkTextLeft = Chunk(textLeft, textLeftFont)
-        val chunkTextRight = Chunk(textRight, textRightFont)
-        val p = Paragraph(chunkTextLeft)
-        p.add(Chunk(VerticalPositionMark()))
-        p.add(chunkTextRight)
-        document.add(p)
-    }
-
-    @Throws(DocumentException::class)
-    private fun addLineSeparator(document: Document) {
-        val lineSeparator = LineSeparator()
-        lineSeparator.lineColor = BaseColor(0, 0, 0, 68)
-        addLineSpace(document)
-        document.add(Chunk(lineSeparator))
-    }
-
-    @Throws(DocumentException::class)
-    private fun addLineSpace(document: Document) {
-        document.add(Paragraph(""))
-    }
-
-    private fun printPDF() {
-        val printManager = requireActivity().getSystemService(AppCompatActivity.PRINT_SERVICE) as PrintManager
-        try {
-            val printDocumentAdapter: PrintDocumentAdapter = PdfDocumentAdapter(Common.getAppPath(requireActivity()) + "test_pdf.pdf")
-            printManager.print("Document", printDocumentAdapter, PrintAttributes.Builder().build())
-        } catch (e: Exception) {
-            Log.e("okimatra", "" + e.message)
-            Toast.makeText(requireActivity(), "Can't read pdf file", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    @Throws(DocumentException::class)
 
     private fun backFunction() {
         binding1.apply {
@@ -2593,7 +2487,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
         if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfRecordAlertDialogSounding(pdfId,userDao)})
+            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
             _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvSoundingList?.adapter = soundingAdapter
             _binding2?.svSoundingList?.visibility = View.VISIBLE
@@ -2604,105 +2498,62 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun pdfRecordAlertDialogSounding(id: Int, userDao: UserDao) {
+    private fun pdfSounding(id: Int, userDao: UserDao) {
+        initData()
         lifecycleScope.launch {
             userDao.fetchSoundingById(id).collect {
                 try {
                     Dexter.withContext(requireActivity())
-                        .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .withListener(object : PermissionListener {
-                            override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
-                                val path =Common.getAppPath(requireActivity()) + "test_pdf.pdf"
-                                val date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
-                                if (File(path).exists()) File(path).delete()
-                                try {
-                                    val document = Document()
-                                    //Save
-                                    PdfWriter.getInstance(document, FileOutputStream(path))
-                                    //open to write
-                                    document.open()
-                                    //Settings
-                                    document.pageSize = PageSize.A4.rotate()
-                                    document.addCreationDate()
-                                    document.addAuthor("okimatra")
-                                    document.addCreator("okimatra")
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                if (report.areAllPermissionsGranted()) {
 
-                                    //Font Settings
-                                    val colorAccent = BaseColor(0, 153, 204, 255)
-                                    val fontSizeHeader = 20.0f
-                                    val valueFontSize = 26.0f
+                                    appFontRegular.color = BaseColor.WHITE
+                                    appFontRegular.size = 10f
+                                    val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
+                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
+                                    Log.d("loc", outPath)
+                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
+                                    doc.open()
+                                    //Header Column Init with width nad no. of columns
+                                    initInvoiceHeader(doc)
+                                    doc.setMargins(0f, 0f, paddingEdge, paddingEdge)
+                                    initBillDetails(doc)
+                                    addLine(writer)
+                                    initTableHeader(doc)
+                                    initItemsTable(doc)
+                                    initPriceDetails(doc)
+                                    initFooter(doc)
+                                    doc.close()
 
-                                    //Custom font
-                                    val fontName = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+                                    val file = File(outPath)
+                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
+//                                        val path: Uri = FileProvider.getUriForFile(requireActivity(),BuildConfig.APPLICATION_ID + ".provider",file)
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW)
+                                        intent.setDataAndType(path, "application/pdf")
+                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(requireActivity(), "No PDF Viewer", Toast.LENGTH_SHORT).show()
+                                    }
 
-                                    //create title of document
-                                    val titleFont = Font(fontName, 20.0f, Font.NORMAL, BaseColor.BLACK)
-                                    addNewItem(document, "Laporan Hitung Barang Curah Bea Cukai", Element.ALIGN_CENTER, titleFont)
 
-                                    // Add more
-                                    val orderNumberFont = Font(fontName, fontSizeHeader, Font.NORMAL, colorAccent)
-                                    addNewItem(document, "order number", Element.ALIGN_LEFT, orderNumberFont)
-                                    val orderNumberValueFont = Font(fontName, valueFontSize, Font.NORMAL, BaseColor.BLACK)
-                                    addNewItem(document, "#525263", Element.ALIGN_LEFT, orderNumberValueFont)
-                                    addLineSeparator(document)
-                                    addNewItem(document, "Order Date", Element.ALIGN_LEFT, orderNumberFont)
-                                    addNewItem(document, date, Element.ALIGN_LEFT, orderNumberValueFont)
-                                    addLineSeparator(document)
-                                    addNewItem(document, "Account name", Element.ALIGN_LEFT, orderNumberFont)
-                                    addNewItem(document, it.pengguna_jasa_sounding, Element.ALIGN_LEFT, orderNumberValueFont)
-                                    addLineSeparator(document)
-
-                                    //Add product order detail
-                                    addLineSpace(document)
-                                    addNewItem(document, "Product details", Element.ALIGN_CENTER, titleFont)
-                                    addLineSeparator(document)
-
-                                    //item 1
-                                    addNewItemWithLeftAndRight(
-                                        document,
-                                        "Burger",
-                                        "(1.0%)",
-                                        titleFont,
-                                        orderNumberValueFont
-                                    )
-                                    addNewItemWithLeftAndRight(document, "20", "1200.0", titleFont, orderNumberValueFont)
-                                    addLineSeparator(document)
-
-                                    //item 2
-                                    addNewItemWithLeftAndRight(document, "Pizza", "(0.0%)", titleFont, orderNumberValueFont)
-                                    addNewItemWithLeftAndRight(document, "12", "1520.0", titleFont, orderNumberValueFont)
-                                    addLineSeparator(document)
-
-                                    //item 3
-                                    addNewItemWithLeftAndRight(
-                                        document,
-                                        "Sandwich",
-                                        "(0.0%)",
-                                        titleFont,
-                                        orderNumberValueFont
-                                    )
-                                    addNewItemWithLeftAndRight(document, "10", "1000.0", titleFont, orderNumberValueFont)
-                                    addLineSeparator(document)
-
-                                    //Total
-                                    addLineSpace(document)
-                                    addLineSpace(document)
-                                    addNewItemWithLeftAndRight(document, "total", "8500", titleFont, orderNumberValueFont)
-                                    document.close()
-                                    printPDF()
-                                } catch (e: FileNotFoundException) {
-                                    e.printStackTrace()
+                                } else {
+                                    Toast.makeText(requireActivity(), "Permission Not Granted", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
-                            override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
                             override fun onPermissionRationaleShouldBeShown(
-                                permissionRequest: PermissionRequest,
-                                permissionToken: PermissionToken
+                                permissions: List<PermissionRequest>,
+                                token: PermissionToken
                             ) {
+                                token.continuePermissionRequest()
                             }
-                        })
-                        .check()
+                        }).check()
                 } catch (e: Exception) {
                     Log.d("okimara", "" + e.message)
                 }

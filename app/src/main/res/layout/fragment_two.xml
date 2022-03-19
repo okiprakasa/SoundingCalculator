@@ -20,7 +20,6 @@
             android:weightSum="2"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
-
             android:background="@drawable/switch_off"
             android:elevation="15dp"
             android:clipToPadding="false">
@@ -53,19 +52,7 @@
                 android:textColor="@color/login"
                 android:fontFamily="@font/nunito"
                 android:textStyle="bold"/>
-
         </LinearLayout>
-
-        <Button
-            android:id="@+id/generatePdf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_light"
-            android:background="@drawable/rounded_button"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            android:text="@string/tambah_data"/>
 
         <ScrollView
             android:id="@+id/svSoundingList"
