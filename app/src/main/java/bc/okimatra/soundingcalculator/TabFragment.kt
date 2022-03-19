@@ -279,7 +279,11 @@ class TabFragment(private val title: String) : Fragment() {
                         override fun onNothingSelected(parent: AdapterView<*>?) {
                             lifecycleScope.launch {
                                 userDao.fetchServiceUserByName(namaPenggunaJasa.selectedItem.toString()).collect {
-                                    lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
+                                    try {
+                                        lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
+                                    } catch (e: Exception) {
+                                        Log.d("okimatra", "" + e.message)
+                                    }
                                 }
                             }
                         }
@@ -287,7 +291,11 @@ class TabFragment(private val title: String) : Fragment() {
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                             lifecycleScope.launch {
                                 userDao.fetchServiceUserByName(namaPenggunaJasa.selectedItem.toString()).collect {
-                                    lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
+                                    try {
+                                        lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
+                                    } catch (e: Exception) {
+                                        Log.d("okimatra", "" + e.message)
+                                    }
                                 }
                             }
                         }
@@ -332,63 +340,71 @@ class TabFragment(private val title: String) : Fragment() {
                                 results = soundingCalculator()
                                 lifecycleScope.launch {
                                     userDao.fetchServiceUserByName(penggunaJasa).collect { it3 ->
-                                        val npwp = it3.npwp_perusahaan
-                                        val alamat = it3.alamat_perusahaan
-                                        val perusahaan = it3.perusahaan_pengguna_jasa
-                                        val jabatan = it3.jabatan
-                                        lifecycleScope.launch {
-                                            userDao.fetchUserByName(petugasSounding).collect {
-                                                val nip = it.nip
-                                                lifecycleScope.launch {
-                                                    userDao.insertSounding(SoundingEntity(
-                                                        tinggi_cairan = tinggiCairanAngka,
-                                                        suhu_cairan = suhuCairanAngka,
-                                                        suhu_kalibrasi_tangki = suhuKalibrasiAngka,
-                                                        tinggi_meja = tinggiMejaAngka,
-                                                        faktor_muai = koefisienMuai,
-                                                        volume_kalibrasi1 = volumeKalibrasi,
-                                                        density_cairan = densityAngka,
-                                                        tinggi_cairan_terkoreksi = results[0],
-                                                        volume_fraksi = results[1],
-                                                        volume_kalibrasi2 = results[2],
-                                                        volume_mid = results[3],
-                                                        volume_app = results[4],
-                                                        volume_obs = results[5],
-                                                        volume = results[6],
-                                                        hasil_sounding = results[7],
-                                                        no_tangki = nomorTangkiText,
-                                                        pegawai_sounding = petugasSounding,
-                                                        nip_pegawai = nip,
-                                                        pengguna_jasa_sounding = penggunaJasa,
-                                                        jabatan_pengguna_jasa = jabatan,
-                                                        perusahaan_sounding = perusahaan,
-                                                        npwp_perusahaan_sounding = npwp,
-                                                        alamat_perusahaan_sounding = alamat,
-                                                        lokasi_sounding = lokasiSoundingText,
-                                                        waktu = waktuText,
-                                                        nomor_dokumen = nomorDokumen,
-                                                        produk = produk,
-                                                        bentuk = bentukText,
-                                                        waktu_date = Date().time
-                                                    ))
-                                                    Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
-                                                    _binding1?.tinggiCairan?.text?.clear()
-                                                    _binding1?.suhuCairan?.text?.clear()
-                                                    _binding1?.suhuTetap?.text?.clear()
-                                                    _binding1?.tinggiMeja?.text?.clear()
-                                                    _binding1?.muai?.text?.clear()
-                                                    _binding1?.tabelKalibrasi?.text?.clear()
-                                                    _binding1?.densityCairan?.text?.clear()
-                                                    _binding1?.tabelFraksi?.text?.clear()
-                                                    _binding1?.tabelKalibrasi2?.text?.clear()
-                                                    _binding1?.noTangki?.text?.clear()
-                                                    _binding1?.lokasiSounding?.text?.clear()
-                                                    _binding1?.waktu?.text?.clear()
-                                                    _binding1?.produk?.text?.clear()
-                                                    _binding1?.bentuk?.text?.clear()
-                                                    backFunction()
+                                        try {
+                                            val npwp = it3.npwp_perusahaan
+                                            val alamat = it3.alamat_perusahaan
+                                            val perusahaan = it3.perusahaan_pengguna_jasa
+                                            val jabatan = it3.jabatan
+                                            lifecycleScope.launch {
+                                                userDao.fetchUserByName(petugasSounding).collect {
+                                                    try {
+                                                        val nip = it.nip
+                                                        lifecycleScope.launch {
+                                                            userDao.insertSounding(SoundingEntity(
+                                                                tinggi_cairan = tinggiCairanAngka,
+                                                                suhu_cairan = suhuCairanAngka,
+                                                                suhu_kalibrasi_tangki = suhuKalibrasiAngka,
+                                                                tinggi_meja = tinggiMejaAngka,
+                                                                faktor_muai = koefisienMuai,
+                                                                volume_kalibrasi1 = volumeKalibrasi,
+                                                                density_cairan = densityAngka,
+                                                                tinggi_cairan_terkoreksi = results[0],
+                                                                volume_fraksi = results[1],
+                                                                volume_kalibrasi2 = results[2],
+                                                                volume_mid = results[3],
+                                                                volume_app = results[4],
+                                                                volume_obs = results[5],
+                                                                volume = results[6],
+                                                                hasil_sounding = results[7],
+                                                                no_tangki = nomorTangkiText,
+                                                                pegawai_sounding = petugasSounding,
+                                                                nip_pegawai = nip,
+                                                                pengguna_jasa_sounding = penggunaJasa,
+                                                                jabatan_pengguna_jasa = jabatan,
+                                                                perusahaan_sounding = perusahaan,
+                                                                npwp_perusahaan_sounding = npwp,
+                                                                alamat_perusahaan_sounding = alamat,
+                                                                lokasi_sounding = lokasiSoundingText,
+                                                                waktu = waktuText,
+                                                                nomor_dokumen = nomorDokumen,
+                                                                produk = produk,
+                                                                bentuk = bentukText,
+                                                                waktu_date = Date().time
+                                                            ))
+                                                            Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
+                                                            _binding1?.tinggiCairan?.text?.clear()
+                                                            _binding1?.suhuCairan?.text?.clear()
+                                                            _binding1?.suhuTetap?.text?.clear()
+                                                            _binding1?.tinggiMeja?.text?.clear()
+                                                            _binding1?.muai?.text?.clear()
+                                                            _binding1?.tabelKalibrasi?.text?.clear()
+                                                            _binding1?.densityCairan?.text?.clear()
+                                                            _binding1?.tabelFraksi?.text?.clear()
+                                                            _binding1?.tabelKalibrasi2?.text?.clear()
+                                                            _binding1?.noTangki?.text?.clear()
+                                                            _binding1?.lokasiSounding?.text?.clear()
+                                                            _binding1?.waktu?.text?.clear()
+                                                            _binding1?.produk?.text?.clear()
+                                                            _binding1?.bentuk?.text?.clear()
+                                                            backFunction()
+                                                        }
+                                                    } catch (e: Exception) {
+                                                        Log.d("okimatra", "" + e.message)
+                                                    }
                                                 }
                                             }
+                                        } catch (e: Exception) {
+                                            Log.d("okimatra", "" + e.message)
                                         }
                                     }
                                 }
@@ -602,7 +618,6 @@ class TabFragment(private val title: String) : Fragment() {
                 _binding3?.btnAddPenggunaJasa?.setOnClickListener {
                     addRecordServiceUser(userDao)
                 }
-
             }
             else -> {
                 lifecycleScope.launch {
@@ -625,7 +640,7 @@ class TabFragment(private val title: String) : Fragment() {
                         Handler(Looper.getMainLooper()).postDelayed({
                             lifecycleScope.launch {
                                 userDao.fetchAllSounding().collect {
-//                        Log.d("exactcompanies", "$it")
+                                    Log.d("exactcompanies", "$it")
                                     val list = ArrayList(it)
                                     setupListOfDataIntoRecyclerViewSounding(list,userDao)
                                 }
@@ -657,8 +672,7 @@ class TabFragment(private val title: String) : Fragment() {
                                         appFontRegular.color = BaseColor.WHITE
                                         appFontRegular.size = 10f
                                         val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                        val outPath =
-                                            requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
+                                        val outPath = requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
                                         Log.d("loc", outPath)
                                         val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                         doc.open()
@@ -1705,7 +1719,7 @@ class TabFragment(private val title: String) : Fragment() {
                 updateRecordDialogUser(updateId,userDao)
             }){deleteId->deleteRecordAlertDialogUser(deleteId,userDao)
             }
-            _binding3?.rvUserList?.layoutManager = LinearLayoutManager(context)
+            _binding3?.rvUserList?.layoutManager = LinearLayoutManager(requireActivity())
             _binding3?.rvUserList?.adapter = itemAdapter
             _binding3?.svUserList?.visibility = View.VISIBLE
             _binding3?.svServiceUserList?.visibility = View.GONE
@@ -1777,8 +1791,12 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         lifecycleScope.launch {
             userDao.fetchUserById(id).collect {
-                binding.updateNama.setText(it.nama_pegawai)
-                binding.updateNip.setText(it.nip)
+                try {
+                    binding.updateNama.setText(it.nama_pegawai)
+                    binding.updateNip.setText(it.nip)
+                } catch (e: Exception) {
+                    Log.e("okimatra", "" + e.message)
+                }
             }
         }
         binding.tvUpdate.setOnClickListener {
@@ -1843,13 +1861,9 @@ class TabFragment(private val title: String) : Fragment() {
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
             lifecycleScope.launch {
-                userDao.fetchUserById(id).collect {
-                    lifecycleScope.launch {
-                        userDao.deleteUser(PegawaiEntity(id))
-                        Toast.makeText(context,"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show()
-                        dialogInterface.dismiss()
-                    }
-                }
+                userDao.deleteUser(PegawaiEntity(id))
+                Toast.makeText(context,"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
             }
         }
         builder.setNegativeButton("No") { dialogInterface, _ ->
@@ -1883,26 +1897,30 @@ class TabFragment(private val title: String) : Fragment() {
         var alamatPerusahaan: String
         lifecycleScope.launch {
             userDao.fetchCompanyByName(perusahaan).collect {
-                npwpPerusahaan = it.npwp
-                alamatPerusahaan = it.alamat
-                when {
-                    name.isEmpty() -> {
-                        Toast.makeText(context, "Mohon Masukkan Nama Pengguna Jasa", Toast.LENGTH_SHORT).show()
-                    }
-                    jabatan.isEmpty() -> {
-                        Toast.makeText(context, "Mohon Masukkan Jabatan Pengguna Jasa", Toast.LENGTH_SHORT).show()
-                    }
-                    perusahaan.isEmpty() -> {
-                        Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        lifecycleScope.launch {
-                            userDao.insertServiceUser(PenggunaJasaEntity(nama_pengguna_jasa = name, jabatan = jabatan, perusahaan_pengguna_jasa = perusahaan, npwp_perusahaan = npwpPerusahaan, alamat_perusahaan = alamatPerusahaan))
-                            Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
-                            _binding3?.nama?.text?.clear()
-                            _binding3?.jabatan?.text?.clear()
+                try {
+                    npwpPerusahaan = it.npwp
+                    alamatPerusahaan = it.alamat
+                    when {
+                        name.isEmpty() -> {
+                            Toast.makeText(context, "Mohon Masukkan Nama Pengguna Jasa", Toast.LENGTH_SHORT).show()
+                        }
+                        jabatan.isEmpty() -> {
+                            Toast.makeText(context, "Mohon Masukkan Jabatan Pengguna Jasa", Toast.LENGTH_SHORT).show()
+                        }
+                        perusahaan.isEmpty() -> {
+                            Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            lifecycleScope.launch {
+                                userDao.insertServiceUser(PenggunaJasaEntity(nama_pengguna_jasa = name, jabatan = jabatan, perusahaan_pengguna_jasa = perusahaan, npwp_perusahaan = npwpPerusahaan, alamat_perusahaan = alamatPerusahaan))
+                                Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
+                                _binding3?.nama?.text?.clear()
+                                _binding3?.jabatan?.text?.clear()
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    Log.d("okimatra", "" + e.message)
                 }
             }
         }
@@ -1932,19 +1950,27 @@ class TabFragment(private val title: String) : Fragment() {
                     }
                     lifecycleScope.launch {
                         userDao.fetchServiceUserById(id).collect {
-                            binding.updateNama.setText(it.nama_pengguna_jasa)
-                            binding.updateJabatan.setText(it.jabatan)
-                            val spinnerPosition = adapter?.getPosition(it.perusahaan_pengguna_jasa)
-                            if (spinnerPosition != null) {
-                                binding.updatePerusahaan.setSelection(spinnerPosition)
+                            try {
+                                binding.updateNama.setText(it.nama_pengguna_jasa)
+                                binding.updateJabatan.setText(it.jabatan)
+                                val spinnerPosition = adapter?.getPosition(it.perusahaan_pengguna_jasa)
+                                if (spinnerPosition != null) {
+                                    binding.updatePerusahaan.setSelection(spinnerPosition)
+                                }
+                            } catch (e: Exception) {
+                                Log.e("okimatra", "" + e.message)
                             }
                         }
                     }
                 } else {
                     lifecycleScope.launch {
                         userDao.fetchServiceUserById(id).collect {
-                            binding.updateNama.setText(it.nama_pengguna_jasa)
-                            binding.updateJabatan.setText(it.jabatan)
+                            try {
+                                binding.updateNama.setText(it.nama_pengguna_jasa)
+                                binding.updateJabatan.setText(it.jabatan)
+                            } catch (e: Exception) {
+                                Log.d("okimatra", "" + e.message)
+                            }
                         }
                     }
                 }
@@ -1960,26 +1986,30 @@ class TabFragment(private val title: String) : Fragment() {
 
             lifecycleScope.launch {
                 userDao.fetchCompanyByName(perusahaan).collect {
-                    npwpPerusahaan = it.npwp
-                    alamatPerusahaan = it.alamat
-                    when {
-                        name.isEmpty() -> {
-                            Toast.makeText(context, "Mohon Masukkan Nama Eksportir", Toast.LENGTH_SHORT).show()
-                        }
-                        jabatan.isEmpty() -> {
-                            Toast.makeText(context, "Mohon Masukkan Jabatan Eksportir", Toast.LENGTH_SHORT).show()
-                        }
-                        perusahaan.isEmpty() -> {
-                            Toast.makeText(context, "Mohon Pilih Perusahaan", Toast.LENGTH_SHORT).show()
-                        }
-                        else -> {
-                            lifecycleScope.launch {
-                                userDao.updateServiceUser(PenggunaJasaEntity(id, name, jabatan, perusahaan, npwpPerusahaan, alamatPerusahaan))
-                                Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
-                                    .show()
-                                updateDialog.dismiss()
+                    try {
+                        npwpPerusahaan = it.npwp
+                        alamatPerusahaan = it.alamat
+                        when {
+                            name.isEmpty() -> {
+                                Toast.makeText(context, "Mohon Masukkan Nama Eksportir", Toast.LENGTH_SHORT).show()
+                            }
+                            jabatan.isEmpty() -> {
+                                Toast.makeText(context, "Mohon Masukkan Jabatan Eksportir", Toast.LENGTH_SHORT).show()
+                            }
+                            perusahaan.isEmpty() -> {
+                                Toast.makeText(context, "Mohon Pilih Perusahaan", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                lifecycleScope.launch {
+                                    userDao.updateServiceUser(PenggunaJasaEntity(id, name, jabatan, perusahaan, npwpPerusahaan, alamatPerusahaan))
+                                    Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
+                                        .show()
+                                    updateDialog.dismiss()
+                                }
                             }
                         }
+                    } catch (e: Exception) {
+                        Log.d("okimatra", "" + e.message)
                     }
                 }
             }
@@ -2083,143 +2113,72 @@ class TabFragment(private val title: String) : Fragment() {
                 down.visibility = View.GONE
             }
 
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                lifecycleScope.launch {
-//                    userDao.fetchSoundingById(id).collect { it1 ->
-//                        tinggiCairan.setText(zeroRemover(it1.tinggi_cairan.toBigDecimal().toPlainString()))
-//                        suhuCairan.setText(zeroRemover(it1.suhu_cairan.toBigDecimal().toPlainString()))
-//                        suhuTetap.setText(zeroRemover(it1.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()))
-//                        tinggiMeja.setText(zeroRemover(it1.tinggi_meja.toBigDecimal().toPlainString()))
-//                        faktorMuai.setText(zeroRemover(it1.faktor_muai.toBigDecimal().toPlainString()))
-//                        tabelKalibrasi.setText(zeroRemover(it1.volume_kalibrasi1.toBigDecimal().toPlainString()))
-//                        tabelKalibrasi2.setText(zeroRemover(it1.volume_kalibrasi2.toBigDecimal().toPlainString()))
-//                        tabelFraksi.setText(zeroRemover(it1.volume_fraksi.toBigDecimal().toPlainString()))
-//                        densityCairan.setText(zeroRemover(it1.density_cairan.toBigDecimal().toPlainString()))
-//                        noTangki.setText(it1.no_tangki)
-//                        lokasiSounding.setText(it1.lokasi_sounding)
-//                        waktu.setText(it1.waktu)
-//                        noDokumen.setText(it1.nomor_dokumen)
-//                        produk.setText(it1.produk)
-//                        bentuk.setText(it1.bentuk)
-//                        waktuDate = it1.waktu_date
-//                        lifecycleScope.launch {
-//                            userDao.fetchAllUser().collect { it2 ->
-//                                populateDropdownUser(ArrayList(it2), namaPegawai)
-//                                val items = arrayListOf<String>()
-//                                if (ArrayList(it2).isNotEmpty()) {
-//                                    for (i in 0 until ArrayList(it2).size) {
-//                                        items.add(ArrayList(it2)[i].nama_pegawai)
-//                                    }
-//                                    val adapter = activity?.let { it ->
-//                                        ArrayAdapter(
-//                                            it,
-//                                            R.layout.dropdown_layout,
-//                                            items
-//                                        )
-//                                    }
-//                                    lifecycleScope.launch {
-//                                        userDao.fetchUserById(id).collect {
-//                                            val spinnerPosition = adapter?.getPosition(it.nama_pegawai)
-//                                            if (spinnerPosition != null) {
-//                                                namaPegawai.setSelection(spinnerPosition)
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        lifecycleScope.launch {
-//                            userDao.fetchAllServiceUser().collect { it1 ->
-//                                populateDropdownServiceUser(ArrayList(it1), namaPenggunaJasa)
-//                                val items = arrayListOf<String>()
-//                                if (ArrayList(it1).isNotEmpty()) {
-//                                    for (i in 0 until ArrayList(it1).size) {
-//                                        items.add(ArrayList(it1)[i].nama_pengguna_jasa)
-//                                    }
-//                                    val adapter = activity?.let { it ->
-//                                        ArrayAdapter(
-//                                            it,
-//                                            R.layout.dropdown_layout,
-//                                            items
-//                                        )
-//                                    }
-//                                    lifecycleScope.launch {
-//                                        userDao.fetchServiceUserById(id).collect {
-//                                            val spinnerPosition = adapter?.getPosition(it.nama_pengguna_jasa)
-//                                            if (spinnerPosition != null) {
-//                                                namaPenggunaJasa.setSelection(spinnerPosition)
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }, 10)
-
             lifecycleScope.launch {
                 userDao.fetchSoundingById(id).collect { it1 ->
-                    tinggiCairan.setText(zeroRemover(it1.tinggi_cairan.toBigDecimal().toPlainString()))
-                    suhuCairan.setText(zeroRemover(it1.suhu_cairan.toBigDecimal().toPlainString()))
-                    suhuTetap.setText(zeroRemover(it1.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()))
-                    tinggiMeja.setText(zeroRemover(it1.tinggi_meja.toBigDecimal().toPlainString()))
-                    faktorMuai.setText(zeroRemover(it1.faktor_muai.toBigDecimal().toPlainString()))
-                    tabelKalibrasi.setText(zeroRemover(it1.volume_kalibrasi1.toBigDecimal().toPlainString()))
-                    tabelKalibrasi2.setText(zeroRemover(it1.volume_kalibrasi2.toBigDecimal().toPlainString()))
-                    tabelFraksi.setText(zeroRemover(it1.volume_fraksi.toBigDecimal().toPlainString()))
-                    densityCairan.setText(zeroRemover(it1.density_cairan.toBigDecimal().toPlainString()))
-                    noTangki.setText(it1.no_tangki)
-                    lokasiSounding.setText(it1.lokasi_sounding)
-                    waktu.setText(it1.waktu)
-                    noDokumen.setText(it1.nomor_dokumen)
-                    produk.setText(it1.produk)
-                    bentuk.setText(it1.bentuk)
-                    waktuDate = it1.waktu_date
-                    lifecycleScope.launch {
-                        userDao.fetchAllUser().collect { it2 ->
-                            populateDropdownUser(ArrayList(it2), namaPegawai)
-                            val items = arrayListOf<String>()
-                            if (ArrayList(it2).isNotEmpty()) {
-                                for (i in 0 until ArrayList(it2).size) {
-                                    items.add(ArrayList(it2)[i].nama_pegawai)
-                                }
-                                val adapter = activity?.let { it ->
-                                    ArrayAdapter(
-                                        it,
-                                        R.layout.dropdown_layout,
-                                        items
-                                    )
-                                }
-                                val spinnerPosition = adapter?.getPosition(it1.pegawai_sounding)
-                                if (spinnerPosition != null) {
-                                    namaPegawai.setSelection(spinnerPosition)
+                    try {
+                        tinggiCairan.setText(zeroRemover(it1.tinggi_cairan.toBigDecimal().toPlainString()))
+                        suhuCairan.setText(zeroRemover(it1.suhu_cairan.toBigDecimal().toPlainString()))
+                        suhuTetap.setText(zeroRemover(it1.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()))
+                        tinggiMeja.setText(zeroRemover(it1.tinggi_meja.toBigDecimal().toPlainString()))
+                        faktorMuai.setText(zeroRemover(it1.faktor_muai.toBigDecimal().toPlainString()))
+                        tabelKalibrasi.setText(zeroRemover(it1.volume_kalibrasi1.toBigDecimal().toPlainString()))
+                        tabelKalibrasi2.setText(zeroRemover(it1.volume_kalibrasi2.toBigDecimal().toPlainString()))
+                        tabelFraksi.setText(zeroRemover(it1.volume_fraksi.toBigDecimal().toPlainString()))
+                        densityCairan.setText(zeroRemover(it1.density_cairan.toBigDecimal().toPlainString()))
+                        noTangki.setText(it1.no_tangki)
+                        lokasiSounding.setText(it1.lokasi_sounding)
+                        waktu.setText(it1.waktu)
+                        noDokumen.setText(it1.nomor_dokumen)
+                        produk.setText(it1.produk)
+                        bentuk.setText(it1.bentuk)
+                        waktuDate = it1.waktu_date
+                        lifecycleScope.launch {
+                            userDao.fetchAllUser().collect { it2 ->
+                                populateDropdownUser(ArrayList(it2), namaPegawai)
+                                val items = arrayListOf<String>()
+                                if (ArrayList(it2).isNotEmpty()) {
+                                    for (i in 0 until ArrayList(it2).size) {
+                                        items.add(ArrayList(it2)[i].nama_pegawai)
+                                    }
+                                    val adapter = activity?.let { it ->
+                                        ArrayAdapter(
+                                            it,
+                                            R.layout.dropdown_layout,
+                                            items
+                                        )
+                                    }
+                                    val spinnerPosition = adapter?.getPosition(it1.pegawai_sounding)
+                                    if (spinnerPosition != null) {
+                                        namaPegawai.setSelection(spinnerPosition)
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    lifecycleScope.launch {
-                        userDao.fetchAllServiceUser().collect { it3 ->
-                            populateDropdownServiceUser(ArrayList(it3), namaPenggunaJasa)
-                            val items = arrayListOf<String>()
-                            if (ArrayList(it3).isNotEmpty()) {
-                                for (i in 0 until ArrayList(it3).size) {
-                                    items.add(ArrayList(it3)[i].nama_pengguna_jasa)
-                                }
-                                val adapter = activity?.let { it ->
-                                    ArrayAdapter(
-                                        it,
-                                        R.layout.dropdown_layout,
-                                        items
-                                    )
-                                }
-                                val spinnerPosition = adapter?.getPosition(it1.pengguna_jasa_sounding)
-                                if (spinnerPosition != null) {
-                                    namaPenggunaJasa.setSelection(spinnerPosition)
+                        lifecycleScope.launch {
+                            userDao.fetchAllServiceUser().collect { it3 ->
+                                populateDropdownServiceUser(ArrayList(it3), namaPenggunaJasa)
+                                val items = arrayListOf<String>()
+                                if (ArrayList(it3).isNotEmpty()) {
+                                    for (i in 0 until ArrayList(it3).size) {
+                                        items.add(ArrayList(it3)[i].nama_pengguna_jasa)
+                                    }
+                                    val adapter = activity?.let { it ->
+                                        ArrayAdapter(
+                                            it,
+                                            R.layout.dropdown_layout,
+                                            items
+                                        )
+                                    }
+                                    val spinnerPosition = adapter?.getPosition(it1.pengguna_jasa_sounding)
+                                    if (spinnerPosition != null) {
+                                        namaPenggunaJasa.setSelection(spinnerPosition)
+                                    }
                                 }
                             }
                         }
+                    } catch (e: Exception) {
+                        Log.e("okimatra", "" + e.message)
                     }
                 }
             }
@@ -2345,49 +2304,57 @@ class TabFragment(private val title: String) : Fragment() {
                 results = soundingCalculatorUpdate(binding)
                 lifecycleScope.launch {
                     userDao.fetchServiceUserByName(penggunaJasa).collect { it3 ->
-                        val npwp = it3.npwp_perusahaan
-                        val alamat = it3.alamat_perusahaan
-                        val perusahaan = it3.perusahaan_pengguna_jasa
-                        val jabatan = it3.jabatan
-                        lifecycleScope.launch {
-                            userDao.fetchUserByName(petugasSounding).collect {
-                                val nip = it.nip
-                                lifecycleScope.launch {
-                                    userDao.updateSounding(SoundingEntity(id,
-                                        tinggi_cairan = tinggiCairanAngka,
-                                        suhu_cairan = suhuCairanAngka,
-                                        suhu_kalibrasi_tangki = suhuKalibrasiAngka,
-                                        tinggi_meja = tinggiMejaAngka,
-                                        faktor_muai = koefisienMuai,
-                                        volume_kalibrasi1 = volumeKalibrasi,
-                                        density_cairan = densityAngka,
-                                        tinggi_cairan_terkoreksi = results[0],
-                                        volume_fraksi = results[1],
-                                        volume_kalibrasi2 = results[2],
-                                        volume_mid = results[3],
-                                        volume_app = results[4],
-                                        volume_obs = results[5],
-                                        volume = results[6],
-                                        hasil_sounding = results[7],
-                                        no_tangki = nomorTangkiText,
-                                        pegawai_sounding = petugasSounding,
-                                        nip_pegawai = nip,
-                                        pengguna_jasa_sounding = penggunaJasa,
-                                        jabatan_pengguna_jasa = jabatan,
-                                        perusahaan_sounding = perusahaan,
-                                        npwp_perusahaan_sounding = npwp,
-                                        alamat_perusahaan_sounding = alamat,
-                                        lokasi_sounding = lokasiSoundingText,
-                                        waktu = waktuText,
-                                        nomor_dokumen = nomorDokumen,
-                                        produk = produk,
-                                        bentuk = bentukText,
-                                        waktu_date = waktuDate
-                                    ))
-                                    Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
-                                    updateDialog.dismiss()
+                        try {
+                            val npwp = it3.npwp_perusahaan
+                            val alamat = it3.alamat_perusahaan
+                            val perusahaan = it3.perusahaan_pengguna_jasa
+                            val jabatan = it3.jabatan
+                            lifecycleScope.launch {
+                                userDao.fetchUserByName(petugasSounding).collect {
+                                    try {
+                                        val nip = it.nip
+                                        lifecycleScope.launch {
+                                            userDao.updateSounding(SoundingEntity(id,
+                                                tinggi_cairan = tinggiCairanAngka,
+                                                suhu_cairan = suhuCairanAngka,
+                                                suhu_kalibrasi_tangki = suhuKalibrasiAngka,
+                                                tinggi_meja = tinggiMejaAngka,
+                                                faktor_muai = koefisienMuai,
+                                                volume_kalibrasi1 = volumeKalibrasi,
+                                                density_cairan = densityAngka,
+                                                tinggi_cairan_terkoreksi = results[0],
+                                                volume_fraksi = results[1],
+                                                volume_kalibrasi2 = results[2],
+                                                volume_mid = results[3],
+                                                volume_app = results[4],
+                                                volume_obs = results[5],
+                                                volume = results[6],
+                                                hasil_sounding = results[7],
+                                                no_tangki = nomorTangkiText,
+                                                pegawai_sounding = petugasSounding,
+                                                nip_pegawai = nip,
+                                                pengguna_jasa_sounding = penggunaJasa,
+                                                jabatan_pengguna_jasa = jabatan,
+                                                perusahaan_sounding = perusahaan,
+                                                npwp_perusahaan_sounding = npwp,
+                                                alamat_perusahaan_sounding = alamat,
+                                                lokasi_sounding = lokasiSoundingText,
+                                                waktu = waktuText,
+                                                nomor_dokumen = nomorDokumen,
+                                                produk = produk,
+                                                bentuk = bentukText,
+                                                waktu_date = waktuDate
+                                            ))
+                                            Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
+                                            updateDialog.dismiss()
+                                        }
+                                    }  catch (e: Exception) {
+                                        Log.d("okimatra", "" + e.message)
+                                    }
                                 }
                             }
+                        } catch (e: Exception) {
+                            Log.d("okimatra", "" + e.message)
                         }
                     }
                 }
@@ -2467,9 +2434,13 @@ class TabFragment(private val title: String) : Fragment() {
 
         lifecycleScope.launch {
             userDao.fetchCompanyById(id).collect {
-                binding.updateNama.setText(it.nama_perusahaan)
-                binding.updateNpwp.setText(it.npwp)
-                binding.etUpdateAlamatId.setText(it.alamat)
+                try {
+                    binding.updateNama.setText(it.nama_perusahaan)
+                    binding.updateNpwp.setText(it.npwp)
+                    binding.etUpdateAlamatId.setText(it.alamat)
+                } catch (e: Exception) {
+                    Log.e("okimatra", "" + e.message)
+                }
             }
         }
 
@@ -2636,101 +2607,105 @@ class TabFragment(private val title: String) : Fragment() {
     private fun pdfRecordAlertDialogSounding(id: Int, userDao: UserDao) {
         lifecycleScope.launch {
             userDao.fetchSoundingById(id).collect {
-                Dexter.withContext(requireActivity())
-                    .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .withListener(object : PermissionListener {
-                        override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
-                            val path =Common.getAppPath(requireActivity()) + "test_pdf.pdf"
-                            val date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
-                            if (File(path).exists()) File(path).delete()
-                            try {
-                                val document = Document()
-                                //Save
-                                PdfWriter.getInstance(document, FileOutputStream(path))
-                                //open to write
-                                document.open()
-                                //Settings
-                                document.pageSize = PageSize.A4.rotate()
-                                document.addCreationDate()
-                                document.addAuthor("okimatra")
-                                document.addCreator("okimatra")
+                try {
+                    Dexter.withContext(requireActivity())
+                        .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .withListener(object : PermissionListener {
+                            override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
+                                val path =Common.getAppPath(requireActivity()) + "test_pdf.pdf"
+                                val date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+                                if (File(path).exists()) File(path).delete()
+                                try {
+                                    val document = Document()
+                                    //Save
+                                    PdfWriter.getInstance(document, FileOutputStream(path))
+                                    //open to write
+                                    document.open()
+                                    //Settings
+                                    document.pageSize = PageSize.A4.rotate()
+                                    document.addCreationDate()
+                                    document.addAuthor("okimatra")
+                                    document.addCreator("okimatra")
 
-                                //Font Settings
-                                val colorAccent = BaseColor(0, 153, 204, 255)
-                                val fontSizeHeader = 20.0f
-                                val valueFontSize = 26.0f
+                                    //Font Settings
+                                    val colorAccent = BaseColor(0, 153, 204, 255)
+                                    val fontSizeHeader = 20.0f
+                                    val valueFontSize = 26.0f
 
-                                //Custom font
-                                val fontName = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+                                    //Custom font
+                                    val fontName = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
 
-                                //create title of document
-                                val titleFont = Font(fontName, 20.0f, Font.NORMAL, BaseColor.BLACK)
-                                addNewItem(document, "Laporan Hitung Barang Curah Bea Cukai", Element.ALIGN_CENTER, titleFont)
+                                    //create title of document
+                                    val titleFont = Font(fontName, 20.0f, Font.NORMAL, BaseColor.BLACK)
+                                    addNewItem(document, "Laporan Hitung Barang Curah Bea Cukai", Element.ALIGN_CENTER, titleFont)
 
-                                // Add more
-                                val orderNumberFont = Font(fontName, fontSizeHeader, Font.NORMAL, colorAccent)
-                                addNewItem(document, "order number", Element.ALIGN_LEFT, orderNumberFont)
-                                val orderNumberValueFont = Font(fontName, valueFontSize, Font.NORMAL, BaseColor.BLACK)
-                                addNewItem(document, "#525263", Element.ALIGN_LEFT, orderNumberValueFont)
-                                addLineSeparator(document)
-                                addNewItem(document, "Order Date", Element.ALIGN_LEFT, orderNumberFont)
-                                addNewItem(document, date, Element.ALIGN_LEFT, orderNumberValueFont)
-                                addLineSeparator(document)
-                                addNewItem(document, "Account name", Element.ALIGN_LEFT, orderNumberFont)
-                                addNewItem(document, it.pengguna_jasa_sounding, Element.ALIGN_LEFT, orderNumberValueFont)
-                                addLineSeparator(document)
+                                    // Add more
+                                    val orderNumberFont = Font(fontName, fontSizeHeader, Font.NORMAL, colorAccent)
+                                    addNewItem(document, "order number", Element.ALIGN_LEFT, orderNumberFont)
+                                    val orderNumberValueFont = Font(fontName, valueFontSize, Font.NORMAL, BaseColor.BLACK)
+                                    addNewItem(document, "#525263", Element.ALIGN_LEFT, orderNumberValueFont)
+                                    addLineSeparator(document)
+                                    addNewItem(document, "Order Date", Element.ALIGN_LEFT, orderNumberFont)
+                                    addNewItem(document, date, Element.ALIGN_LEFT, orderNumberValueFont)
+                                    addLineSeparator(document)
+                                    addNewItem(document, "Account name", Element.ALIGN_LEFT, orderNumberFont)
+                                    addNewItem(document, it.pengguna_jasa_sounding, Element.ALIGN_LEFT, orderNumberValueFont)
+                                    addLineSeparator(document)
 
-                                //Add product order detail
-                                addLineSpace(document)
-                                addNewItem(document, "Product details", Element.ALIGN_CENTER, titleFont)
-                                addLineSeparator(document)
+                                    //Add product order detail
+                                    addLineSpace(document)
+                                    addNewItem(document, "Product details", Element.ALIGN_CENTER, titleFont)
+                                    addLineSeparator(document)
 
-                                //item 1
-                                addNewItemWithLeftAndRight(
-                                    document,
-                                    "Burger",
-                                    "(1.0%)",
-                                    titleFont,
-                                    orderNumberValueFont
-                                )
-                                addNewItemWithLeftAndRight(document, "20", "1200.0", titleFont, orderNumberValueFont)
-                                addLineSeparator(document)
+                                    //item 1
+                                    addNewItemWithLeftAndRight(
+                                        document,
+                                        "Burger",
+                                        "(1.0%)",
+                                        titleFont,
+                                        orderNumberValueFont
+                                    )
+                                    addNewItemWithLeftAndRight(document, "20", "1200.0", titleFont, orderNumberValueFont)
+                                    addLineSeparator(document)
 
-                                //item 2
-                                addNewItemWithLeftAndRight(document, "Pizza", "(0.0%)", titleFont, orderNumberValueFont)
-                                addNewItemWithLeftAndRight(document, "12", "1520.0", titleFont, orderNumberValueFont)
-                                addLineSeparator(document)
+                                    //item 2
+                                    addNewItemWithLeftAndRight(document, "Pizza", "(0.0%)", titleFont, orderNumberValueFont)
+                                    addNewItemWithLeftAndRight(document, "12", "1520.0", titleFont, orderNumberValueFont)
+                                    addLineSeparator(document)
 
-                                //item 3
-                                addNewItemWithLeftAndRight(
-                                    document,
-                                    "Sandwich",
-                                    "(0.0%)",
-                                    titleFont,
-                                    orderNumberValueFont
-                                )
-                                addNewItemWithLeftAndRight(document, "10", "1000.0", titleFont, orderNumberValueFont)
-                                addLineSeparator(document)
+                                    //item 3
+                                    addNewItemWithLeftAndRight(
+                                        document,
+                                        "Sandwich",
+                                        "(0.0%)",
+                                        titleFont,
+                                        orderNumberValueFont
+                                    )
+                                    addNewItemWithLeftAndRight(document, "10", "1000.0", titleFont, orderNumberValueFont)
+                                    addLineSeparator(document)
 
-                                //Total
-                                addLineSpace(document)
-                                addLineSpace(document)
-                                addNewItemWithLeftAndRight(document, "total", "8500", titleFont, orderNumberValueFont)
-                                document.close()
-                                printPDF()
-                            } catch (e: FileNotFoundException) {
-                                e.printStackTrace()
+                                    //Total
+                                    addLineSpace(document)
+                                    addLineSpace(document)
+                                    addNewItemWithLeftAndRight(document, "total", "8500", titleFont, orderNumberValueFont)
+                                    document.close()
+                                    printPDF()
+                                } catch (e: FileNotFoundException) {
+                                    e.printStackTrace()
+                                }
                             }
-                        }
 
-                        override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
-                        override fun onPermissionRationaleShouldBeShown(
-                            permissionRequest: PermissionRequest,
-                            permissionToken: PermissionToken
-                        ) {
-                        }
-                    })
-                    .check()
+                            override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissionRequest: PermissionRequest,
+                                permissionToken: PermissionToken
+                            ) {
+                            }
+                        })
+                        .check()
+                } catch (e: Exception) {
+                    Log.d("okimara", "" + e.message)
+                }
             }
         }
     }

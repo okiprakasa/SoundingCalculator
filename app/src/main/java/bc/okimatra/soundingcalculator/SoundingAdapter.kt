@@ -41,10 +41,6 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
           deleteListener.invoke(item.id)
         }
 
-        holder.ivPdf.setOnClickListener {
-            pdfListener.invoke(item.id)
-        }
-
         holder.ivDown.setOnClickListener {
             holder.tvBentuk.visibility = View.VISIBLE
             holder.ivDown.visibility = View.GONE
@@ -77,7 +73,6 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         val ivDelete = binding.ivDelete
         val ivUp = binding.ivUp
         val ivDown = binding.ivDown
-        val ivPdf = binding.ivPdf
         val background = binding.background
     }
 }
