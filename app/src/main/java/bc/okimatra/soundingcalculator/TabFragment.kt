@@ -26,7 +26,6 @@ import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -34,8 +33,6 @@ import kotlin.math.roundToLong
 import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.widget.Toast
 import androidx.core.content.FileProvider
@@ -46,7 +43,6 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import java.io.ByteArrayOutputStream
 import java.lang.Exception
 
 class TabFragment(private val title: String) : Fragment() {
@@ -63,23 +59,17 @@ class TabFragment(private val title: String) : Fragment() {
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
-    private val colorPrimary = BaseColor(40, 116, 240)
     private val fontSizeDefault = 12f
     private val fontSizeSmall = 8f
-    private var basfontLight: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontLight = Font(basfontLight, fontSizeSmall)
-    private var basfontRegular: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontRegular = Font(basfontRegular, fontSizeDefault)
-    private var basfontSemiBold: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontSemiBold = Font(basfontSemiBold, 24f)
-    private var basfontBold: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontBold = Font(basfontBold, fontSizeDefault)
+    private var baseFontLight: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+    private var appFontLight = Font(baseFontLight, fontSizeSmall)
+    private var baseFontRegular: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+    private var appFontRegular = Font(baseFontRegular, fontSizeDefault)
+    private var baseFontSemiBold: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+    private var appFontSemiBold = Font(baseFontSemiBold, 24f)
+    private var baseFontBold: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
+    private var appFontBold = Font(baseFontBold, fontSizeDefault)
     private val paddingEdge = 40f
-    private val textTopPadding = 3f
-    private val tableTopPadding = 10f
-    private val textTopPaddingExtra = 30f
-    private val billDetailsTopPadding = 80f
-    private val data = ArrayList<ModelItems>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -659,444 +649,56 @@ class TabFragment(private val title: String) : Fragment() {
         _binding3 = null
     }
 
-    private fun initFooter(doc: Document) {
-        appFontRegular.color = colorPrimary
-        val footerTable = PdfPTable(1)
-        footerTable.totalWidth = PageSize.A4.width
-        footerTable.isLockedWidth = true
-        val thankYouCell =
-            PdfPCell(Phrase("THANK YOU FOR YOUR BUSINESS", appFontRegular))
-        thankYouCell.border = Rectangle.NO_BORDER
-        thankYouCell.paddingLeft = paddingEdge
-        thankYouCell.paddingTop = paddingEdge
-        thankYouCell.horizontalAlignment = Rectangle.ALIGN_CENTER
-        footerTable.addCell(thankYouCell)
-        doc.add(footerTable)
+    private fun pdfSounding(id: Int, userDao: UserDao) {
+        lifecycleScope.launch {
+            userDao.fetchSoundingById(id).collect {
+                try {
+                    Dexter.withContext(requireActivity())
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                if (report.areAllPermissionsGranted()) {
+                                    appFontRegular.color = BaseColor.WHITE
+                                    appFontRegular.size = 10f
+                                    val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
+                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
+                                    Log.d("loc", outPath)
+                                    doc.open()
+                                    doc.setMargins(0f, 0f, paddingEdge, paddingEdge)
+                                    doc.close()
 
-    }
+                                    val file = File(outPath)
+                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW)
+                                        intent.setDataAndType(path, "application/pdf")
+                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(requireActivity(), "No PDF Viewer", Toast.LENGTH_SHORT).show()
+                                    }
 
-    private fun initData() {
-        for (i in 1..15) {
-            data.add(
-                ModelItems(
-                    "Item $i",
-                    "Description $i",
-                    (1..1000).random(),
-                    (1234..123456).random(),
-                    (1..99).random(),
-                    (1234..132456).random()
-                )
-            )
+
+                                } else {
+                                    Toast.makeText(requireActivity(), "Permission Not Granted", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: List<PermissionRequest>,
+                                token: PermissionToken
+                            ) {
+                                token.continuePermissionRequest()
+                            }
+                        }).check()
+                } catch (e: Exception) {
+                    Log.d("okimara", "" + e.message)
+                }
+            }
         }
     }
-
-    private fun initPriceDetails(doc: Document) {
-        val priceDetailsTable = PdfPTable(2)
-        priceDetailsTable.totalWidth = PageSize.A4.width
-        priceDetailsTable.setWidths(floatArrayOf(5f, 2f))
-        priceDetailsTable.isLockedWidth = true
-
-        appFontRegular.color = colorPrimary
-        val txtSubTotalCell = PdfPCell(Phrase("Sub Total : ", appFontRegular))
-        txtSubTotalCell.border = Rectangle.NO_BORDER
-        txtSubTotalCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        txtSubTotalCell.paddingTop = textTopPaddingExtra
-        priceDetailsTable.addCell(txtSubTotalCell)
-        appFontBold.color = BaseColor.BLACK
-        val totalPriceCell = PdfPCell(Phrase("AED 12000", appFontBold))
-        totalPriceCell.border = Rectangle.NO_BORDER
-        totalPriceCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        totalPriceCell.paddingTop = textTopPaddingExtra
-        totalPriceCell.paddingRight = paddingEdge
-        priceDetailsTable.addCell(totalPriceCell)
-
-
-        val txtTaxCell = PdfPCell(Phrase("Tax Total : ", appFontRegular))
-        txtTaxCell.border = Rectangle.NO_BORDER
-        txtTaxCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        txtTaxCell.paddingTop = textTopPadding
-        priceDetailsTable.addCell(txtTaxCell)
-
-        val totalTaxCell = PdfPCell(Phrase("AED 100", appFontBold))
-        totalTaxCell.border = Rectangle.NO_BORDER
-        totalTaxCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        totalTaxCell.paddingTop = textTopPadding
-        totalTaxCell.paddingRight = paddingEdge
-        priceDetailsTable.addCell(totalTaxCell)
-
-        val txtTotalCell = PdfPCell(Phrase("TOTAL : ", appFontRegular))
-        txtTotalCell.border = Rectangle.NO_BORDER
-        txtTotalCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        txtTotalCell.paddingTop = textTopPadding
-        txtTotalCell.paddingBottom = textTopPadding
-        txtTotalCell.paddingLeft = paddingEdge
-        priceDetailsTable.addCell(txtTotalCell)
-        appFontBold.color = colorPrimary
-        val totalCell = PdfPCell(Phrase("AED 12100", appFontBold))
-        totalCell.border = Rectangle.NO_BORDER
-        totalCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        totalCell.paddingTop = textTopPadding
-        totalCell.paddingBottom = textTopPadding
-        totalCell.paddingRight = paddingEdge
-        priceDetailsTable.addCell(totalCell)
-
-        doc.add(priceDetailsTable)
-    }
-
-    private fun initItemsTable(doc: Document) {
-        val itemsTable = PdfPTable(5)
-        itemsTable.isLockedWidth = true
-        itemsTable.totalWidth = PageSize.A4.width
-        itemsTable.setWidths(floatArrayOf(1.5f, 1f, 1f, .6f, 1.1f))
-
-        for (item in data) {
-            itemsTable.deleteBodyRows()
-
-            val itemdetails = PdfPTable(1)
-            val itemName = PdfPCell(Phrase(item.itemName, appFontRegular))
-            itemName.border = Rectangle.NO_BORDER
-            val itemDesc = PdfPCell(Phrase(item.itemDesc, appFontLight))
-            itemDesc.border = Rectangle.NO_BORDER
-            itemdetails.addCell(itemName)
-            itemdetails.addCell(itemDesc)
-            val itemCell = PdfPCell(itemdetails)
-            itemCell.border = Rectangle.NO_BORDER
-            itemCell.paddingTop = tableTopPadding
-            itemCell.paddingLeft = paddingEdge
-            itemsTable.addCell(itemCell)
-
-
-            val quantityCell = PdfPCell(Phrase(item.quantity.toString(), appFontRegular))
-            quantityCell.border = Rectangle.NO_BORDER
-            quantityCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-            quantityCell.paddingTop = tableTopPadding
-            itemsTable.addCell(quantityCell)
-
-            val disAmount = PdfPCell(Phrase("AED ${item.disAmount}", appFontRegular))
-            disAmount.border = Rectangle.NO_BORDER
-            disAmount.horizontalAlignment = Rectangle.ALIGN_RIGHT
-            disAmount.paddingTop = tableTopPadding
-            itemsTable.addCell(disAmount)
-
-            val vat = PdfPCell(Phrase(item.vat.toString(), appFontRegular))
-            vat.border = Rectangle.NO_BORDER
-            vat.horizontalAlignment = Rectangle.ALIGN_RIGHT
-            vat.paddingTop = tableTopPadding
-            itemsTable.addCell(vat)
-
-            val netAmount = PdfPCell(Phrase("AED ${item.netAmount}", appFontRegular))
-            netAmount.horizontalAlignment = Rectangle.ALIGN_RIGHT
-            netAmount.border = Rectangle.NO_BORDER
-            netAmount.paddingTop = tableTopPadding
-            netAmount.paddingRight = paddingEdge
-            itemsTable.addCell(netAmount)
-            doc.add(itemsTable)
-        }
-    }
-
-    private fun initTableHeader(doc: Document) {
-
-        doc.add(Paragraph("\n\n\n\n\n")) //adds blank line to place table header below the line
-
-        val titleTable = PdfPTable(5)
-        titleTable.isLockedWidth = true
-        titleTable.totalWidth = PageSize.A4.width
-        titleTable.setWidths(floatArrayOf(1.5f, 1f, 1f, .6f, 1.1f))
-        appFontBold.color = colorPrimary
-
-        val itemCell = PdfPCell(Phrase("Description", appFontBold))
-        itemCell.border = Rectangle.NO_BORDER
-        itemCell.paddingTop = tableTopPadding
-        itemCell.paddingBottom = tableTopPadding
-        itemCell.paddingLeft = paddingEdge
-        titleTable.addCell(itemCell)
-
-
-        val quantityCell = PdfPCell(Phrase("Quantity", appFontBold))
-        quantityCell.border = Rectangle.NO_BORDER
-        quantityCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        quantityCell.paddingBottom = tableTopPadding
-        quantityCell.paddingTop = tableTopPadding
-        titleTable.addCell(quantityCell)
-
-        val disAmount = PdfPCell(Phrase("DIS. Amount", appFontBold))
-        disAmount.border = Rectangle.NO_BORDER
-        disAmount.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        disAmount.paddingBottom = tableTopPadding
-        disAmount.paddingTop = tableTopPadding
-        titleTable.addCell(disAmount)
-
-        val vat = PdfPCell(Phrase("VAT %", appFontBold))
-        vat.border = Rectangle.NO_BORDER
-        vat.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        vat.paddingBottom = tableTopPadding
-        vat.paddingTop = tableTopPadding
-        titleTable.addCell(vat)
-
-        val netAmount = PdfPCell(Phrase("Net Amount", appFontBold))
-        netAmount.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        netAmount.border = Rectangle.NO_BORDER
-        netAmount.paddingTop = tableTopPadding
-        netAmount.paddingBottom = tableTopPadding
-        netAmount.paddingRight = paddingEdge
-        titleTable.addCell(netAmount)
-        doc.add(titleTable)
-    }
-
-    private fun addLine(writer: PdfWriter) {
-        val canvas: PdfContentByte = writer.directContent
-        canvas.setColorStroke(colorPrimary)
-        canvas.moveTo(40.0, 480.0)
-
-        // Drawing the line
-        canvas.lineTo(560.0, 480.0)
-        canvas.setLineWidth(3f)
-
-        // Closing the path stroke
-        canvas.closePathStroke()
-    }
-
-    private fun initBillDetails(doc: Document) {
-        val billDetailsTable =
-            PdfPTable(3)  // table to show customer address, invoice, date and total amount
-        billDetailsTable.setWidths(
-            floatArrayOf(
-                2f,
-                1.82f,
-                2f
-            )
-        )
-        billDetailsTable.isLockedWidth = true
-        billDetailsTable.paddingTop = 30f
-
-        billDetailsTable.totalWidth =
-            PageSize.A4.width // set content width to fill document
-        val customerAddressTable = PdfPTable(1)
-        appFontRegular.color = BaseColor.GRAY
-        appFontRegular.size = 8f
-        val txtBilledToCell = PdfPCell(
-            Phrase(
-                "Billed To",
-                appFontLight
-            )
-        )
-        txtBilledToCell.border = Rectangle.NO_BORDER
-        customerAddressTable.addCell(
-            txtBilledToCell
-        )
-        appFontRegular.size = fontSizeDefault
-        appFontRegular.color = BaseColor.BLACK
-        val clientAddressCell1 = PdfPCell(
-            Paragraph(
-                "Sreehari K",
-                appFontRegular
-            )
-        )
-        clientAddressCell1.border = Rectangle.NO_BORDER
-        clientAddressCell1.paddingTop = textTopPadding
-        customerAddressTable.addCell(clientAddressCell1)
-
-        val clientAddressCell2 = PdfPCell(
-            Paragraph(
-                "Address Line 1",
-                appFontRegular
-            )
-        )
-        clientAddressCell2.border = Rectangle.NO_BORDER
-        clientAddressCell2.paddingTop = textTopPadding
-        customerAddressTable.addCell(clientAddressCell2)
-
-
-        val clientAddressCell3 = PdfPCell(
-            Paragraph(
-                "Address Line 2",
-                appFontRegular
-            )
-        )
-        clientAddressCell3.border = Rectangle.NO_BORDER
-        clientAddressCell3.paddingTop = textTopPadding
-        customerAddressTable.addCell(clientAddressCell3)
-
-
-        val clientAddressCell4 = PdfPCell(
-            Paragraph(
-                "Address Line 3",
-                appFontRegular
-            )
-        )
-        clientAddressCell4.border = Rectangle.NO_BORDER
-        clientAddressCell4.paddingTop = textTopPadding
-        customerAddressTable.addCell(clientAddressCell4)
-
-        val billDetailsCell1 = PdfPCell(customerAddressTable)
-        billDetailsCell1.border = Rectangle.NO_BORDER
-
-        billDetailsCell1.paddingTop = billDetailsTopPadding
-
-        billDetailsCell1.paddingLeft = paddingEdge
-
-        billDetailsTable.addCell(billDetailsCell1)
-
-
-        val invoiceNumAndData = PdfPTable(1)
-        appFontRegular.color = BaseColor.LIGHT_GRAY
-        appFontRegular.size = 8f
-        val txtInvoiceNumber = PdfPCell(Phrase("Invoice Number", appFontLight))
-        txtInvoiceNumber.paddingTop = billDetailsTopPadding
-        txtInvoiceNumber.border = Rectangle.NO_BORDER
-        invoiceNumAndData.addCell(txtInvoiceNumber)
-        appFontRegular.color = BaseColor.BLACK
-        appFontRegular.size = 12f
-        val invoiceNumber = PdfPCell(Phrase("BMC00${(1234..9879).random()}", appFontRegular))
-        invoiceNumber.border = Rectangle.NO_BORDER
-        invoiceNumber.paddingTop = textTopPadding
-        invoiceNumAndData.addCell(invoiceNumber)
-
-        appFontRegular.color = BaseColor.LIGHT_GRAY
-        appFontRegular.size = 5f
-        val txtDate = PdfPCell(Phrase("Date Of Issue", appFontLight))
-        txtDate.paddingTop = textTopPaddingExtra
-        txtDate.border = Rectangle.NO_BORDER
-        invoiceNumAndData.addCell(txtDate)
-
-        appFontRegular.color = BaseColor.BLACK
-        appFontRegular.size = fontSizeDefault
-        val dateCell = PdfPCell(Phrase("04/11/2019", appFontRegular))
-        dateCell.border = Rectangle.NO_BORDER
-        invoiceNumAndData.addCell(dateCell)
-
-        val dataInvoiceNumAndData = PdfPCell(invoiceNumAndData)
-        dataInvoiceNumAndData.border = Rectangle.NO_BORDER
-        billDetailsTable.addCell(dataInvoiceNumAndData)
-
-        val totalPriceTable = PdfPTable(1)
-        val txtInvoiceTotal = PdfPCell(Phrase("Invoice Total", appFontLight))
-        txtInvoiceTotal.paddingTop = billDetailsTopPadding
-        txtInvoiceTotal.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        txtInvoiceTotal.border = Rectangle.NO_BORDER
-        totalPriceTable.addCell(txtInvoiceTotal)
-
-        appFontSemiBold.color = colorPrimary
-        val totalAomountCell = PdfPCell(Phrase("AED ${(111..21398).random()}", appFontSemiBold))
-        totalAomountCell.border = Rectangle.NO_BORDER
-        totalAomountCell.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        totalPriceTable.addCell(totalAomountCell)
-        val dataTotalAmount = PdfPCell(totalPriceTable)
-        dataTotalAmount.border = Rectangle.NO_BORDER
-        dataTotalAmount.paddingRight = paddingEdge
-        dataTotalAmount.verticalAlignment = Rectangle.ALIGN_BOTTOM
-
-        billDetailsTable.addCell(dataTotalAmount)
-        doc.add(billDetailsTable)
-    }
-
-    private fun initInvoiceHeader(doc: Document) {
-        val d = ContextCompat.getDrawable(requireContext(),R.drawable.gear)
-        val bitDw = d as BitmapDrawable
-        val bmp = bitDw.bitmap
-        val stream = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        val image = Image.getInstance(stream.toByteArray())
-        val headerTable = PdfPTable(3)
-        headerTable.setWidths(
-            floatArrayOf(
-                1.3f,
-                1f,
-                1f
-            )
-        ) // adds 3 colomn horizontally
-        headerTable.isLockedWidth = true
-        headerTable.totalWidth = PageSize.A4.width // set content width to fill document
-        val cell = PdfPCell(Image.getInstance(image)) // Logo Cell
-        cell.border = Rectangle.NO_BORDER // Removes border
-        cell.paddingTop = textTopPaddingExtra // sets padding
-        cell.paddingRight = tableTopPadding
-        cell.paddingLeft = paddingEdge
-        cell.horizontalAlignment = Rectangle.ALIGN_LEFT
-        cell.paddingBottom = textTopPaddingExtra
-
-        cell.backgroundColor = colorPrimary // sets background color
-        cell.horizontalAlignment = Element.ALIGN_CENTER
-        headerTable.addCell(cell) // Adds first cell with logo
-
-        val contactTable =
-            PdfPTable(1) // new vertical table for contact details
-        val phoneCell =
-            PdfPCell(
-                Paragraph(
-                    "+91 8547984369",
-                    appFontRegular
-                )
-            )
-        phoneCell.border = Rectangle.NO_BORDER
-        phoneCell.horizontalAlignment = Element.ALIGN_RIGHT
-        phoneCell.paddingTop = textTopPadding
-
-        contactTable.addCell(phoneCell)
-
-        val emailCellCell = PdfPCell(Phrase("sreeharikariot@gmail.com", appFontRegular))
-        emailCellCell.border = Rectangle.NO_BORDER
-        emailCellCell.horizontalAlignment = Element.ALIGN_RIGHT
-        emailCellCell.paddingTop = textTopPadding
-
-        contactTable.addCell(emailCellCell)
-
-        val webCell = PdfPCell(Phrase("www.kariot.me", appFontRegular))
-        webCell.border = Rectangle.NO_BORDER
-        webCell.paddingTop = textTopPadding
-        webCell.horizontalAlignment = Element.ALIGN_RIGHT
-
-        contactTable.addCell(webCell)
-
-
-        val headCell = PdfPCell(contactTable)
-        headCell.border = Rectangle.NO_BORDER
-        headCell.horizontalAlignment = Element.ALIGN_RIGHT
-        headCell.verticalAlignment = Element.ALIGN_MIDDLE
-        headCell.backgroundColor = colorPrimary
-        headerTable.addCell(headCell)
-
-        val address = PdfPTable(1)
-        val line1 = PdfPCell(
-            Paragraph(
-                "Address Line 1",
-                appFontRegular
-            )
-        )
-        line1.border = Rectangle.NO_BORDER
-        line1.paddingTop = textTopPadding
-        line1.horizontalAlignment = Element.ALIGN_RIGHT
-
-        address.addCell(line1)
-
-        val line2 = PdfPCell(Paragraph("Address Line 2", appFontRegular))
-        line2.border = Rectangle.NO_BORDER
-        line2.paddingTop = textTopPadding
-        line2.horizontalAlignment = Element.ALIGN_RIGHT
-
-        address.addCell(line2)
-
-        val line3 = PdfPCell(Paragraph("Address Line 3", appFontRegular))
-        line3.border = Rectangle.NO_BORDER
-        line3.paddingTop = textTopPadding
-        line3.horizontalAlignment = Element.ALIGN_RIGHT
-
-        address.addCell(line3)
-
-
-        val addressHeadCell = PdfPCell(address)
-        addressHeadCell.border = Rectangle.NO_BORDER
-        addressHeadCell.setLeading(22f, 25f)
-        addressHeadCell.horizontalAlignment = Element.ALIGN_RIGHT
-        addressHeadCell.verticalAlignment = Element.ALIGN_MIDDLE
-        addressHeadCell.backgroundColor = colorPrimary
-        addressHeadCell.paddingRight = paddingEdge
-        headerTable.addCell(addressHeadCell)
-
-        doc.add(headerTable)
-    }
-
-//    @Throws(DocumentException::class)
 
     private fun backFunction() {
         binding1.apply {
@@ -2495,69 +2097,6 @@ class TabFragment(private val title: String) : Fragment() {
         } else {
             _binding2?.svSoundingList?.visibility = View.GONE
             _binding2?.tvNoRecordsAvailable?.visibility = View.VISIBLE
-        }
-    }
-
-    private fun pdfSounding(id: Int, userDao: UserDao) {
-        initData()
-        lifecycleScope.launch {
-            userDao.fetchSoundingById(id).collect {
-                try {
-                    Dexter.withContext(requireActivity())
-                        .withPermissions(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ).withListener(object : MultiplePermissionsListener {
-                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                                if (report.areAllPermissionsGranted()) {
-
-                                    appFontRegular.color = BaseColor.WHITE
-                                    appFontRegular.size = 10f
-                                    val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
-                                    Log.d("loc", outPath)
-                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
-                                    doc.open()
-                                    //Header Column Init with width nad no. of columns
-                                    initInvoiceHeader(doc)
-                                    doc.setMargins(0f, 0f, paddingEdge, paddingEdge)
-                                    initBillDetails(doc)
-                                    addLine(writer)
-                                    initTableHeader(doc)
-                                    initItemsTable(doc)
-                                    initPriceDetails(doc)
-                                    initFooter(doc)
-                                    doc.close()
-
-                                    val file = File(outPath)
-                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
-//                                        val path: Uri = FileProvider.getUriForFile(requireActivity(),BuildConfig.APPLICATION_ID + ".provider",file)
-                                    try {
-                                        val intent = Intent(Intent.ACTION_VIEW)
-                                        intent.setDataAndType(path, "application/pdf")
-                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        startActivity(intent)
-                                    } catch (e: ActivityNotFoundException) {
-                                        Toast.makeText(requireActivity(), "No PDF Viewer", Toast.LENGTH_SHORT).show()
-                                    }
-
-
-                                } else {
-                                    Toast.makeText(requireActivity(), "Permission Not Granted", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-
-                            override fun onPermissionRationaleShouldBeShown(
-                                permissions: List<PermissionRequest>,
-                                token: PermissionToken
-                            ) {
-                                token.continuePermissionRequest()
-                            }
-                        }).check()
-                } catch (e: Exception) {
-                    Log.d("okimara", "" + e.message)
-                }
-            }
         }
     }
 
