@@ -1,10 +1,16 @@
 package bc.okimatra.soundingcalculator
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,24 +24,13 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
-import kotlinx.coroutines.launch
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.round
-import kotlin.math.roundToLong
-import android.Manifest
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
-import androidx.core.content.FileProvider
 import com.itextpdf.text.*
 import com.itextpdf.text.pdf.*
 import com.karumi.dexter.Dexter
@@ -43,7 +38,15 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import java.lang.Exception
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToLong
+
 
 class TabFragment(private val title: String) : Fragment() {
 
@@ -65,17 +68,11 @@ class TabFragment(private val title: String) : Fragment() {
     private var appFontLight = Font(baseFontLight, fontSizeSmall)
     private var baseFontRegular: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
     private var appFontRegular = Font(baseFontRegular, fontSizeDefault)
-    private var baseFontSemiBold: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontSemiBold = Font(baseFontSemiBold, 24f)
     private var baseFontBold: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontBold = Font(baseFontBold, fontSizeDefault)
+    private var appFontBold = Font(baseFontBold, 16f)
     private val paddingEdge = 40f
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
             title === "Calculator" -> {
                 _binding1 = FragmentOneBinding.inflate(inflater, container, false)
@@ -98,7 +95,6 @@ class TabFragment(private val title: String) : Fragment() {
         when {
             title === "Calculator" -> {
                 var results: List<Double>
-
                 binding1.apply{
                     waktu.setOnClickListener {
                         dateSetListener = DatePickerDialog.OnDateSetListener {
@@ -114,15 +110,9 @@ class TabFragment(private val title: String) : Fragment() {
                             val tz = TimeZone.getDefault()
                             val now = Date()
                             val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
-                                in 6.9..7.8 -> {
-                                    "WIB"
-                                }
-                                in 7.9..8.8 -> {
-                                    "WITA"
-                                }
-                                in 8.9..9.8 -> {
-                                    "WIT"
-                                }
+                                in 6.9..7.8 -> {"WIB"}
+                                in 7.9..8.8 -> {"WITA"}
+                                in 8.9..9.8 -> {"WIT"}
                                 in -13.0..-0.1 -> {
                                     "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
                                 }
@@ -649,6 +639,85 @@ class TabFragment(private val title: String) : Fragment() {
         _binding3 = null
     }
 
+    private fun initInvoiceHeader(doc: Document) {
+        val paddingEdge = 40f
+        val textTopPadding = 3f
+        val tableTopPadding = 10f
+        val textTopPaddingExtra = 30f
+
+        val headerTable = PdfPTable(3)
+        headerTable.setWidths(floatArrayOf(0.5f, 1f, 0.5f)) // adds 3 column horizontally
+        headerTable.isLockedWidth = true
+        headerTable.totalWidth = PageSize.A4.width // set content width to fill document
+
+        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
+        val bitDwLogoBC = logoBC as BitmapDrawable
+        val bmpLogoBC = bitDwLogoBC.bitmap
+        val streamLogoBC = ByteArrayOutputStream()
+        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
+        val imageLogoBC = Image.getInstance(streamLogoBC.toByteArray())
+        val scalerLogoBC: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoBC.width * 10
+        imageLogoBC.scalePercent(scalerLogoBC)
+
+        val cellLogoBC = PdfPCell(Image.getInstance(imageLogoBC)) // Logo Cell
+        cellLogoBC.border = Rectangle.NO_BORDER // Removes border
+        cellLogoBC.paddingTop = textTopPaddingExtra // sets padding
+        cellLogoBC.paddingRight = tableTopPadding
+        cellLogoBC.paddingLeft = tableTopPadding
+        cellLogoBC.paddingBottom = tableTopPadding
+        cellLogoBC.horizontalAlignment = Rectangle.ALIGN_CENTER
+        cellLogoBC.verticalAlignment = Rectangle.ALIGN_CENTER
+        headerTable.addCell(cellLogoBC) // Adds first cell with logo
+
+        appFontRegular.color = BaseColor.GRAY
+        val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBold)
+        para.alignment = Element.ALIGN_MIDDLE
+        val tittleCell = PdfPCell(para)
+        tittleCell.border = Rectangle.NO_BORDER
+        tittleCell.horizontalAlignment = Element.ALIGN_CENTER
+        tittleCell.verticalAlignment = Element.ALIGN_MIDDLE
+        tittleCell.paddingTop = textTopPaddingExtra-10f
+        tittleCell.paddingBottom = tableTopPadding
+        tittleCell.paddingRight = tableTopPadding
+        tittleCell.paddingLeft = tableTopPadding
+        headerTable.addCell(tittleCell)
+
+        val logoKantor = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc_ktb, null)
+        val bitDwLogoKantor = logoKantor as BitmapDrawable
+        val bmpLogoKantor = bitDwLogoKantor.bitmap
+        val streamLogoKantor = ByteArrayOutputStream()
+        bmpLogoKantor.compress(Bitmap.CompressFormat.PNG, 100, streamLogoKantor)
+        val imageLogoKantor = Image.getInstance(streamLogoKantor.toByteArray())
+        val scalerLogoKantor: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoKantor.width * 10
+        imageLogoKantor.scalePercent(scalerLogoKantor)
+
+        val cellLogoKantor = PdfPCell(Image.getInstance(imageLogoKantor)) // Logo Cell
+        cellLogoKantor.border = Rectangle.NO_BORDER // Removes border
+        cellLogoKantor.paddingTop = textTopPaddingExtra // sets padding
+        cellLogoKantor.paddingRight = tableTopPadding
+        cellLogoKantor.paddingLeft = tableTopPadding
+        cellLogoKantor.paddingBottom = tableTopPadding
+        cellLogoKantor.horizontalAlignment = Rectangle.ALIGN_CENTER
+        cellLogoKantor.verticalAlignment = Rectangle.ALIGN_CENTER
+        headerTable.addCell(cellLogoKantor) // Adds first cell with logo
+
+        doc.add(headerTable)
+    }
+
+    private fun addLine(writer: PdfWriter) {
+        val colorPrimary = BaseColor(40, 116, 240)
+        val canvas: PdfContentByte = writer.directContent
+        canvas.setColorStroke(colorPrimary)
+        canvas.moveTo(40.0, 480.0)
+
+        // Drawing the line
+        canvas.lineTo(560.0, 480.0)
+        canvas.setLineWidth(3f)
+
+        // Closing the path stroke
+        canvas.closePathStroke()
+    }
+
     private fun pdfSounding(id: Int, userDao: UserDao) {
         lifecycleScope.launch {
             userDao.fetchSoundingById(id).collect {
@@ -662,11 +731,22 @@ class TabFragment(private val title: String) : Fragment() {
                                 if (report.areAllPermissionsGranted()) {
                                     appFontRegular.color = BaseColor.WHITE
                                     appFontRegular.size = 10f
+                                    val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
+                                    val currentDate = sdf.format(Calendar.getInstance().time)
+//                                    it.waktu.subSequence(it.waktu.indexOf(",")+1,it.waktu.indexOf(":")-3).toString().replace("-"," ")
                                     val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/my_invoice.pdf" //location where the pdf will store
+                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
                                     Log.d("loc", outPath)
+                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                     doc.open()
                                     doc.setMargins(0f, 0f, paddingEdge, paddingEdge)
+                                    initInvoiceHeader(doc)
+                                    addLine(writer)
+//                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
+//                                    val canvas: PdfContentByte = writer.directContent
+//                                    canvas.setRGBColorFill(0xFF, 0x45, 0x00)
+//                                    canvas.rectangle(10f, 10f, 60f, 60f)
+//                                    canvas.fill()
                                     doc.close()
 
                                     val file = File(outPath)
