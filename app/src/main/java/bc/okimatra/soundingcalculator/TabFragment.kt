@@ -736,7 +736,7 @@ class TabFragment(private val title: String) : Fragment() {
         tittleCell.border = Rectangle.NO_BORDER
         tittleCell.horizontalAlignment = Element.ALIGN_LEFT
         tittleCell.verticalAlignment = Element.ALIGN_MIDDLE
-        tittleCell.paddingTop = tableTopPadding-5f
+        tittleCell.paddingTop = tableTopPadding-3f
         tittleCell.paddingBottom = tableBotPadding
         tittleCell.paddingRight = tableHorizontalPadding
         headerTable.addCell(tittleCell)
