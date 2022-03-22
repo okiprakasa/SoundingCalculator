@@ -1,9 +1,10 @@
-package bc.okimatra.soundingcalculator
+package bc.okimatra.soundingcalculator.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import bc.okimatra.soundingcalculator.R
 import bc.okimatra.soundingcalculator.databinding.ItemsRowCompanyBinding
 import bc.okimatra.soundingcalculator.datasetup.PerusahaanEntity
 

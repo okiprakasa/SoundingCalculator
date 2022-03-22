@@ -1,4 +1,4 @@
-package bc.okimatra.soundingcalculator
+package bc.okimatra.soundingcalculator.adapter
 
 import android.print.PrintDocumentAdapter
 import android.print.PrintAttributes

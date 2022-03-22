@@ -1,20 +1,21 @@
-package bc.okimatra.soundingcalculator
+package bc.okimatra.soundingcalculator.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import bc.okimatra.soundingcalculator.databinding.ItemsRowCompanyBinding
-import bc.okimatra.soundingcalculator.datasetup.PenggunaJasaEntity
+import bc.okimatra.soundingcalculator.R
+import bc.okimatra.soundingcalculator.databinding.ItemsRowBinding
+import bc.okimatra.soundingcalculator.datasetup.PegawaiEntity
 
-class PenggunaJasaAdapter(private val items: ArrayList<PenggunaJasaEntity>,
-                          private val updateListener:(id:Int)->Unit,
-                          private val deleteListener:(id:Int)->Unit) :
-    RecyclerView.Adapter<PenggunaJasaAdapter.ViewHolder>() {
+class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
+                     private val updateListener:(id:Int)->Unit,
+                     private val deleteListener:(id:Int)->Unit) :
+    RecyclerView.Adapter<PegawaiAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemsRowCompanyBinding.inflate(
+            ItemsRowBinding.inflate(
             LayoutInflater.from(parent.context),parent,false)
         )
     }
@@ -23,9 +24,8 @@ class PenggunaJasaAdapter(private val items: ArrayList<PenggunaJasaEntity>,
         val context = holder.itemView.context
         val item = items[position]
 
-        holder.tvName.text = item.nama_pengguna_jasa
-        holder.tvJabatan.text = item.jabatan
-        holder.tvPerusahaan.text = item.perusahaan_pengguna_jasa
+        holder.tvName.text = item.nama_pegawai
+        holder.tvNIP.text = item.nip
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
@@ -46,11 +46,10 @@ class PenggunaJasaAdapter(private val items: ArrayList<PenggunaJasaEntity>,
         return items.size
     }
 
-    class ViewHolder(binding: ItemsRowCompanyBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding: ItemsRowBinding) : RecyclerView.ViewHolder(binding.root) {
         val llMain = binding.llMain
         val tvName = binding.tvName
-        val tvJabatan = binding.barisKedua
-        val tvPerusahaan = binding.barisKetiga
+        val tvNIP = binding.tvNIP
         val ivEdit = binding.ivEdit
         val ivDelete = binding.ivDelete
     }
