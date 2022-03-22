@@ -51,6 +51,7 @@ import java.util.*
 import kotlin.math.round
 import kotlin.math.roundToLong
 
+
 class TabFragment(private val title: String) : Fragment() {
 
     private var _binding1: FragmentOneBinding? = null
@@ -64,15 +65,14 @@ class TabFragment(private val title: String) : Fragment() {
 
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
-
-    private val fontSizeDefault = 13f
-//    private val fontSizeSmall = 8f
-//    private var baseFontLight: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-//    private var appFontLight = Font(baseFontLight, fontSizeSmall)
-    private var baseFontRegular: BaseFont = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontRegular = Font(baseFontRegular, fontSizeDefault)
-    private var baseFontBold: BaseFont = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontBold = Font(baseFontBold, 16f)
+    
+    private var baseFontRegular  = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
+    private var regularFont = Font(Font.FontFamily.HELVETICA, 11f, Font.NORMAL, BaseColor.BLACK)
+    private var appFontTiny = Font(baseFontRegular, 2f)
+    private var appFontMiddle = Font(baseFontRegular, 8f)
+    private var appFontSemiBig = Font(Font.FontFamily.HELVETICA, 13f, Font.BOLD, BaseColor.BLACK)
+    private var baseFontBig = BaseFont.createFont("res/font/nexa.otf", "UTF-8", BaseFont.EMBEDDED)
+    private var appFontBig= Font(baseFontBig, 16f, Font.BOLD)
     private val paddingEdge = 40f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
@@ -310,10 +310,10 @@ class TabFragment(private val title: String) : Fragment() {
                                 val penggunaJasa = _binding1?.namaPenggunaJasa?.selectedItem.toString()
                                 val nomorDokumen = endSpaceRemover(_binding1?.noDokumen?.text.toString())
                                 val produk = endSpaceRemover(_binding1?.produk?.text.toString())
-                                val judulKalibrasi1 = _binding1?.judulTabelKalibrasi?.text.toString()
-                                val judulKalibrasi2 = _binding1?.judulTabelKalibrasi2?.text.toString()
+                                val judulKalibrasi1 = _binding1?.judulTabelKalibrasi?.text.toString().replace(".",",")
+                                val judulKalibrasi2 = _binding1?.judulTabelKalibrasi2?.text.toString().replace(".",",")
                                 val judulFraksi = _binding1?.judulTabelFraksi?.text.toString()
-                                val dataTabel = _binding1?.dataTabel?.text.toString()
+                                val dataTabel = _binding1?.dataTabel?.text.toString().replace("Data Tabel (","").replace(")","").replace(".",",")
                                 results = soundingCalculator()
                                 lifecycleScope.launch {
                                     userDao.fetchServiceUserByName(penggunaJasa).collect { it3 ->
@@ -661,8 +661,6 @@ class TabFragment(private val title: String) : Fragment() {
                         ).withListener(object : MultiplePermissionsListener {
                             override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                                 if (report.areAllPermissionsGranted()) {
-                                    appFontRegular.color = BaseColor.WHITE
-                                    appFontRegular.size = 10f
                                     val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
                                     val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
@@ -705,11 +703,10 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     private fun headerRawReport(doc: Document, writer: PdfWriter) {
         val tableBotPadding = 10f
         val tableHorizontalPadding = 20f
-        val tableTopPadding = 30f
+        val tableTopPadding = 22f
 
         val headerTable = PdfPTable(2)
         headerTable.setWidths(floatArrayOf(1f, 3.5f))
@@ -734,7 +731,7 @@ class TabFragment(private val title: String) : Fragment() {
         cellLogoBC.paddingRight = tableHorizontalPadding
         headerTable.addCell(cellLogoBC)
 
-        val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBold)
+        val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBig)
         para.alignment = Element.ALIGN_MIDDLE
         val tittleCell = PdfPCell(para)
         tittleCell.border = Rectangle.NO_BORDER
@@ -758,36 +755,111 @@ class TabFragment(private val title: String) : Fragment() {
         val colorPrimary = BaseColor(0, 0, 0)
         val canvas: PdfContentByte = writer.directContent
         canvas.setColorStroke(colorPrimary)
-        canvas.moveTo(0.0, 740.0)
+        canvas.moveTo(0.0, 760.0)
         // Drawing the line
-        canvas.lineTo(PageSize.A4.width.toDouble(), 740.0)
+        canvas.lineTo(PageSize.A4.width.toDouble(), 760.0)
         canvas.setLineWidth(1.5f)
         canvas.closePathStroke()
     }
-
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
-        val padding = 3f
-        val horizontalPadding = 60f
+//        idTable.widthPercentage = 100f
+//        idTable.tableEvent = BorderEvent()
+//        idTable.deleteBodyRows()
+//        val pID = Paragraph()
+//        pID.add(idTable)
+//        pID.indentationLeft = horizontalPadding
+//        doc.add(pID)
+        doc.add(Paragraph("\n"))
+        val metodeFraksi = it.volume_fraksi > 0
+
         val nomorDokumen = it.nomor_dokumen.ifEmpty { "-" }
         val produk = it.produk.ifEmpty { "-" }
-        doc.add(Paragraph("\n\n"))
-        appFontRegular.color = BaseColor.BLACK
-        val identificationData = listOf("Nama Perusahaan", "Hari/Tanggal", "Jam", "Lokasi", "No Dokumen", "Produk", "Bentuk")
-        val identificationValue = listOf(
+        writeDataTitle("Data Umum", doc)
+        val judulUmum = listOf("Nama Perusahaan", "Nomor Tangki", "Hari/Tanggal", "Jam", "Lokasi", "No Dokumen", "Produk", "Bentuk")
+        val nilaiUmum = listOf(
             it.perusahaan_sounding,
+            it.no_tangki,
             it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
             it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
             it.lokasi_sounding,
             nomorDokumen,
             produk,
-            it.bentuk)
-        val idTable = PdfPTable(3)
-        idTable.setWidths(floatArrayOf(1f, 0.1f, 3.5f))
-        idTable.isLockedWidth = true
-        idTable.totalWidth = PageSize.A4.width-2*horizontalPadding
+            it.bentuk
+        )
+        writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
 
-        for (i in 0..6) {
-            val idCell = PdfPCell(Phrase(identificationData[i], appFontRegular))
+        writeDataTitle("Data Lapangan", doc)
+        val judulLapangan = listOf("Tinggi Hasil Sounding", "Suhu Hasil Sounding")
+        val nilaiLapangan = listOf(
+            "${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+            "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
+        )
+        writeDatawithSemicolomn(judulLapangan, nilaiLapangan, doc)
+
+        writeDataTitle("Data Tangki", doc)
+        val judulTangki = listOf("Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki")
+        val nilaiTangki = listOf(
+            "${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm",
+            "${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C",
+            zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")
+        )
+        writeDatawithSemicolomn(judulTangki, nilaiTangki, doc)
+
+        writeDataTitle("Data Tabel", doc)
+        val judulTabel: List<String>
+        val nilaiTabel: List<String>
+        if (metodeFraksi) {
+            judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Produk")
+            nilaiTabel = listOf(
+                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
+            )
+        } else {
+            judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Produk")
+            nilaiTabel = listOf(
+                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
+            )
+        }
+        writeDatawithSemicolomn(judulTabel, nilaiTabel, doc)
+
+        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
+        writeDataTitle("Hasil Perhitungan $metode", doc)
+        val calcData = listOf("Tinggi Terkoreksi", "Volume App", "Volume Obs", "Volume", "Hasil Akhir Muatan")
+        val calcValue = listOf(
+            "${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m",
+            "${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L",
+            "${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L",
+            "${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL",
+            "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
+        )
+        writeDatawithSemicolomn(calcData, calcValue, doc)
+        doc.add(Paragraph("\n\n", appFontMiddle))
+
+        val ttdData = listOf("Mengetahui,", "Atasan Langsung", "\n\n\n", it.pegawai_sounding)
+        val ttdValue = listOf("Disusun oleh", "Pemeriksa Bea Cukai", "\n\n\n", it.pegawai_sounding)
+        writeAuthentication(ttdData, ttdValue, doc)
+    }
+    private fun writeDataTitle(text: String, doc: Document) {
+        val padding = 3f
+        val judul= Chunk(text, appFontSemiBig)
+        judul.setUnderline(0.5f, -2f)
+        val paraJudul = Paragraph(judul)
+        paraJudul.indentationLeft = 20*padding+2f
+        doc.add(paraJudul)
+        doc.add(Paragraph("\n", appFontTiny))
+    }
+    private fun writeDatawithSemicolomn(listJudul: List<String>, listNilai: List<String>, doc: Document) {
+        val padding = 3f
+        val idTable = PdfPTable(3)
+        idTable.setWidths(floatArrayOf(1.4f, 0.1f, 3.5f))
+        idTable.isLockedWidth = true
+        idTable.totalWidth = PageSize.A4.width-2*20*padding
+        for (i in listJudul.indices) {
+            val idCell = PdfPCell(Phrase(listJudul[i], regularFont))
             idCell.border = Rectangle.NO_BORDER
             idCell.horizontalAlignment = Element.ALIGN_LEFT
             idCell.verticalAlignment = Element.ALIGN_MIDDLE
@@ -795,7 +867,7 @@ class TabFragment(private val title: String) : Fragment() {
             idCell.paddingBottom = padding
             idTable.addCell(idCell)
 
-            val separatorCell = PdfPCell(Phrase(":", appFontRegular))
+            val separatorCell = PdfPCell(Phrase(":", regularFont))
             separatorCell.border = Rectangle.NO_BORDER
             separatorCell.horizontalAlignment = Element.ALIGN_CENTER
             separatorCell.verticalAlignment = Element.ALIGN_MIDDLE
@@ -803,68 +875,45 @@ class TabFragment(private val title: String) : Fragment() {
             separatorCell.paddingBottom = padding
             idTable.addCell(separatorCell)
 
-            val valueCell = PdfPCell(Phrase(identificationValue[i], appFontRegular))
+            val valueCell = PdfPCell(Phrase(listNilai[i], regularFont))
             valueCell.border = Rectangle.NO_BORDER
             valueCell.horizontalAlignment = Element.ALIGN_LEFT
             valueCell.verticalAlignment = Element.ALIGN_MIDDLE
             valueCell.paddingTop = padding
             valueCell.paddingBottom = padding
-            valueCell.paddingRight = horizontalPadding
+            valueCell.paddingRight = padding
             idTable.addCell(valueCell)
         }
-//        val canvas: PdfContentByte = writer.directContent
-//        idTable.writeSelectedRows(0,-1,100f,200f,canvas)
-//        idTable.tableEvent = BorderEvent()
         doc.add(idTable)
-        doc.add(Paragraph("\n\n"))
-//
-//        val fieldData = listOf("Tinggi Hasil Sounding", "Suhu Hasil Sounding", "Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki", "Tabel Kalibrasi 1", "Bentuk")
-//        val fieldValue = listOf(
-//            it.perusahaan_sounding,
-//            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
-//            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
-//            it.lokasi_sounding,
-//            nomorDokumen,
-//            produk,
-//            it.bentuk)
-//        val idTable = PdfPTable(3)
-//        idTable.setWidths(floatArrayOf(1f, 0.1f, 3.5f))
-//        idTable.isLockedWidth = true
-//        idTable.totalWidth = PageSize.A4.width-2*horizontalPadding
+        idTable.deleteBodyRows()
+        doc.add(Paragraph("\n", appFontMiddle))
     }
+    private fun writeAuthentication(listJudul: List<String>, listNilai: List<String>, doc: Document) {
+        val padding = 3f
+        val idTable = PdfPTable(2)
+        idTable.setWidths(floatArrayOf(1f, 1f))
+        idTable.isLockedWidth = true
+        idTable.totalWidth = PageSize.A4.width
+        for (i in listJudul.indices) {
+            val idCell = PdfPCell(Phrase(listJudul[i], regularFont))
+            idCell.border = Rectangle.NO_BORDER
+            idCell.horizontalAlignment = Element.ALIGN_LEFT
+            idCell.verticalAlignment = Element.ALIGN_MIDDLE
+            idCell.paddingTop = padding
+            idCell.paddingBottom = padding
+            idCell.paddingLeft = 20*padding
+            idTable.addCell(idCell)
 
-    class BorderEvent : PdfPTableEvent {
-        override fun tableLayout(
-            table: PdfPTable, widths: Array<FloatArray>,
-            heights: FloatArray, headerRows: Int, rowStart: Int,
-            canvases: Array<PdfContentByte>
-        ) {
-            val width = widths[0]
-            val x1 = width[0]
-            val x2 = width[width.size - 1]
-            val y1 = heights[0]
-            val y2 = heights[heights.size - 1]
-            val cb = canvases[PdfPTable.LINECANVAS]
-            cb.rectangle(x1, y1, x2 - x1, y2 - y1)
-            cb.stroke()
-            cb.resetRGBColorStroke()
+            val valueCell = PdfPCell(Phrase(listNilai[i], regularFont))
+            valueCell.border = Rectangle.NO_BORDER
+            valueCell.horizontalAlignment = Element.ALIGN_LEFT
+            valueCell.verticalAlignment = Element.ALIGN_MIDDLE
+            valueCell.paddingTop = padding
+            valueCell.paddingBottom = padding
+            valueCell.paddingLeft = 30*padding
+            idTable.addCell(valueCell)
         }
-    }
-
-    private fun backFunction() {
-        binding1.apply {
-            dataAdministrasiLayout.visibility = View.GONE
-            back.visibility = View.GONE
-            simpanHasil.visibility = View.GONE
-            dataLapanganLayout.visibility = View.VISIBLE
-            dataTangkiLayout.visibility = View.VISIBLE
-            dataTabelLayout.visibility = View.VISIBLE
-            hasilLayout.visibility = View.VISIBLE
-            next.visibility = View.VISIBLE
-            Handler(Looper.getMainLooper()).postDelayed({
-                scrollView.fullScroll(ScrollView.FOCUS_UP)
-            }, 1)
-        }
+        doc.add(idTable)
     }
 
     private fun resetResult() {
@@ -876,7 +925,6 @@ class TabFragment(private val title: String) : Fragment() {
             hasilTinggiTerkoreksi.text = getText(R.string.tinggi_terkoreksi)
         }
     }
-
     private fun resetDataTabel() {
         binding1.apply {
             judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
@@ -885,7 +933,6 @@ class TabFragment(private val title: String) : Fragment() {
             dataTabel.text = getText(R.string.data_tabel)
         }
     }
-
     private fun calculatorCheck(): Boolean {
         binding1.apply {
             val checkResult: Boolean = try {
@@ -901,7 +948,6 @@ class TabFragment(private val title: String) : Fragment() {
             return checkResult
         }
     }
-
     private fun judulDataTabel() {
         var soundingCorrect: Double
         var satuanmm : String
@@ -944,13 +990,11 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     private fun tinggiCek (): Boolean {
         binding1.apply {
             return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
         }
     }
-
     private fun soundingCalculator(): List<Double> {
         var volumeKalibrasi2 = 0.0
         var volumeFraksi = 0.0
@@ -1072,7 +1116,6 @@ class TabFragment(private val title: String) : Fragment() {
             nilaiHasilKalkulator
         )
     }
-
     private fun calculatorListener(listEditText: List<AppCompatEditText>): List<Double> {
         var results1 = listOf<Double>()
         for (element in listEditText) {
@@ -1090,7 +1133,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
         return results1
     }
-
     private fun calculatorTinggiListener(listEditText: List<AppCompatEditText>): List<Double> {
         var results1 = listOf<Double>()
         for (element in listEditText) {
@@ -1122,7 +1164,6 @@ class TabFragment(private val title: String) : Fragment() {
             hasilTinggiTerkoreksi.text = getText(R.string.tinggi_terkoreksi)
         }
     }
-
     private fun resetDataTabelUdpate(binding: DialogUpdateSoundingBinding) {
         binding.apply {
             judulTabelKalibrasi.text = getText(R.string.tabel_kalibrasi)
@@ -1130,7 +1171,6 @@ class TabFragment(private val title: String) : Fragment() {
             judulTabelKalibrasi2.text = getText(R.string.tabel_kalibrasi2)
         }
     }
-
     private fun calculatorCheckUpdate(binding: DialogUpdateSoundingBinding): Boolean {
         binding.apply {
             val checkResult: Boolean = try {
@@ -1146,7 +1186,6 @@ class TabFragment(private val title: String) : Fragment() {
             return checkResult
         }
     }
-
     private fun judulDataTabelUpdate(binding: DialogUpdateSoundingBinding) {
         var satuanmm : String
         var soundingCorrectedFinal: String
@@ -1184,13 +1223,11 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     private fun tinggiCekUpdate(binding: DialogUpdateSoundingBinding): Boolean {
         binding.apply {
             return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
         }
     }
-
     private fun soundingCalculatorUpdate(binding: DialogUpdateSoundingBinding): List<Double> {
         var volumeKalibrasi2 = 0.0
         var volumeFraksi = 0.0
@@ -1253,7 +1290,6 @@ class TabFragment(private val title: String) : Fragment() {
             nilaiHasilKalkulator
         )
     }
-
     private fun calculatorListenerUpdate(listEditText: List<AppCompatEditText>, binding: DialogUpdateSoundingBinding): List<Double> {
         var results1 = listOf<Double>()
         for (element in listEditText) {
@@ -1271,7 +1307,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
         return results1
     }
-
     private fun calculatorTinggiListenerUpdate(listEditText: List<AppCompatEditText>, binding: DialogUpdateSoundingBinding): List<Double> {
         var results1 = listOf<Double>()
         for (element in listEditText) {
@@ -1294,72 +1329,6 @@ class TabFragment(private val title: String) : Fragment() {
         return results1
     }
 
-    private fun dayConverter(date: String): String {
-        return date.replace("Monday","Senin").replace("Tuesday","Selasa").replace("Wednesday","Rabu").replace("Thursday","Kamis").replace("Friday","Jumat").replace("Saturday","Sabtu").replace("Sunday","Minggu")
-    }
-
-    private fun monthConverter(date: String): String {
-        return date.replace("January","Januari").replace("February","Februari").replace("March","Maret").replace("May","Mei").replace("June","Juni").replace("July","Juli").replace("August","Agustus").replace("October","Oktober").replace("December","December")
-    }
-
-    private fun roundDigits(number: Double): Double {
-        val number6digits = (number * 1000000).roundToLong()/1000000.toDouble()
-        val number5digits = (number6digits * 100000).roundToLong()/100000.toDouble()
-        val number4digits = (number5digits * 10000).roundToLong()/10000.toDouble()
-        return (number4digits * 1000).roundToLong()/1000.toDouble()
-    }
-
-    private fun populateDropdownUser(list:ArrayList<PegawaiEntity>, spinner: Spinner) {
-        val items = arrayListOf<String>()
-        if (list.isNotEmpty()) {
-            for (i in 0 until list.size) {
-                items.add(list[i].nama_pegawai)
-            }
-            val adapter = activity?.let { it ->
-                ArrayAdapter(
-                    it,
-                    R.layout.dropdown_layout,
-                    items
-                )
-            }
-            spinner.adapter = adapter
-        }
-    }
-
-    private fun populateDropdownCompany(list:ArrayList<PerusahaanEntity>, spinner: Spinner) {
-        val items = arrayListOf<String>()
-        if (list.isNotEmpty()) {
-            for (i in 0 until list.size) {
-                items.add(list[i].nama_perusahaan)
-            }
-            val adapter = activity?.let { it ->
-                ArrayAdapter(
-                    it,
-                    R.layout.dropdown_layout,
-                    items
-                )
-            }
-            spinner.adapter = adapter
-        }
-    }
-
-    private fun populateDropdownServiceUser(list:ArrayList<PenggunaJasaEntity>, spinner: Spinner) {
-        val items = arrayListOf<String>()
-        if (list.isNotEmpty()) {
-            for (i in 0 until list.size) {
-                items.add(list[i].nama_pengguna_jasa)
-            }
-            val adapter = activity?.let { it ->
-                ArrayAdapter(
-                    it,
-                    R.layout.dropdown_layout,
-                    items
-                )
-            }
-            spinner.adapter = adapter
-        }
-    }
-
     private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<PegawaiEntity>, userDao: UserDao) {
         if (employeesList.isNotEmpty()) {
             val itemAdapter = PegawaiAdapter(employeesList,{ updateId ->
@@ -1377,7 +1346,6 @@ class TabFragment(private val title: String) : Fragment() {
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
-
     private fun addRecordUser(userDao: UserDao) {
         val name = endSpaceRemover(_binding3?.nama?.text.toString())
         val nip = _binding3?.nip?.text.toString()
@@ -1429,7 +1397,6 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     private fun updateRecordDialogUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
@@ -1502,7 +1469,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-
     private fun deleteRecordAlertDialogUser(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
@@ -1535,7 +1501,6 @@ class TabFragment(private val title: String) : Fragment() {
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
-
     private fun addRecordServiceUser(userDao: UserDao) {
         val name = endSpaceRemover(_binding3?.nama?.text.toString())
         val jabatan = endSpaceRemover(_binding3?.jabatan?.text.toString())
@@ -1572,7 +1537,6 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     private fun updateRecordDialogServiceUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
@@ -1667,7 +1631,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-
     private fun deleteRecordAlertDialogServiceUser(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
@@ -1703,7 +1666,6 @@ class TabFragment(private val title: String) : Fragment() {
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
-
     private fun addRecordCompany(userDao: UserDao) {
         val name = endSpaceRemover(_binding3?.nama?.text.toString())
         val npwp = _binding3?.etNPWPId?.text.toString()
@@ -1729,7 +1691,6 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     private fun updateRecordDialogCompany(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
@@ -1873,7 +1834,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-
     private fun deleteRecordAlertDialogCompany(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
@@ -1908,7 +1868,6 @@ class TabFragment(private val title: String) : Fragment() {
             _binding2?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
-
     private fun updateRecordDialogSounding(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
@@ -2286,7 +2245,6 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-
     private fun deleteRecordAlertDialogSounding(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
@@ -2305,12 +2263,78 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
+    private fun populateDropdownUser(list:ArrayList<PegawaiEntity>, spinner: Spinner) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            for (i in 0 until list.size) {
+                items.add(list[i].nama_pegawai)
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            spinner.adapter = adapter
+        }
+    }
+    private fun populateDropdownCompany(list:ArrayList<PerusahaanEntity>, spinner: Spinner) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            for (i in 0 until list.size) {
+                items.add(list[i].nama_perusahaan)
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            spinner.adapter = adapter
+        }
+    }
+    private fun populateDropdownServiceUser(list:ArrayList<PenggunaJasaEntity>, spinner: Spinner) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            for (i in 0 until list.size) {
+                items.add(list[i].nama_pengguna_jasa)
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            spinner.adapter = adapter
+        }
+    }
+
     private fun emptyCheck(listEditText: List<AppCompatEditText>): Boolean{
         var checkResult = true
         for (editText in listEditText) {
             checkResult = checkResult && editText.text.toString().isNotEmpty()
         }
         return checkResult
+    }
+    private fun zeroRemover(text: String): String {
+        return if (text.length > 1) {
+            if (text.subSequence(text.length-2,text.length) == ".0") {
+                (text.subSequence(0, text.length-2).toString())
+            } else {
+                text
+            }
+        } else {
+            text
+        }
+    }
+    private fun roundDigits(number: Double): Double {
+        val number6digits = (number * 1000000).roundToLong()/1000000.toDouble()
+        val number5digits = (number6digits * 100000).roundToLong()/100000.toDouble()
+        val number4digits = (number5digits * 10000).roundToLong()/10000.toDouble()
+        return (number4digits * 1000).roundToLong()/1000.toDouble()
     }
 
     private fun visibilityGone(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {
@@ -2321,7 +2345,6 @@ class TabFragment(private val title: String) : Fragment() {
             textView.visibility = View.GONE
         }
     }
-
     private fun visibilityVisible(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {
         for (editText in listEditText) {
             editText.visibility = View.VISIBLE
@@ -2331,15 +2354,26 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun zeroRemover(text: String): String {
-        return if (text.length > 1) {
-            if (text.subSequence(text.length-2,text.length) == ".0") {
-                (text.subSequence(0, text.length-2).toString())
-            } else {
-                text
-            }
-        } else {
-            text
+    private fun dayConverter(date: String): String {
+        return date.replace("Monday","Senin").replace("Tuesday","Selasa").replace("Wednesday","Rabu").replace("Thursday","Kamis").replace("Friday","Jumat").replace("Saturday","Sabtu").replace("Sunday","Minggu")
+    }
+    private fun monthConverter(date: String): String {
+        return date.replace("January","Januari").replace("February","Februari").replace("March","Maret").replace("May","Mei").replace("June","Juni").replace("July","Juli").replace("August","Agustus").replace("October","Oktober").replace("December","December")
+    }
+
+    private fun backFunction() {
+        binding1.apply {
+            dataAdministrasiLayout.visibility = View.GONE
+            back.visibility = View.GONE
+            simpanHasil.visibility = View.GONE
+            dataLapanganLayout.visibility = View.VISIBLE
+            dataTangkiLayout.visibility = View.VISIBLE
+            dataTabelLayout.visibility = View.VISIBLE
+            hasilLayout.visibility = View.VISIBLE
+            next.visibility = View.VISIBLE
+            Handler(Looper.getMainLooper()).postDelayed({
+                scrollView.fullScroll(ScrollView.FOCUS_UP)
+            }, 1)
         }
     }
 }

@@ -3,6 +3,7 @@
     <string name="data_lapangan">Data Lapangan</string>
     <string name="tinggi_cairan">Tinggi Cairan (mm)</string>
     <string name="suhu_cairan">Suhu Cairan (°C)</string>
+    <string name="suhu_edited">%s °C</string>
     <string name="tinggi_meja">Tinggi Meja (mm)</string>
     <string name="tabel_kalibrasi">Tabel Kalibrasi</string>
     <string name="tabel_fraksi">Tabel Fraksi</string>
