@@ -769,7 +769,7 @@ class TabFragment(private val title: String) : Fragment() {
 //        pID.add(idTable)
 //        pID.indentationLeft = horizontalPadding
 //        doc.add(pID)
-        doc.add(Paragraph("\n"))
+        doc.add(Paragraph("\n", appFontMiddle))
         val metodeFraksi = it.volume_fraksi > 0
 
         val nomorDokumen = it.nomor_dokumen.ifEmpty { "-" }
@@ -799,8 +799,8 @@ class TabFragment(private val title: String) : Fragment() {
         writeDataTitle("Data Tangki", doc)
         val judulTangki = listOf("Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki")
         val nilaiTangki = listOf(
-            "${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm",
             "${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C",
+            "${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm",
             zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")
         )
         writeDatawithSemicolomn(judulTangki, nilaiTangki, doc)
@@ -837,11 +837,19 @@ class TabFragment(private val title: String) : Fragment() {
             "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
         )
         writeDatawithSemicolomn(calcData, calcValue, doc)
-        doc.add(Paragraph("\n\n", appFontMiddle))
+        doc.add(Paragraph("\n", appFontMiddle))
 
-        val ttdData = listOf("Mengetahui,", "Atasan Langsung", "\n\n\n", it.pegawai_sounding)
-        val ttdValue = listOf("Disusun oleh", "Pemeriksa Bea Cukai", "\n\n\n", it.pegawai_sounding)
-        writeAuthentication(ttdData, ttdValue, doc)
+        val ttdValue = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n")
+        writeAuthentication(ttdValue, doc)
+
+        val nama = Chunk(it.pegawai_sounding, regularFont)
+        nama.setUnderline(0.5f, -2f)
+        val para = Paragraph(nama)
+        para.indentationLeft = 380f
+        doc.add(para)
+
+        val nip = listOf(it.nip_pegawai)
+        writeAuthentication(nip, doc)
     }
     private fun writeDataTitle(text: String, doc: Document) {
         val padding = 3f
@@ -888,32 +896,12 @@ class TabFragment(private val title: String) : Fragment() {
         idTable.deleteBodyRows()
         doc.add(Paragraph("\n", appFontMiddle))
     }
-    private fun writeAuthentication(listJudul: List<String>, listNilai: List<String>, doc: Document) {
-        val padding = 3f
-        val idTable = PdfPTable(2)
-        idTable.setWidths(floatArrayOf(1f, 1f))
-        idTable.isLockedWidth = true
-        idTable.totalWidth = PageSize.A4.width
-        for (i in listJudul.indices) {
-            val idCell = PdfPCell(Phrase(listJudul[i], regularFont))
-            idCell.border = Rectangle.NO_BORDER
-            idCell.horizontalAlignment = Element.ALIGN_LEFT
-            idCell.verticalAlignment = Element.ALIGN_MIDDLE
-            idCell.paddingTop = padding
-            idCell.paddingBottom = padding
-            idCell.paddingLeft = 20*padding
-            idTable.addCell(idCell)
-
-            val valueCell = PdfPCell(Phrase(listNilai[i], regularFont))
-            valueCell.border = Rectangle.NO_BORDER
-            valueCell.horizontalAlignment = Element.ALIGN_LEFT
-            valueCell.verticalAlignment = Element.ALIGN_MIDDLE
-            valueCell.paddingTop = padding
-            valueCell.paddingBottom = padding
-            valueCell.paddingLeft = 30*padding
-            idTable.addCell(valueCell)
+    private fun writeAuthentication(listNilai: List<String>, doc: Document) {
+        for (i in listNilai.indices) {
+            val para = Paragraph(listNilai[i], regularFont)
+            para.indentationLeft = 380f
+            doc.add(para)
         }
-        doc.add(idTable)
     }
 
     private fun resetResult() {
@@ -2187,7 +2175,7 @@ class TabFragment(private val title: String) : Fragment() {
                             val judulFraksi = judulTabelFraksi.text.toString()
                             val soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
                             val soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
-                            val dataTabel = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
+                            val dataTabel = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString()).replace("Data Tabel (","").replace(")","").replace(".",",")
                             lifecycleScope.launch {
                                 userDao.fetchUserByName(petugasSounding).collect {
                                     try {
