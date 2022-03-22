@@ -51,7 +51,6 @@ import java.util.*
 import kotlin.math.round
 import kotlin.math.roundToLong
 
-
 class TabFragment(private val title: String) : Fragment() {
 
     private var _binding1: FragmentOneBinding? = null
@@ -706,7 +705,7 @@ class TabFragment(private val title: String) : Fragment() {
     private fun headerRawReport(doc: Document, writer: PdfWriter) {
         val tableBotPadding = 10f
         val tableHorizontalPadding = 20f
-        val tableTopPadding = 22f
+        val tableTopPadding = 20f
 
         val headerTable = PdfPTable(2)
         headerTable.setWidths(floatArrayOf(1f, 3.5f))
@@ -755,9 +754,9 @@ class TabFragment(private val title: String) : Fragment() {
         val colorPrimary = BaseColor(0, 0, 0)
         val canvas: PdfContentByte = writer.directContent
         canvas.setColorStroke(colorPrimary)
-        canvas.moveTo(0.0, 760.0)
+        canvas.moveTo(0.0, 755.0)
         // Drawing the line
-        canvas.lineTo(PageSize.A4.width.toDouble(), 760.0)
+        canvas.lineTo(PageSize.A4.width.toDouble(), 755.0)
         canvas.setLineWidth(1.5f)
         canvas.closePathStroke()
     }
@@ -769,18 +768,20 @@ class TabFragment(private val title: String) : Fragment() {
 //        pID.add(idTable)
 //        pID.indentationLeft = horizontalPadding
 //        doc.add(pID)
-        doc.add(Paragraph("\n", appFontMiddle))
+        doc.add(Paragraph("\n\n\n\n\n", appFontTiny))
         val metodeFraksi = it.volume_fraksi > 0
 
         val nomorDokumen = it.nomor_dokumen.ifEmpty { "-" }
         val produk = it.produk.ifEmpty { "-" }
         writeDataTitle("Data Umum", doc)
-        val judulUmum = listOf("Nama Perusahaan", "Nomor Tangki", "Hari/Tanggal", "Jam", "Lokasi", "No Dokumen", "Produk", "Bentuk")
+        val judulUmum = listOf("Nama Perusahaan", "Nomor Tangki","Alamat", "Waktu", "Lokasi", "No Dokumen", "Produk", "Bentuk")
         val nilaiUmum = listOf(
             it.perusahaan_sounding,
             it.no_tangki,
-            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
-            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
+            it.alamat_perusahaan_sounding,
+            it.waktu.replace("-"," "),
+//            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
+//            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
             it.lokasi_sounding,
             nomorDokumen,
             produk,
@@ -848,8 +849,15 @@ class TabFragment(private val title: String) : Fragment() {
         para.indentationLeft = 380f
         doc.add(para)
 
-        val nip = listOf(it.nip_pegawai)
-        writeAuthentication(nip, doc)
+        val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
+                " " + it.nip_pegawai.subSequence(8,14).toString() +
+                " " + it.nip_pegawai.subSequence(14,15).toString() +
+                " " + it.nip_pegawai.subSequence(15,it.nip_pegawai.length).toString()
+//        val nip = listOf(nipSpace)
+        val paraNip = Paragraph(nipSpace, regularFont)
+        paraNip.indentationLeft = 379f
+        doc.add(paraNip)
+//        writeAuthentication(nip, doc)
     }
     private fun writeDataTitle(text: String, doc: Document) {
         val padding = 3f
@@ -870,7 +878,7 @@ class TabFragment(private val title: String) : Fragment() {
             val idCell = PdfPCell(Phrase(listJudul[i], regularFont))
             idCell.border = Rectangle.NO_BORDER
             idCell.horizontalAlignment = Element.ALIGN_LEFT
-            idCell.verticalAlignment = Element.ALIGN_MIDDLE
+            idCell.verticalAlignment = Element.ALIGN_TOP
             idCell.paddingTop = padding
             idCell.paddingBottom = padding
             idTable.addCell(idCell)
@@ -878,7 +886,7 @@ class TabFragment(private val title: String) : Fragment() {
             val separatorCell = PdfPCell(Phrase(":", regularFont))
             separatorCell.border = Rectangle.NO_BORDER
             separatorCell.horizontalAlignment = Element.ALIGN_CENTER
-            separatorCell.verticalAlignment = Element.ALIGN_MIDDLE
+            separatorCell.verticalAlignment = Element.ALIGN_TOP
             separatorCell.paddingTop = padding
             separatorCell.paddingBottom = padding
             idTable.addCell(separatorCell)
@@ -886,7 +894,7 @@ class TabFragment(private val title: String) : Fragment() {
             val valueCell = PdfPCell(Phrase(listNilai[i], regularFont))
             valueCell.border = Rectangle.NO_BORDER
             valueCell.horizontalAlignment = Element.ALIGN_LEFT
-            valueCell.verticalAlignment = Element.ALIGN_MIDDLE
+            valueCell.verticalAlignment = Element.ALIGN_TOP
             valueCell.paddingTop = padding
             valueCell.paddingBottom = padding
             valueCell.paddingRight = padding
