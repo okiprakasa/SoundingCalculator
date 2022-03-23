@@ -226,19 +226,19 @@ class TabFragment(private val title: String) : Fragment() {
                                                     }
                                                 }
                                                 else {
-                                                    Toast.makeText(context, "Mohon Tambahkan Data Pengguna Jasa Terlebih Dahulu Pada Tab User", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(context, "Mohon Tambahkan Data Pengguna Jasa\nTerlebih Dahulu Pada Tab User", Toast.LENGTH_LONG).show()
                                                 }
                                             }
                                         }
                                     }
                                     else {
-                                        Toast.makeText(context, "Mohon Tambahkan Data Pegawai Terlebih Dahulu Pada Tab User", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Mohon Tambahkan Data Pegawai\nTerlebih Dahulu Pada Tab User", Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
                         }
                         else {
-                            Toast.makeText(context, "Mohon Cek Data, Nilai Hasil Masih 0", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Mohon Cek Data\nNilai Hasil Masih 0", Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -360,7 +360,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 judulFraksi = judulFraksi,
                                                                 judulDataTabel = dataTabel
                                                             ))
-                                                            Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(requireContext(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                                                             _binding1?.tinggiCairan?.text?.clear()
                                                             _binding1?.suhuCairan?.text?.clear()
                                                             _binding1?.suhuTetap?.text?.clear()
@@ -531,7 +531,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                 }
                                 else {
-                                    Toast.makeText(context, "Mohon Tambahkan Data Perusahaan Terlebih Dahulu Pada Tab Company", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Mohon Tambahkan Data Perusahaan\nTerlebih Dahulu Pada Tab Company", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -599,14 +599,24 @@ class TabFragment(private val title: String) : Fragment() {
                 }
             }
             else -> {
-                lifecycleScope.launch {
-                    userDao.fetchAllSounding().collect {
-                        Log.d("okimatra", "$it")
-                        val list = ArrayList(it)
-                        setupListOfDataIntoRecyclerViewSounding(list,userDao)
-                    }
-                }
                 binding2.apply{
+                    rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                    rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                    finalTab.background = null
+                    finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                    fabFinalReport.visibility = View.GONE
+                    svSoundingList.visibility = View.VISIBLE
+                    svFinalList.visibility = View.GONE
+                    tvNoFinalDataAvailable.visibility = View.GONE
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        lifecycleScope.launch {
+                            userDao.fetchAllSounding().collect {
+                                Log.d("okimatra", "$it")
+                                val list = ArrayList(it)
+                                setupListOfDataIntoRecyclerViewSounding(list,userDao)
+                            }
+                        }
+                    }, 10)
                     rawDataTab.setOnClickListener {
                         rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -614,12 +624,12 @@ class TabFragment(private val title: String) : Fragment() {
                         finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
                         fabFinalReport.visibility = View.GONE
                         svSoundingList.visibility = View.VISIBLE
-                        tvNoRawDataAvailable.visibility = View.GONE
                         svFinalList.visibility = View.GONE
+                        tvNoFinalDataAvailable.visibility = View.GONE
                         Handler(Looper.getMainLooper()).postDelayed({
                             lifecycleScope.launch {
                                 userDao.fetchAllSounding().collect {
-                                    Log.d("exactcompanies", "$it")
+                                    Log.d("okimatra", "$it")
                                     val list = ArrayList(it)
                                     setupListOfDataIntoRecyclerViewSounding(list,userDao)
                                 }
@@ -633,8 +643,21 @@ class TabFragment(private val title: String) : Fragment() {
                         rawDataTab.background = null
                         rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
                         fabFinalReport.visibility = View.VISIBLE
-                        tvNoRawDataAvailable.visibility = View.VISIBLE
+                        tvNoFinalDataAvailable.visibility = View.VISIBLE
                         svSoundingList.visibility = View.GONE
+                        tvNoRawDataAvailable.visibility = View.GONE
+                    }
+
+                    fabFinalReport.setOnClickListener {
+                        lifecycleScope.launch {
+                            userDao.countAllSounding().collect {
+                                if (it>1) {
+                                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(requireContext(), "Total Raw Data kurang dari 2\nMohon tambahkan Raw Data", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -678,12 +701,12 @@ class TabFragment(private val title: String) : Fragment() {
                                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         startActivity(intent)
                                     } catch (e: ActivityNotFoundException) {
-                                        Toast.makeText(requireActivity(), "No PDF Viewer", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireActivity(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
                                     }
 
 
                                 } else {
-                                    Toast.makeText(requireActivity(), "Permission Not Granted", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(requireActivity(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
@@ -772,12 +795,12 @@ class TabFragment(private val title: String) : Fragment() {
         val nomorDokumen = it.nomor_dokumen.ifEmpty { "-" }
         val produk = it.produk.ifEmpty { "-" }
         writeDataTitle("Data Umum", doc)
-        val judulUmum = listOf("Nama Perusahaan", "Alamat", "Nomor Tangki", "Waktu", "Lokasi", "No Dokumen", "Produk", "Bentuk")
+        val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding", "No Dokumen", "Produk/Jenis Barang", "Bentuk Fisik/Warna/Bau")
         val nilaiUmum = listOf(
             it.perusahaan_sounding,
             it.alamat_perusahaan_sounding,
             it.no_tangki,
-            it.waktu.replace("-"," "),
+            (it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," "),
 //            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
 //            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
             it.lokasi_sounding,
@@ -838,40 +861,64 @@ class TabFragment(private val title: String) : Fragment() {
         writeDatawithSemicolomn(calcData, calcValue, doc)
         doc.add(Paragraph("\n", appFontMiddle))
 
-        val ttdValue = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n")
-        writeAuthentication(ttdValue, doc)
+//        val ttdValue = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n")
+//        writeAuthentication(ttdValue, doc)
+//        val nama = Chunk(it.pegawai_sounding, regularFont)
+//        nama.setUnderline(0.5f, -2f)
+//        val para = Paragraph(nama)
+//        para.indentationLeft = 380f
+//        doc.add(para)
 
-        val nama = Chunk(it.pegawai_sounding, regularFont)
-        nama.setUnderline(0.5f, -2f)
-        val para = Paragraph(nama)
-        para.indentationLeft = 380f
-        doc.add(para)
+        val ttdPenggunaJasa = listOf("Mengetahui,", "Eksportir", "\n\n\n")
+        val ttdPegawai = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n\n")
+        writeAuthenticationwithCustomer(ttdPenggunaJasa, ttdPegawai, doc)
+
+        val table = PdfPTable(2)
+        table.setWidths(floatArrayOf(1f, 1f))
+        table.isLockedWidth = true
+        table.totalWidth = PageSize.A4.width
+        val namaPJ = Chunk(it.pengguna_jasa_sounding, regularFont)
+        namaPJ.setUnderline(0.5f, -2f)
+        val pjCell = PdfPCell(Phrase(namaPJ))
+        pjCell.border = Rectangle.NO_BORDER
+        pjCell.horizontalAlignment = Element.ALIGN_LEFT
+        pjCell.verticalAlignment = Element.ALIGN_TOP
+        pjCell.paddingLeft = 57f
+        table.addCell(pjCell)
+        val namaPeg = Chunk(it.pegawai_sounding, regularFont)
+        namaPeg.setUnderline(0.5f, -2f)
+        val pegCell = PdfPCell(Phrase(namaPeg))
+        pegCell.border = Rectangle.NO_BORDER
+        pegCell.horizontalAlignment = Element.ALIGN_LEFT
+        pegCell.verticalAlignment = Element.ALIGN_TOP
+        pegCell.paddingLeft = 72f
+        table.addCell(pegCell)
+        doc.add(table)
+        table.deleteBodyRows()
 
         val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
                 " " + it.nip_pegawai.subSequence(8,14).toString() +
                 " " + it.nip_pegawai.subSequence(14,15).toString() +
                 " " + it.nip_pegawai.subSequence(15,it.nip_pegawai.length).toString()
-//        val nip = listOf(nipSpace)
-        val paraNip = Paragraph(nipSpace, regularFont)
-        paraNip.indentationLeft = 379f
-        doc.add(paraNip)
-//        writeAuthentication(nip, doc)
+        val nip = listOf(nipSpace)
+        val jabatan = listOf(it.jabatan_pengguna_jasa)
+        writeAuthenticationwithCustomer(jabatan, nip, doc)
     }
     private fun writeDataTitle(text: String, doc: Document) {
         val padding = 3f
         val judul= Chunk(text, appFontSemiBig)
         judul.setUnderline(0.5f, -2f)
         val paraJudul = Paragraph(judul)
-        paraJudul.indentationLeft = 20*padding+2f
+        paraJudul.indentationLeft = 19*padding-1f
         doc.add(paraJudul)
         doc.add(Paragraph("\n", appFontTiny))
     }
     private fun writeDatawithSemicolomn(listJudul: List<String>, listNilai: List<String>, doc: Document) {
         val padding = 3f
-        val idTable = PdfPTable(3)
-        idTable.setWidths(floatArrayOf(1.4f, 0.1f, 3.5f))
-        idTable.isLockedWidth = true
-        idTable.totalWidth = PageSize.A4.width-2*20*padding
+        val table = PdfPTable(3)
+        table.setWidths(floatArrayOf(1.7f, 0.05f, 3.5f))
+        table.isLockedWidth = true
+        table.totalWidth = PageSize.A4.width
         for (i in listJudul.indices) {
             val idCell = PdfPCell(Phrase(listJudul[i], regularFont))
             idCell.border = Rectangle.NO_BORDER
@@ -879,7 +926,8 @@ class TabFragment(private val title: String) : Fragment() {
             idCell.verticalAlignment = Element.ALIGN_TOP
             idCell.paddingTop = padding
             idCell.paddingBottom = padding
-            idTable.addCell(idCell)
+            idCell.paddingLeft = 19*padding
+            table.addCell(idCell)
 
             val separatorCell = PdfPCell(Phrase(":", regularFont))
             separatorCell.border = Rectangle.NO_BORDER
@@ -887,7 +935,7 @@ class TabFragment(private val title: String) : Fragment() {
             separatorCell.verticalAlignment = Element.ALIGN_TOP
             separatorCell.paddingTop = padding
             separatorCell.paddingBottom = padding
-            idTable.addCell(separatorCell)
+            table.addCell(separatorCell)
 
             val valueCell = PdfPCell(Phrase(listNilai[i], regularFont))
             valueCell.border = Rectangle.NO_BORDER
@@ -895,16 +943,40 @@ class TabFragment(private val title: String) : Fragment() {
             valueCell.verticalAlignment = Element.ALIGN_TOP
             valueCell.paddingTop = padding
             valueCell.paddingBottom = padding
-            valueCell.paddingRight = padding
-            idTable.addCell(valueCell)
+            valueCell.paddingRight = 18*padding
+            table.addCell(valueCell)
         }
-        doc.add(idTable)
-        idTable.deleteBodyRows()
+        doc.add(table)
+        table.deleteBodyRows()
         doc.add(Paragraph("\n", appFontMiddle))
     }
-    private fun writeAuthentication(listNilai: List<String>, doc: Document) {
-        for (i in listNilai.indices) {
-            val para = Paragraph(listNilai[i], regularFont)
+    private fun writeAuthenticationwithCustomer(listPenggunaJasa: List<String>, listPegawai: List<String>, doc: Document) {
+        val table = PdfPTable(2)
+        table.setWidths(floatArrayOf(1f, 1f))
+        table.isLockedWidth = true
+        table.totalWidth = PageSize.A4.width
+        for (i in listPegawai.indices) {
+            val pjCell = PdfPCell(Phrase(listPenggunaJasa[i], regularFont))
+            pjCell.border = Rectangle.NO_BORDER
+            pjCell.horizontalAlignment = Element.ALIGN_LEFT
+            pjCell.verticalAlignment = Element.ALIGN_TOP
+            pjCell.paddingLeft = 57f
+            table.addCell(pjCell)
+
+            val pegCell = PdfPCell(Phrase(listPegawai[i], regularFont))
+            pegCell.border = Rectangle.NO_BORDER
+            pegCell.horizontalAlignment = Element.ALIGN_LEFT
+            pegCell.verticalAlignment = Element.ALIGN_TOP
+            pegCell.paddingLeft = 72f
+            table.addCell(pegCell)
+        }
+        doc.add(table)
+        table.deleteBodyRows()
+    }
+    @Suppress("unused")
+    private fun writeAuthentication(listPegawai: List<String>, doc: Document) {
+        for (i in listPegawai.indices) {
+            val para = Paragraph(listPegawai[i], regularFont)
             para.indentationLeft = 380f
             doc.add(para)
         }
@@ -1373,7 +1445,7 @@ class TabFragment(private val title: String) : Fragment() {
                 Toast.makeText(context, "Mohon Periksa Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
             }
             nip.substring(8,12).toInt() - nip.substring(0,4).toInt() > 70 -> {
-                Toast.makeText(context, "Mohon Periksa Tahun Lahir dan Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Mohon Periksa Tahun Lahir dan\nTahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
             }
             nip.substring(12,14).toInt() !in 1..12 -> {
                 Toast.makeText(context, "Mohon Periksa Bulan Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
@@ -1440,7 +1512,7 @@ class TabFragment(private val title: String) : Fragment() {
                     Toast.makeText(context, "Mohon Periksa Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
                 }
                 nip.substring(8,12).toInt() - nip.substring(0,4).toInt() > 70 -> {
-                    Toast.makeText(context, "Mohon Periksa Tahun Lahir dan Tahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Mohon Periksa Tahun Lahir dan\nTahun Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()
                 }
                 nip.substring(12,14).toInt() !in 1..12 -> {
                     Toast.makeText(context, "Mohon Periksa Bulan Penerimaan PNS Anda", Toast.LENGTH_SHORT).show()

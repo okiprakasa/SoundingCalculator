@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">SoundingCalculator</string>
     <string name="data_lapangan">Data Lapangan</string>
+    <string name="data_umum">Data Umum</string>
     <string name="tinggi_cairan">Tinggi Cairan (mm)</string>
+    <string name="sarana_pengangkut">Sarana Pengangkut</string>
+    <string name="hint_sarana_pengangkut">Nama Sarana Pengangkut</string>
     <string name="suhu_cairan">Suhu Cairan (°C)</string>
     <string name="suhu_edited">%s °C</string>
     <string name="tinggi_meja">Tinggi Meja (mm)</string>
@@ -74,6 +77,7 @@
     <string name="tambah_data">TAMBAHKAN DATA</string>
     <string name="no_record">Tidak Ada Data Tersedia</string>
     <string name="no_raw_record">Tidak Ada Data Tersedia\nTambahkan Data melalui Tab Calculator</string>
+    <string name="no_final_record">Tidak Ada Data Tersedia\nTambahkan Data melalui\nTombol Tambah pada Kanan Bawah</string>
     <string name="hint_nama">Masukkan Nama Anda</string>
     <string name="hint_npwp">Masukkan NPWP Perusahaan</string>
     <string name="hint_perusahaan">Masukkan Nama Perusahaan</string>
