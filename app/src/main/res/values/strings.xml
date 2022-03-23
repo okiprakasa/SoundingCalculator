@@ -73,7 +73,7 @@
     <string name="hint_nip">Masukkan NIP Anda</string>
     <string name="tambah_data">TAMBAHKAN DATA</string>
     <string name="no_record">Tidak Ada Data Tersedia</string>
-    <string name="no_raw_record">Tidak Ada Raw Data Tersedia. Raw Data hanya dapat ditambahkan melalui Tab Calculator</string>
+    <string name="no_raw_record">Tidak Ada Data Tersedia\nTambahkan Data melalui Tab Calculator</string>
     <string name="hint_nama">Masukkan Nama Anda</string>
     <string name="hint_npwp">Masukkan NPWP Perusahaan</string>
     <string name="hint_perusahaan">Masukkan Nama Perusahaan</string>
