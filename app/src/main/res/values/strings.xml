@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">SoundingCalculator</string>
     <string name="data_lapangan">Data Lapangan</string>
+    <string name="data_sounding">Data Sounding %s</string>
     <string name="data_umum">Data Umum</string>
     <string name="tinggi_cairan">Tinggi Cairan (mm)</string>
+    <string name="awal">Awal</string>
+    <string name="awal_edited">Awal %s</string>
+    <string name="akhir">Akhir</string>
+    <string name="hint_sounding">Masukkan Sounding</string>
+    <string name="akhir_edited">Akhir %s</string>
     <string name="sarana_pengangkut">Sarana Pengangkut</string>
+    <string name="jumlah_barcon">Jumlah Contoh Barang</string>
     <string name="hint_sarana_pengangkut">Nama Sarana Pengangkut</string>
     <string name="suhu_cairan">Suhu Cairan (°C)</string>
     <string name="suhu_edited">%s °C</string>
@@ -17,6 +24,7 @@
     <string name="data_tabel">Data Tabel</string>
     <string name="faktor_muai">Koefisien/Faktor Muai Tangki</string>
     <string name="simpan_data">SIMPAN DATA</string>
+    <string name="i">%s</string>
     <string name="hasil">Hasil: 0.000 MT</string>
     <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>
     <string name="volume_app">Volume App: 0.000 L</string>
@@ -83,6 +91,9 @@
     <string name="hint_perusahaan">Masukkan Nama Perusahaan</string>
     <string name="perusahaan">Perusahaan</string>
     <string name="waktu">Waktu Sounding</string>
+    <string name="tanggal_ba">Tanggal Berita Acara</string>
+    <string name="waktu_barcon">Waktu Pengajuan Contoh Barang</string>
+    <string name="hint_tanggal_ba">Tanggal Penerbitan BA</string>
     <string name="hint_waktu">Masukkan Waktu Sounding</string>
     <string name="format_waktu">%s %02d:%02d %s</string>
     <string name="no_dokumen">Nomor Dokumen</string>
@@ -107,6 +118,8 @@
     <string name="hint_nama_pegawai">Nama Petugas Sounding</string>
     <string name="hint_nama_pengguna_jasa">Nama Petugas Pengguna Jasa</string>
     <string name="lokasi_sounding">Lokasi Sounding</string>
+    <string name="lokasi_ba">Lokasi Berita Acara</string>
+    <string name="hint_lokasi_ba">Lokasi Penerbitan BA</string>
     <string name="hint_lokasi_sounding">Masukkan Lokasi Sounding</string>
     <string name="no_tangki_edited">No Tangki: %s   </string>
     <string name="delete">Delete</string>

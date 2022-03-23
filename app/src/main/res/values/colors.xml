@@ -13,6 +13,7 @@
     <color name="login">#023E7D</color>
     <color name="red">#E91E63</color>
     <color name="transparentColor">#00FFFFFF</color>
+    <color name="Transparent">#00000000</color>
     <color name="grey">#808080</color>
     <color name="outerblue">#C0D6F7</color>
     <color name="colorWhite">#FFFFFF</color>
