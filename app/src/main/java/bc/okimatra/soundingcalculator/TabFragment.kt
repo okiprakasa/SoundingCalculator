@@ -90,7 +90,6 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val userDao = (requireActivity().application as UserApp).db.userDao()
@@ -613,9 +612,9 @@ class TabFragment(private val title: String) : Fragment() {
                         rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         finalTab.background = null
                         finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        fabRawData.visibility = View.GONE
+                        fabFinalReport.visibility = View.GONE
                         svSoundingList.visibility = View.VISIBLE
-                        tvNoRecordsAvailable.visibility = View.GONE
+                        tvNoRawDataAvailable.visibility = View.GONE
                         svFinalList.visibility = View.GONE
                         Handler(Looper.getMainLooper()).postDelayed({
                             lifecycleScope.launch {
@@ -633,15 +632,14 @@ class TabFragment(private val title: String) : Fragment() {
                         finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         rawDataTab.background = null
                         rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        fabRawData.visibility = View.VISIBLE
-                        tvNoRecordsAvailable.visibility = View.VISIBLE
+                        fabFinalReport.visibility = View.VISIBLE
+                        tvNoRawDataAvailable.visibility = View.VISIBLE
                         svSoundingList.visibility = View.GONE
                     }
                 }
             }
         }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding1 = null
@@ -774,11 +772,11 @@ class TabFragment(private val title: String) : Fragment() {
         val nomorDokumen = it.nomor_dokumen.ifEmpty { "-" }
         val produk = it.produk.ifEmpty { "-" }
         writeDataTitle("Data Umum", doc)
-        val judulUmum = listOf("Nama Perusahaan", "Nomor Tangki","Alamat", "Waktu", "Lokasi", "No Dokumen", "Produk", "Bentuk")
+        val judulUmum = listOf("Nama Perusahaan", "Alamat", "Nomor Tangki", "Waktu", "Lokasi", "No Dokumen", "Produk", "Bentuk")
         val nilaiUmum = listOf(
             it.perusahaan_sounding,
-            it.no_tangki,
             it.alamat_perusahaan_sounding,
+            it.no_tangki,
             it.waktu.replace("-"," "),
 //            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
 //            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
@@ -790,7 +788,7 @@ class TabFragment(private val title: String) : Fragment() {
         writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
 
         writeDataTitle("Data Lapangan", doc)
-        val judulLapangan = listOf("Tinggi Hasil Sounding", "Suhu Hasil Sounding")
+        val judulLapangan = listOf("Tinggi Cairan", "Suhu Cairan")
         val nilaiLapangan = listOf(
             "${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
             "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
@@ -810,7 +808,7 @@ class TabFragment(private val title: String) : Fragment() {
         val judulTabel: List<String>
         val nilaiTabel: List<String>
         if (metodeFraksi) {
-            judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Produk")
+            judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Cairan")
             nilaiTabel = listOf(
                 "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
                 "${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L",
@@ -1053,13 +1051,14 @@ class TabFragment(private val title: String) : Fragment() {
                             (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
                                 .toDouble()) / 1000
                         )
-                        delta =
-                            ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
-                                .toDouble()) / 1000 - judulTabelKalibrasi.text.toString()
-                                .subSequence(
+                        delta =((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()) / 1000 -
+                                judulTabelKalibrasi.text.toString().subSequence(
                                     judulTabelKalibrasi.text.indexOf("(") + 1,
                                     judulTabelKalibrasi.text.indexOf(")") - 2
                                 ).toString().toDouble()) / 0.01
+                        //Handle Double Rounding Error
+                        delta = (delta * 1000000).roundToLong()/1000000.toDouble()
+                        delta = (delta * 100000).roundToLong()/100000.toDouble()
                         volumeMid = tabelKalibrasi.text.toString()
                             .toDouble() + delta * (tabelKalibrasi2.text.toString()
                             .toDouble() - tabelKalibrasi.text.toString().toDouble())
@@ -1256,6 +1255,8 @@ class TabFragment(private val title: String) : Fragment() {
                         volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
                         tinggiTerkoreksi = roundDigits((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000)
                         delta =((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000 - judulTabelKalibrasi.text.toString().subSequence(judulTabelKalibrasi.text.indexOf("(") + 1,judulTabelKalibrasi.text.indexOf(")") - 2).toString().toDouble()) / 0.01
+                        delta = (delta * 1000000).roundToLong()/1000000.toDouble()
+                        delta = (delta * 100000).roundToLong()/100000.toDouble()
                         volumeMid = tabelKalibrasi.text.toString().toDouble() + delta * (tabelKalibrasi2.text.toString().toDouble() - tabelKalibrasi.text.toString().toDouble())
                         volumeApp = roundDigits(volumeMid)
                         volumeObs = roundDigits(volumeApp * (1.0 + ((suhuCairan.text.toString().toDouble() - suhuTetap.text.toString().toDouble()) * faktorMuai.text.toString().toDouble())))
@@ -1858,10 +1859,10 @@ class TabFragment(private val title: String) : Fragment() {
             _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvSoundingList?.adapter = soundingAdapter
             _binding2?.svSoundingList?.visibility = View.VISIBLE
-            _binding2?.tvNoRecordsAvailable?.visibility = View.GONE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
         } else {
             _binding2?.svSoundingList?.visibility = View.GONE
-            _binding2?.tvNoRecordsAvailable?.visibility = View.VISIBLE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
         }
     }
     private fun updateRecordDialogSounding(id:Int, userDao: UserDao) {
