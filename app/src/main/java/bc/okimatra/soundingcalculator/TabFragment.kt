@@ -70,6 +70,8 @@ class TabFragment(private val title: String) : Fragment() {
 
     private lateinit var ivCvMap: MutableMap<ImageView, CardView>
     private lateinit var tvCvMap: MutableMap<ImageView, TextView>
+    private lateinit var spAwalCvMap: MutableMap<ImageView, Spinner>
+    private lateinit var spAkhirCvMap: MutableMap<ImageView, Spinner>
     private var counterSounding = 1
     
     private var baseFontRegular  = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
@@ -79,7 +81,6 @@ class TabFragment(private val title: String) : Fragment() {
     private var appFontSemiBig = Font(Font.FontFamily.HELVETICA, 13f, Font.BOLD, BaseColor.BLACK)
     private var baseFontBig = BaseFont.createFont("res/font/nexa.otf", "UTF-8", BaseFont.EMBEDDED)
     private var appFontBig= Font(baseFontBig, 16f, Font.BOLD)
-    private val paddingEdge = 40f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
@@ -832,7 +833,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     Log.d("loc", outPath)
                                     val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                     doc.open()
-                                    doc.setMargins(0f, 0f, paddingEdge, paddingEdge)
+                                    doc.setMargins(0f, 0f, 40f, 40f)
                                     headerRawReport(doc, writer)
                                     bodyRawReport(doc, it)
                                     doc.close()
