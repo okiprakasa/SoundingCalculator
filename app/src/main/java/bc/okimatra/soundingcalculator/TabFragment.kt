@@ -203,49 +203,55 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     next.setOnClickListener {
-                        if (hasilKalkulator.text.toString() != "Hasil: 0.000 MT") {
-                            lifecycleScope.launch {
-                                userDao.countAllUser().collect { it1 ->
-                                    if (it1>0) {
-                                        lifecycleScope.launch {
-                                            userDao.countAllServiceUser().collect { it2 ->
-                                                if (it2>0) {
-                                                    dataLapanganLayout.visibility = View.GONE
-                                                    dataTangkiLayout.visibility = View.GONE
-                                                    dataTabelLayout.visibility = View.GONE
-                                                    hasilLayout.visibility = View.GONE
-                                                    next.visibility = View.GONE
-                                                    dataAdministrasiLayout.visibility = View.VISIBLE
-                                                    back.visibility = View.VISIBLE
-                                                    simpanHasil.visibility = View.VISIBLE
-                                                    Handler(Looper.getMainLooper()).postDelayed({
-                                                        scrollView.fullScroll(ScrollView.FOCUS_UP)
-                                                    }, 1)
-                                                    lifecycleScope.launch {
-                                                        userDao.fetchAllUser().collect {
-                                                            populateDropdownUser(ArrayList(it), namaPegawai)
+                        val hasil = hasilKalkulator.text.toString()
+                        when {
+                            hasil == "Hasil: 0.000 MT" -> {
+                                Toast.makeText(context, "Mohon Cek Data\nNilai Hasil Masih 0", Toast.LENGTH_SHORT).show()
+                            }
+                            hasil.subSequence(hasil.indexOf(":")+1, hasil.length-3).toString().replace(",",".").replace(" ","").toDouble()<0 -> {
+                                Toast.makeText(context, "Mohon Cek Data\nHasil Bernilai Negatif", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                lifecycleScope.launch {
+                                    userDao.countAllUser().collect { it1 ->
+                                        if (it1>0) {
+                                            lifecycleScope.launch {
+                                                userDao.countAllServiceUser().collect { it2 ->
+                                                    if (it2>0) {
+                                                        dataLapanganLayout.visibility = View.GONE
+                                                        dataTangkiLayout.visibility = View.GONE
+                                                        dataTabelLayout.visibility = View.GONE
+                                                        hasilLayout.visibility = View.GONE
+                                                        next.visibility = View.GONE
+                                                        dataAdministrasiLayout.visibility = View.VISIBLE
+                                                        back.visibility = View.VISIBLE
+                                                        simpanHasil.visibility = View.VISIBLE
+                                                        Handler(Looper.getMainLooper()).postDelayed({
+                                                            scrollView.fullScroll(ScrollView.FOCUS_UP)
+                                                        }, 1)
+                                                        lifecycleScope.launch {
+                                                            userDao.fetchAllUser().collect {
+                                                                populateDropdownUser(ArrayList(it), namaPegawai)
+                                                            }
+                                                        }
+                                                        lifecycleScope.launch {
+                                                            userDao.fetchAllServiceUser().collect {
+                                                                populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
+                                                            }
                                                         }
                                                     }
-                                                    lifecycleScope.launch {
-                                                        userDao.fetchAllServiceUser().collect {
-                                                            populateDropdownServiceUser(ArrayList(it), namaPenggunaJasa)
-                                                        }
+                                                    else {
+                                                        Toast.makeText(context, "Mohon Tambahkan Data\nPengguna Jasa Terlebih Dahulu\nPada Tab User", Toast.LENGTH_LONG).show()
                                                     }
-                                                }
-                                                else {
-                                                    Toast.makeText(context, "Mohon Tambahkan Data\nPengguna Jasa Terlebih Dahulu\nPada Tab User", Toast.LENGTH_LONG).show()
                                                 }
                                             }
                                         }
-                                    }
-                                    else {
-                                        Toast.makeText(context, "Mohon Tambahkan Data Pegawai\nTerlebih Dahulu Pada Tab User", Toast.LENGTH_LONG).show()
+                                        else {
+                                            Toast.makeText(context, "Mohon Tambahkan Data Pegawai\nTerlebih Dahulu Pada Tab User", Toast.LENGTH_LONG).show()
+                                        }
                                     }
                                 }
                             }
-                        }
-                        else {
-                            Toast.makeText(context, "Mohon Cek Data\nNilai Hasil Masih 0", Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -644,19 +650,27 @@ class TabFragment(private val title: String) : Fragment() {
                         }, 10)
                     }
                     finalTab.setOnClickListener {
-                        finalTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                        finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                        rawDataTab.background = null
-                        rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        fabFinalReport.visibility = View.VISIBLE
-                        tvNoFinalDataAvailable.visibility = View.VISIBLE
-                        svFinalList.visibility = View.VISIBLE
-                        svSoundingList.visibility = View.GONE
-                        tvNoRawDataAvailable.visibility = View.GONE
                         lifecycleScope.launch {
-                            userDao.fetchAllSounding().collect {
-                                populateDropdownSounding(ArrayList(it), awal1, false)
-                                populateDropdownSounding(ArrayList(it), akhir1, true)
+                            userDao.countAllSounding().collect { itTotalSounding ->
+                                if (itTotalSounding > 0) {
+                                    finalTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                                    finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                                    rawDataTab.background = null
+                                    rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    fabFinalReport.visibility = View.VISIBLE
+                                    tvNoFinalDataAvailable.visibility = View.VISIBLE
+                                    svFinalList.visibility = View.VISIBLE
+                                    svSoundingList.visibility = View.GONE
+                                    tvNoRawDataAvailable.visibility = View.GONE
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllSounding().collect {
+                                            populateDropdownSounding(ArrayList(it), awal1, false)
+                                            populateDropdownSounding(ArrayList(it), akhir1, true)
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui Save Data\n Pada Tab Calculator", Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
                     }
