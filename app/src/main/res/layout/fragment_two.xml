@@ -353,7 +353,8 @@
                                     android:layout_weight="1.5"
                                     android:contentDescription="@string/top_border"
                                     android:elevation="20dp"
-                                    android:src="@drawable/ic_close"/>
+                                    android:src="@drawable/ic_close"
+                                    android:visibility="invisible"/>
                             </LinearLayout>
 
                             <TextView
@@ -380,13 +381,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/rounded_input"
-                                    android:fontFamily="@font/poppins_light"
-                                    android:paddingTop="7dp"
-                                    android:paddingBottom="7dp"
-                                    android:scrollbars="vertical"
-                                    android:spinnerMode="dropdown"
-                                    android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp"/>
+                                    android:spinnerMode="dropdown"/>
                             </RelativeLayout>
 
                             <TextView
@@ -412,13 +407,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/rounded_input"
-                                    android:fontFamily="@font/poppins_light"
-                                    android:paddingTop="7dp"
-                                    android:paddingBottom="7dp"
-                                    android:scrollbars="vertical"
-                                    android:spinnerMode="dropdown"
-                                    android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp"/>
+                                    android:spinnerMode="dropdown" />
                             </RelativeLayout>
 
                         </LinearLayout>

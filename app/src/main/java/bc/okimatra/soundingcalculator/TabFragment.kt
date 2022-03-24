@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.cardview.widget.CardView
@@ -52,7 +51,6 @@ import java.io.FileOutputStream
 import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToLong
 
@@ -70,9 +68,8 @@ class TabFragment(private val title: String) : Fragment() {
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
-    private lateinit var totalSoundingCardView: List<CardView>
-    private lateinit var totalSoundingTextView: ArrayList<TextView>
-    private lateinit var totalSoundingImageView: ArrayList<ImageView>
+    private lateinit var ivCvMap: MutableMap<ImageView, CardView>
+    private lateinit var tvCvMap: MutableMap<ImageView, TextView>
     private var counterSounding = 1
     
     private var baseFontRegular  = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
@@ -674,12 +671,10 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }
                     }
-                    addOrClose1.tag = 1
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
-                    totalSoundingCardView = listOf(soundingCardView1)
-                    totalSoundingTextView = arrayListOf(titleSounding1)
-                    totalSoundingImageView = arrayListOf(addOrClose1)
                     addClickListener(binding2, btnAddSounding, userDao)
+                    ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                    tvCvMap = mutableMapOf(addOrClose1 to titleSounding1)
                 }
             }
         }
@@ -691,18 +686,17 @@ class TabFragment(private val title: String) : Fragment() {
         _binding3 = null
     }
 
-    private fun addClickListener(binding: FragmentTwoBinding, iv: Button, userDao: UserDao) {
+    private fun addClickListener(binding: FragmentTwoBinding, btn: Button, userDao: UserDao) {
         val radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, requireContext().resources.displayMetrics)
         val elevation = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, requireContext().resources.displayMetrics)
         binding.apply {
-            iv.setOnClickListener {
+            btn.setOnClickListener {
                 counterSounding += 1
                 val cv = CardView(requireContext())
                 cv.id = View.generateViewId()
                 cv.radius = radius
                 cv.elevation = elevation
                 cv.layoutParams = soundingCardView1.layoutParams
-                totalSoundingCardView = totalSoundingCardView+cv
 
                 val ll = LinearLayout(requireContext())
                 ll.layoutParams = soundingLL.layoutParams
@@ -720,16 +714,14 @@ class TabFragment(private val title: String) : Fragment() {
                 tvTitle.gravity = titleSounding1.gravity
                 tvTitle.text = String.format(getString(R.string.data_sounding), counterSounding)
                 tvTitle.textSize = 19f
-                totalSoundingTextView = (totalSoundingTextView + tvTitle) as ArrayList<TextView>
 
                 val ivTitle = ImageView(requireContext())
                 ivTitle.id = View.generateViewId()
-                ivTitle.tag = counterSounding
+//                ivTitle.tag = counterSounding
                 ivTitle.layoutParams = addOrClose1.layoutParams
                 ivTitle.contentDescription = addOrClose1.contentDescription
                 ivTitle.elevation = addOrClose1.elevation
-                ivTitle.setImageResource(R.drawable.ic_add_circle)
-                totalSoundingImageView = (totalSoundingImageView + ivTitle) as ArrayList<ImageView>
+                ivTitle.setImageResource(R.drawable.ic_close)
 
                 val tvAwal = TextView(requireContext())
                 tvAwal.text = getString(R.string.awal)
@@ -741,7 +733,7 @@ class TabFragment(private val title: String) : Fragment() {
                 rlETAwal.layoutParams = soundingRL.layoutParams
                 rlETAwal.background = ResourcesCompat.getDrawable(resources, R.drawable.rounded_input, null)
 
-                val spAwal = Spinner(requireContext(),null,android.R.style.Widget_Spinner,Spinner.MODE_DROPDOWN)
+                val spAwal = Spinner(requireContext())
                 spAwal.layoutParams = awal1.layoutParams
                 spAwal.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
 
@@ -755,9 +747,22 @@ class TabFragment(private val title: String) : Fragment() {
                 rlETAkhir.layoutParams = soundingRL.layoutParams
                 rlETAkhir.background = ResourcesCompat.getDrawable(resources, R.drawable.rounded_input, null)
 
-                val spAkhir = Spinner(requireContext(),null,android.R.style.Widget_Spinner,Spinner.MODE_DROPDOWN)
+                val spAkhir = Spinner(requireContext())
                 spAkhir.layoutParams = akhir1.layoutParams
                 spAkhir.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
+
+                llTitle.addView(tvTitleLeft)
+                llTitle.addView(tvTitle)
+                llTitle.addView(ivTitle)
+                ll.addView(llTitle)
+                ll.addView(tvAwal)
+                rlETAwal.addView(spAwal)
+                ll.addView(rlETAwal)
+                ll.addView(tvAkhir)
+                rlETAkhir.addView(spAkhir)
+                ll.addView(rlETAkhir)
+                cv.addView(ll)
+                soundingContainer.addView(cv)
 
                 try {
                     val f: Field = Spinner::class.java.getDeclaredField("mCursorDrawableRes")
@@ -773,19 +778,24 @@ class TabFragment(private val title: String) : Fragment() {
                         populateDropdownSounding(ArrayList(it), spAkhir, true)
                     }
                 }
-
-                llTitle.addView(tvTitleLeft)
-                llTitle.addView(tvTitle)
-                llTitle.addView(ivTitle)
-                ll.addView(llTitle)
-                ll.addView(tvAwal)
-                rlETAwal.addView(spAwal)
-                ll.addView(rlETAwal)
-                ll.addView(tvAkhir)
-                rlETAkhir.addView(spAkhir)
-                ll.addView(rlETAkhir)
-                cv.addView(ll)
-                soundingContainer.addView(cv)
+                ivCvMap += mutableMapOf(ivTitle to cv)
+                removeListener(binding, ivTitle)
+                tvCvMap += mutableMapOf(ivTitle to tvTitle)
+            }
+        }
+    }
+    private fun removeListener(binding: FragmentTwoBinding, iv: ImageView) {
+        var i = 1
+        binding.apply {
+            iv.setOnClickListener {
+                counterSounding -= 1
+                (ivCvMap[iv]?.parent as ViewGroup).removeView(ivCvMap[iv]) //Only ViewGroup can have removeView, ViewParent can't
+                ivCvMap.remove(iv)
+                tvCvMap.remove(iv)
+                tvCvMap.keys.forEach {
+                    tvCvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
+                    i++
+                }
             }
         }
     }
@@ -2507,13 +2517,11 @@ class TabFragment(private val title: String) : Fragment() {
             for (i in 0 until list.size) {
                 items.add(list[i].no_tangki + "; ${dateCompress(list[i].waktu)}")
             }
-            val adapter = activity?.let { it ->
-                ArrayAdapter(
-                    it,
-                    R.layout.dropdown_layout,
-                    items
-                )
-            }
+            val adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_layout,
+                items
+            )
             spinner.adapter = adapter
         }
     }
