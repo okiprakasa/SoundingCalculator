@@ -24,6 +24,7 @@
     <string name="data_tabel">Data Tabel</string>
     <string name="faktor_muai">Koefisien/Faktor Muai Tangki</string>
     <string name="simpan_data">SIMPAN DATA</string>
+    <string name="tambah_sounding">TAMBAH INPUT SOUNDING</string>
     <string name="i">%s</string>
     <string name="hasil">Hasil: 0.000 MT</string>
     <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>

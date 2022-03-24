@@ -353,7 +353,7 @@
                                     android:layout_weight="1.5"
                                     android:contentDescription="@string/top_border"
                                     android:elevation="20dp"
-                                    android:src="@drawable/ic_add_circle"/>
+                                    android:src="@drawable/ic_close"/>
                             </LinearLayout>
 
                             <TextView
@@ -375,21 +375,16 @@
                                 android:layout_marginEnd="25dp"
                                 android:background="@drawable/rounded_input">
 
-                                <!-- INPUT -->
-                                <androidx.appcompat.widget.AppCompatEditText
+                                <Spinner
                                     android:id="@+id/awal1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
+                                    android:background="@drawable/rounded_input"
                                     android:fontFamily="@font/poppins_light"
-                                    android:hint="@string/hint_sounding"
-                                    android:inputType="numberDecimal"
-                                    android:maxLength="18"
-                                    android:maxLines="1"
-                                    android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="0dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="7dp"
+                                    android:paddingBottom="7dp"
+                                    android:scrollbars="vertical"
+                                    android:spinnerMode="dropdown"
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="13sp"/>
                             </RelativeLayout>
@@ -412,24 +407,18 @@
                                 android:layout_marginEnd="25dp"
                                 android:background="@drawable/rounded_input">
 
-                                <!-- INPUT -->
-                                <androidx.appcompat.widget.AppCompatEditText
+                                <Spinner
                                     android:id="@+id/akhir1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
+                                    android:background="@drawable/rounded_input"
                                     android:fontFamily="@font/poppins_light"
-                                    android:hint="@string/hint_sounding"
-                                    android:inputType="numberDecimal"
-                                    android:maxLength="18"
-                                    android:maxLines="1"
-                                    android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="0dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="7dp"
+                                    android:paddingBottom="7dp"
+                                    android:scrollbars="vertical"
+                                    android:spinnerMode="dropdown"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
-
+                                    android:textSize="13sp"/>
                             </RelativeLayout>
 
                         </LinearLayout>
@@ -439,7 +428,24 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/btnAdd"
+                    android:id="@+id/btnAddSounding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@drawable/rounded_button_white"
+                    android:elevation="5dp"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="center"
+                    android:text="@string/tambah_sounding"
+                    android:textColor="@color/login"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnSave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

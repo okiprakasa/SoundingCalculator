@@ -11,12 +11,10 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
@@ -24,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.cardview.widget.CardView
@@ -50,14 +49,15 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToLong
 
 
 class TabFragment(private val title: String) : Fragment() {
-
     private var _binding1: FragmentOneBinding? = null
     private val binding1 get() = _binding1!!
 
@@ -236,7 +236,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                     }
                                                 }
                                                 else {
-                                                    Toast.makeText(context, "Mohon Tambahkan Data Pengguna Jasa\nTerlebih Dahulu Pada Tab User", Toast.LENGTH_LONG).show()
+                                                    Toast.makeText(context, "Mohon Tambahkan Data\nPengguna Jasa Terlebih Dahulu\nPada Tab User", Toast.LENGTH_LONG).show()
                                                 }
                                             }
                                         }
@@ -541,7 +541,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                 }
                                 else {
-                                    Toast.makeText(context, "Mohon Tambahkan Data Perusahaan\nTerlebih Dahulu Pada Tab Company", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Mohon Tambahkan Data\nPerusahaanTerlebih Dahulu\nPada Tab Company", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -656,6 +656,12 @@ class TabFragment(private val title: String) : Fragment() {
                         svFinalList.visibility = View.VISIBLE
                         svSoundingList.visibility = View.GONE
                         tvNoRawDataAvailable.visibility = View.GONE
+                        lifecycleScope.launch {
+                            userDao.fetchAllSounding().collect {
+                                populateDropdownSounding(ArrayList(it), awal1, false)
+                                populateDropdownSounding(ArrayList(it), akhir1, true)
+                            }
+                        }
                     }
                     fabFinalReport.setOnClickListener {
                         lifecycleScope.launch {
@@ -673,7 +679,7 @@ class TabFragment(private val title: String) : Fragment() {
                     totalSoundingCardView = listOf(soundingCardView1)
                     totalSoundingTextView = arrayListOf(titleSounding1)
                     totalSoundingImageView = arrayListOf(addOrClose1)
-                    addClickListener(binding2, addOrClose1)
+                    addClickListener(binding2, btnAddSounding, userDao)
                 }
             }
         }
@@ -685,108 +691,101 @@ class TabFragment(private val title: String) : Fragment() {
         _binding3 = null
     }
 
-    private fun addClickListener(binding: FragmentTwoBinding, iv: ImageView) {
+    private fun addClickListener(binding: FragmentTwoBinding, iv: Button, userDao: UserDao) {
         val radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, requireContext().resources.displayMetrics)
         val elevation = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, requireContext().resources.displayMetrics)
         binding.apply {
             iv.setOnClickListener {
-                if (iv.tag == totalSoundingCardView.size) {
-                    counterSounding += 1
-                    iv.setImageResource(R.drawable.ic_close)
-                    val cv = CardView(requireContext())
-                    cv.id = View.generateViewId()
-                    cv.radius = radius
-                    cv.elevation = elevation
-                    cv.layoutParams = soundingCardView1.layoutParams
-                    totalSoundingCardView = totalSoundingCardView+cv
+                counterSounding += 1
+                val cv = CardView(requireContext())
+                cv.id = View.generateViewId()
+                cv.radius = radius
+                cv.elevation = elevation
+                cv.layoutParams = soundingCardView1.layoutParams
+                totalSoundingCardView = totalSoundingCardView+cv
 
-                    val ll = LinearLayout(requireContext())
-                    ll.layoutParams = soundingLL.layoutParams
-                    ll.orientation = soundingLL.orientation
+                val ll = LinearLayout(requireContext())
+                ll.layoutParams = soundingLL.layoutParams
+                ll.orientation = soundingLL.orientation
 
-                    val llTitle = LinearLayout(requireContext())
-                    llTitle.layoutParams = soundingLLTitle.layoutParams
-                    llTitle.orientation = soundingLLTitle.orientation
+                val llTitle = LinearLayout(requireContext())
+                llTitle.layoutParams = soundingLLTitle.layoutParams
+                llTitle.orientation = soundingLLTitle.orientation
 
-                    val tvTitleLeft = TextView(requireContext())
-                    tvTitleLeft.layoutParams = titleLeft.layoutParams
+                val tvTitleLeft = TextView(requireContext())
+                tvTitleLeft.layoutParams = titleLeft.layoutParams
 
-                    val tvTitle = TextView(requireContext())
-                    tvTitle.layoutParams = titleSounding1.layoutParams
-                    tvTitle.gravity = titleSounding1.gravity
-                    tvTitle.text = String.format(getString(R.string.data_sounding), counterSounding)
-                    tvTitle.textSize = 19f
-                    totalSoundingTextView = (totalSoundingTextView + tvTitle) as ArrayList<TextView>
+                val tvTitle = TextView(requireContext())
+                tvTitle.layoutParams = titleSounding1.layoutParams
+                tvTitle.gravity = titleSounding1.gravity
+                tvTitle.text = String.format(getString(R.string.data_sounding), counterSounding)
+                tvTitle.textSize = 19f
+                totalSoundingTextView = (totalSoundingTextView + tvTitle) as ArrayList<TextView>
 
-                    val ivTitle = ImageView(requireContext())
-                    ivTitle.id = View.generateViewId()
-                    ivTitle.tag = counterSounding
-                    ivTitle.layoutParams = addOrClose1.layoutParams
-                    ivTitle.contentDescription = addOrClose1.contentDescription
-                    ivTitle.elevation = addOrClose1.elevation
-                    ivTitle.setImageResource(R.drawable.ic_add_circle)
-                    addClickListener(binding2, ivTitle)
-                    totalSoundingImageView = (totalSoundingImageView + ivTitle) as ArrayList<ImageView>
+                val ivTitle = ImageView(requireContext())
+                ivTitle.id = View.generateViewId()
+                ivTitle.tag = counterSounding
+                ivTitle.layoutParams = addOrClose1.layoutParams
+                ivTitle.contentDescription = addOrClose1.contentDescription
+                ivTitle.elevation = addOrClose1.elevation
+                ivTitle.setImageResource(R.drawable.ic_add_circle)
+                totalSoundingImageView = (totalSoundingImageView + ivTitle) as ArrayList<ImageView>
 
-                    val tvAwal = TextView(requireContext())
-                    tvAwal.text = getString(R.string.awal)
-                    tvAwal.textSize = 14f
-                    tvAwal.layoutParams = soundingAwal.layoutParams
-                    tvAwal.typeface = ResourcesCompat.getFont(requireContext(), R.font.helvetica)
+                val tvAwal = TextView(requireContext())
+                tvAwal.text = getString(R.string.awal)
+                tvAwal.textSize = 14f
+                tvAwal.layoutParams = soundingAwal.layoutParams
+                tvAwal.typeface = ResourcesCompat.getFont(requireContext(), R.font.helvetica)
 
-                    val rlETAwal = RelativeLayout(requireContext())
-                    rlETAwal.layoutParams = soundingRL.layoutParams
-                    rlETAwal.background = ResourcesCompat.getDrawable(resources, R.drawable.rounded_input, null)
+                val rlETAwal = RelativeLayout(requireContext())
+                rlETAwal.layoutParams = soundingRL.layoutParams
+                rlETAwal.background = ResourcesCompat.getDrawable(resources, R.drawable.rounded_input, null)
 
-                    val etAwal = AppCompatEditText(requireContext())
-                    etAwal.layoutParams = awal1.layoutParams
-                    etAwal.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
-                    etAwal.typeface = ResourcesCompat.getFont(requireContext(), R.font.poppins_light)
-                    etAwal.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
-                    etAwal.maxLines = 1
-                    etAwal.textSize = 13f
+                val spAwal = Spinner(requireContext(),null,android.R.style.Widget_Spinner,Spinner.MODE_DROPDOWN)
+                spAwal.layoutParams = awal1.layoutParams
+                spAwal.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
 
-                    val tvAkhir = TextView(requireContext())
-                    tvAkhir.text = getString(R.string.akhir)
-                    tvAkhir.textSize = 14f
-                    tvAkhir.layoutParams = soundingAwal.layoutParams
-                    tvAkhir.typeface = ResourcesCompat.getFont(requireContext(), R.font.helvetica)
+                val tvAkhir = TextView(requireContext())
+                tvAkhir.text = getString(R.string.akhir)
+                tvAkhir.textSize = 14f
+                tvAkhir.layoutParams = soundingAwal.layoutParams
+                tvAkhir.typeface = ResourcesCompat.getFont(requireContext(), R.font.helvetica)
 
-                    val rlETAkhir = RelativeLayout(requireContext())
-                    rlETAkhir.layoutParams = soundingRL.layoutParams
-                    rlETAkhir.background = ResourcesCompat.getDrawable(resources, R.drawable.rounded_input, null)
+                val rlETAkhir = RelativeLayout(requireContext())
+                rlETAkhir.layoutParams = soundingRL.layoutParams
+                rlETAkhir.background = ResourcesCompat.getDrawable(resources, R.drawable.rounded_input, null)
 
-                    val etAkhir = AppCompatEditText(requireContext())
-                    etAkhir.layoutParams = awal1.layoutParams
-                    etAkhir.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
-                    etAkhir.typeface = ResourcesCompat.getFont(requireContext(), R.font.poppins_light)
-                    etAkhir.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
-                    etAkhir.maxLines = 1
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        etAwal.textCursorDrawable = ResourcesCompat.getDrawable(resources, R.drawable.cursor_color, null)
-                    }
-                    etAkhir.textSize = 13f
+                val spAkhir = Spinner(requireContext(),null,android.R.style.Widget_Spinner,Spinner.MODE_DROPDOWN)
+                spAkhir.layoutParams = akhir1.layoutParams
+                spAkhir.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
 
-                    llTitle.addView(tvTitleLeft)
-                    llTitle.addView(tvTitle)
-                    llTitle.addView(ivTitle)
-                    ll.addView(llTitle)
-                    ll.addView(tvAwal)
-                    rlETAwal.addView(etAwal)
-                    ll.addView(rlETAwal)
-                    ll.addView(tvAkhir)
-                    rlETAkhir.addView(etAkhir)
-                    ll.addView(rlETAkhir)
-                    cv.addView(ll)
-                    soundingContainer.addView(cv)
+                try {
+                    val f: Field = Spinner::class.java.getDeclaredField("mCursorDrawableRes")
+                    f.isAccessible = true
+                    f.set(spAwal, R.drawable.cursor_color)
+                    f.set(spAkhir, R.drawable.cursor_color)
+                } catch (ignored: java.lang.Exception) {
                 }
-                else {
-                    counterSounding -= 1
-                    soundingContainer.removeView(totalSoundingCardView[iv.tag.toString().toInt()-1])
-                    for (i in totalSoundingImageView.indices) {
-                        totalSoundingImageView[i].tag = i+1
+
+                lifecycleScope.launch {
+                    userDao.fetchAllSounding().collect {
+                        populateDropdownSounding(ArrayList(it), spAwal, false)
+                        populateDropdownSounding(ArrayList(it), spAkhir, true)
                     }
                 }
+
+                llTitle.addView(tvTitleLeft)
+                llTitle.addView(tvTitle)
+                llTitle.addView(ivTitle)
+                ll.addView(llTitle)
+                ll.addView(tvAwal)
+                rlETAwal.addView(spAwal)
+                ll.addView(rlETAwal)
+                ll.addView(tvAkhir)
+                rlETAkhir.addView(spAkhir)
+                ll.addView(rlETAkhir)
+                cv.addView(ll)
+                soundingContainer.addView(cv)
             }
         }
     }
@@ -2501,6 +2500,23 @@ class TabFragment(private val title: String) : Fragment() {
             spinner.adapter = adapter
         }
     }
+    private fun populateDropdownSounding(list:ArrayList<SoundingEntity>, spinner: Spinner, out: Boolean) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            if (out) items.add("Empty Out") else items.add("Empty In")
+            for (i in 0 until list.size) {
+                items.add(list[i].no_tangki + "; ${dateCompress(list[i].waktu)}")
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            spinner.adapter = adapter
+        }
+    }
 
     private fun emptyCheck(listEditText: List<AppCompatEditText>): Boolean{
         var checkResult = true
@@ -2549,6 +2565,20 @@ class TabFragment(private val title: String) : Fragment() {
     }
     private fun monthConverter(date: String): String {
         return date.replace("January","Januari").replace("February","Februari").replace("March","Maret").replace("May","Mei").replace("June","Juni").replace("July","Juli").replace("August","Agustus").replace("October","Oktober").replace("December","December")
+    }
+    private fun dateCompress(date:String): String {
+        return date.replace("Januari","01")
+            .replace("Februari","02")
+            .replace("Maret","03")
+            .replace("April","04")
+            .replace("Mei","05")
+            .replace("Juni","06")
+            .replace("Juli","07")
+            .replace("Agustus","08")
+            .replace("September","09")
+            .replace("Oktober","10")
+            .replace("November","11")
+            .replace("Desember","12")
     }
 
     private fun backFunction() {
