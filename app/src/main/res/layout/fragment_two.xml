@@ -79,9 +79,11 @@
             android:visibility="visible">
 
             <LinearLayout
+                android:id="@+id/soundingParent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/soundingContainer"
@@ -98,7 +100,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="30dp"
                         android:layout_marginBottom="10dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="5dp">
 
@@ -147,9 +149,9 @@
                                     android:maxLength="18"
                                     android:maxLines="1"
                                     android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="0dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="13sp" />
                             </RelativeLayout>
@@ -158,7 +160,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:layout_marginTop="14dp"
+                                android:layout_marginTop="12dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/tanggal_ba"
@@ -185,9 +187,9 @@
                                     android:fontFamily="@font/poppins_light"
                                     android:hint="@string/hint_tanggal_ba"
                                     android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="5dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="13sp" />
                             </RelativeLayout>
@@ -196,7 +198,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:layout_marginTop="14dp"
+                                android:layout_marginTop="12dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/lokasi_ba"
@@ -219,9 +221,9 @@
                                     android:fontFamily="@font/poppins_light"
                                     android:hint="@string/hint_lokasi_ba"
                                     android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="5dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="13sp" />
                             </RelativeLayout>
@@ -230,7 +232,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:layout_marginTop="20dp"
+                                android:layout_marginTop="12dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/jumlah_barcon"
@@ -251,14 +253,14 @@
                                     android:layout_height="wrap_content"
                                     android:background="@android:color/transparent"
                                     android:fontFamily="@font/poppins_light"
-                                    android:hint="@string/jumlah_barcon"
+                                    android:hint="@string/hint_jumlah_barcon"
                                     android:inputType="numberDecimal"
                                     android:maxLength="18"
                                     android:maxLines="1"
                                     android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="0dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="13sp" />
                             </RelativeLayout>
@@ -267,7 +269,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:layout_marginTop="14dp"
+                                android:layout_marginTop="12dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/waktu_barcon"
@@ -292,11 +294,11 @@
                                     android:focusable="false"
                                     android:focusableInTouchMode="false"
                                     android:fontFamily="@font/poppins_light"
-                                    android:hint="@string/waktu_barcon"
+                                    android:hint="@string/hint_waktu_barcon"
                                     android:paddingStart="15dp"
-                                    android:paddingTop="14dp"
-                                    android:paddingEnd="5dp"
-                                    android:paddingBottom="14dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="13sp" />
                             </RelativeLayout>
@@ -477,8 +479,7 @@
             android:gravity="center"
             android:text="@string/no_final_record"
             android:textSize="18sp"
-            android:visibility="gone"
-            tools:visibility="gone"/>
+            android:visibility="gone"/>
 
     </LinearLayout>
 

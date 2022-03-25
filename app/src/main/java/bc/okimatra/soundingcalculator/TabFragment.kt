@@ -73,7 +73,8 @@ class TabFragment(private val title: String) : Fragment() {
     private lateinit var spAwalCvMap: MutableMap<ImageView, Spinner>
     private lateinit var spAkhirCvMap: MutableMap<ImageView, Spinner>
     private var counterSounding = 1
-    
+    private var fabOverSounding = true
+
     private var baseFontRegular  = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
     private var regularFont = Font(Font.FontFamily.HELVETICA, 11f, Font.NORMAL, BaseColor.BLACK)
     private var appFontTiny = Font(baseFontRegular, 2f)
@@ -622,6 +623,7 @@ class TabFragment(private val title: String) : Fragment() {
                     svSoundingList.visibility = View.VISIBLE
                     svFinalList.visibility = View.GONE
                     tvNoFinalDataAvailable.visibility = View.GONE
+
                     Handler(Looper.getMainLooper()).postDelayed({
                         lifecycleScope.launch {
                             userDao.fetchAllSounding().collect {
@@ -631,6 +633,7 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }
                     }, 10)
+
                     rawDataTab.setOnClickListener {
                         rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -654,15 +657,23 @@ class TabFragment(private val title: String) : Fragment() {
                         lifecycleScope.launch {
                             userDao.countAllSounding().collect { itTotalSounding ->
                                 if (itTotalSounding > 0) {
+                                    svSoundingList.visibility = View.GONE
+                                    tvNoRawDataAvailable.visibility = View.GONE
+                                    svFinalList.visibility = View.VISIBLE
                                     finalTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                                     finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                                     rawDataTab.background = null
                                     rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                                    fabFinalReport.visibility = View.VISIBLE
+                                    if (fabOverSounding) {
+                                        soundingParent.visibility = View.GONE
+                                        rvFinalList.visibility = View.VISIBLE
+                                        fabFinalReport.visibility = View.VISIBLE
+                                    } else {
+                                        fabFinalReport.visibility = View.GONE
+                                        rvFinalList.visibility = View.GONE
+                                        soundingParent.visibility = View.VISIBLE
+                                    }
                                     tvNoFinalDataAvailable.visibility = View.VISIBLE
-                                    svFinalList.visibility = View.VISIBLE
-                                    svSoundingList.visibility = View.GONE
-                                    tvNoRawDataAvailable.visibility = View.GONE
                                     lifecycleScope.launch {
                                         userDao.fetchAllSounding().collect {
                                             populateDropdownSounding(ArrayList(it), awal1, false)
@@ -676,16 +687,80 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     }
                     fabFinalReport.setOnClickListener {
-                        lifecycleScope.launch {
-                            userDao.countAllSounding().collect {
-                                if (it>1) {
-                                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(requireContext(), "Total Raw Data kurang dari 2\nMohon tambahkan Raw Data", Toast.LENGTH_LONG).show()
+                        fabOverSounding = false
+                        rvFinalList.visibility = View.GONE
+                        fabFinalReport.visibility = View.GONE
+                        soundingParent.visibility = View.VISIBLE
+                    }
+                    tanggalBa.setOnClickListener {
+                        dateSetListener = DatePickerDialog.OnDateSetListener {
+                                _, year, month, dayOfMonth ->
+                            cal.set(Calendar.YEAR, year)
+                            cal.set(Calendar.MONTH, month)
+                            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            val timeID = "dd MMMM yyyy"
+                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalID = dayConverter(monthConverter(tanggalEng))
+                            tanggalBa.setText(tanggalID)
+                        }
+                        DatePickerDialog(
+                            requireContext(),
+                            R.style.TimePickerTheme,
+                            dateSetListener,
+                            cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH),
+                            cal.get(Calendar.DAY_OF_MONTH)
+                        ).show()
+                    }
+                    waktuBarcon.setOnClickListener {
+                        dateSetListener = DatePickerDialog.OnDateSetListener {
+                                _, year, month, dayOfMonth ->
+                            cal.set(Calendar.YEAR, year)
+                            cal.set(Calendar.MONTH, month)
+                            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            val timeID = "EEEE, dd-MMMM-yyyy"
+                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalID = dayConverter(monthConverter(tanggalEng))
+
+                            val tz = TimeZone.getDefault()
+                            val now = Date()
+                            val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+                                in 6.9..7.8 -> {"WIB"}
+                                in 7.9..8.8 -> {"WITA"}
+                                in 8.9..9.8 -> {"WIT"}
+                                in -13.0..-0.1 -> {
+                                    "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                                }
+                                else -> {
+                                    "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
                                 }
                             }
+
+                            val mcurrentTime = Calendar.getInstance()
+                            val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+                            val minute = mcurrentTime[Calendar.MINUTE]
+                            val mTimePicker = TimePickerDialog(
+                                requireContext(),
+                                R.style.TimePickerTheme,
+                                { _, selectedHour, selectedMinute -> waktuBarcon.setText(String.format(getString(R.string.format_waktu, tanggalID, selectedHour, selectedMinute, timeZone))) },
+                                hour,
+                                minute,
+                                true
+                            )
+                            mTimePicker.show()
                         }
+                        DatePickerDialog(
+                            requireContext(),
+                            R.style.TimePickerTheme,
+                            dateSetListener,
+                            cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH),
+                            cal.get(Calendar.DAY_OF_MONTH)
+                        ).show()
                     }
+
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
                     addClickListener(binding2, btnAddSounding, userDao)
                     ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
@@ -811,6 +886,7 @@ class TabFragment(private val title: String) : Fragment() {
                     tvCvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
                     i++
                 }
+                Toast.makeText(requireContext(), "Tab Deleted", Toast.LENGTH_SHORT).show()
             }
         }
     }

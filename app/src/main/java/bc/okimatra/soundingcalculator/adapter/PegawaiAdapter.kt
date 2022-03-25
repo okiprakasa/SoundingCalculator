@@ -23,9 +23,13 @@ class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.itemView.context
         val item = items[position]
+        val nipSpace = item.nip.subSequence(0,8).toString() +
+                " " + item.nip.subSequence(8,14).toString() +
+                " " + item.nip.subSequence(14,15).toString() +
+                " " + item.nip.subSequence(15,item.nip.length).toString()
 
         holder.tvName.text = item.nama_pegawai
-        holder.tvNIP.text = item.nip
+        holder.tvNIP.text = nipSpace
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
