@@ -31,10 +31,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import bc.okimatra.soundingcalculator.adapter.PegawaiAdapter
-import bc.okimatra.soundingcalculator.adapter.PenggunaJasaAdapter
-import bc.okimatra.soundingcalculator.adapter.PerusahaanAdapter
-import bc.okimatra.soundingcalculator.adapter.SoundingAdapter
+import bc.okimatra.soundingcalculator.adapter.*
 import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import com.itextpdf.text.*
@@ -48,7 +45,6 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -69,9 +65,9 @@ class TabFragment(private val title: String) : Fragment() {
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
     private lateinit var ivCvMap: MutableMap<ImageView, CardView>
-    private lateinit var tvCvMap: MutableMap<ImageView, TextView>
-    private lateinit var spAwalCvMap: MutableMap<ImageView, Spinner>
-    private lateinit var spAkhirCvMap: MutableMap<ImageView, Spinner>
+    private lateinit var ivTvMap: MutableMap<ImageView, TextView>
+    private lateinit var ivSpAwalMap: MutableMap<ImageView, Spinner>
+    private lateinit var ivSpAkhirMap: MutableMap<ImageView, Spinner>
     private var counterSounding = 1
     private var fabOverSounding = true
 
@@ -666,14 +662,19 @@ class TabFragment(private val title: String) : Fragment() {
                                     rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
                                     if (fabOverSounding) {
                                         soundingParent.visibility = View.GONE
-                                        rvFinalList.visibility = View.VISIBLE
+                                        lifecycleScope.launch {
+                                            userDao.fetchAllReport().collect {
+                                                val list = ArrayList(it)
+                                                setupListOfDataIntoRecyclerViewReport(list, userDao)
+                                            }
+                                        }
                                         fabFinalReport.visibility = View.VISIBLE
                                     } else {
                                         fabFinalReport.visibility = View.GONE
                                         rvFinalList.visibility = View.GONE
+                                        tvNoFinalDataAvailable.visibility = View.GONE
                                         soundingParent.visibility = View.VISIBLE
                                     }
-                                    tvNoFinalDataAvailable.visibility = View.VISIBLE
                                     lifecycleScope.launch {
                                         userDao.fetchAllSounding().collect {
                                             populateDropdownSounding(ArrayList(it), awal1, false)
@@ -760,11 +761,61 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.get(Calendar.DAY_OF_MONTH)
                         ).show()
                     }
+                    btnSave.setOnClickListener {
+                        if (emptyCheck(listOf(namaSarkut, tanggalBa, lokasiBa, jumlahBarcon, waktuBarcon))) {
+                            val listSounding = ArrayList<String>()
+                            ivSpAwalMap.keys.forEach {
+                                listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
+                                listSounding += arrayListOf(ivSpAkhirMap[it]!!.selectedItem.toString()) //ID from ivSpAwal = ivSpAkhir
+                            }
+                            var tinggiCairanList = ArrayList<Double>()
+                            var suhuCairanList = ArrayList<Double>()
+                            var suhuKalibrasiTangkiList = ArrayList<Double>()
+                            var tinggiMejaList = ArrayList<Double>()
+                            var faktorMuaiList = ArrayList<Double>()
+                            var tinggiCairanTerkoreksiList = ArrayList<Double>()
+                            var volumeKalibrasi1List = ArrayList<Double>()
+                            var densityCairanList = ArrayList<Double>()
+                            var volumeFraksiList = ArrayList<Double>()
+                            var volumeKalibrasi2List = ArrayList<Double>()
+                            var volumeMidList = ArrayList<Double>()
+                            var volumeAppList = ArrayList<Double>()
+                            var volumeObsList = ArrayList<Double>()
+                            var volumeList = ArrayList<Double>()
+                            var hasilSoundingList = ArrayList<Double>()
+                            var noTangkiList = ArrayList<String>()
+                            var pegawaiSoundingList = ArrayList<String>()
+                            var nipPegawaiList = ArrayList<String>()
+                            var penggunaJasaSoundingList = ArrayList<String>()
+                            var jabatanPenggunaJasaList = ArrayList<String>()
+                            var perusahaanSoundingList = ArrayList<String>()
+                            var npwpPerusahaanSoundingList = ArrayList<String>()
+                            var alamatPerusahaanSoundingList = ArrayList<String>()
+                            var lokasiSoundingList = ArrayList<String>()
+                            var waktuList = ArrayList<String>()
+                            var nomorDokumenList = ArrayList<String>()
+                            var produkList = ArrayList<String>()
+                            var bentukList = ArrayList<String>()
+                            var judulKalibrasi1List = ArrayList<String>()
+                            var judulKalibrasi2List = ArrayList<String>()
+                            var judulFraksiList = ArrayList<String>()
+                            var judulDataTabelList = ArrayList<String>()
+                            for (data in listSounding) {
+                                lifecycleScope.launch {
+                                    userDao.fetchSoundingByNoTangkiAndWaktu(data.subSequence(0, data.indexOf(";")).toString(), data.subSequence(data.indexOf(";")+2, data.length).toString())
+                                }
+                            }
+                            soundingParent.visibility = View.GONE
+                            fabFinalReport.visibility = View.VISIBLE
+                        }
+                    }
 
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
                     addClickListener(binding2, btnAddSounding, userDao)
                     ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
-                    tvCvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                    ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                    ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                    ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
                 }
             }
         }
@@ -853,14 +904,14 @@ class TabFragment(private val title: String) : Fragment() {
                 ll.addView(rlETAkhir)
                 cv.addView(ll)
                 soundingContainer.addView(cv)
-
-                try {
-                    val f: Field = Spinner::class.java.getDeclaredField("mCursorDrawableRes")
-                    f.isAccessible = true
-                    f.set(spAwal, R.drawable.cursor_color)
-                    f.set(spAkhir, R.drawable.cursor_color)
-                } catch (ignored: java.lang.Exception) {
-                }
+//
+//                try {
+//                    val f: Field = Spinner::class.java.getDeclaredField("mCursorDrawableRes")
+//                    f.isAccessible = true
+//                    f.set(spAwal, R.drawable.cursor_color)
+//                    f.set(spAkhir, R.drawable.cursor_color)
+//                } catch (ignored: java.lang.Exception) {
+//                }
 
                 lifecycleScope.launch {
                     userDao.fetchAllSounding().collect {
@@ -870,7 +921,9 @@ class TabFragment(private val title: String) : Fragment() {
                 }
                 ivCvMap += mutableMapOf(ivTitle to cv)
                 removeListener(binding, ivTitle)
-                tvCvMap += mutableMapOf(ivTitle to tvTitle)
+                ivTvMap += mutableMapOf(ivTitle to tvTitle)
+                ivSpAwalMap += mutableMapOf(ivTitle to spAwal)
+                ivSpAkhirMap += mutableMapOf(ivTitle to spAkhir)
             }
         }
     }
@@ -881,9 +934,11 @@ class TabFragment(private val title: String) : Fragment() {
                 counterSounding -= 1
                 (ivCvMap[iv]?.parent as ViewGroup).removeView(ivCvMap[iv]) //Only ViewGroup can have removeView, ViewParent can't
                 ivCvMap.remove(iv)
-                tvCvMap.remove(iv)
-                tvCvMap.keys.forEach {
-                    tvCvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
+                ivTvMap.remove(iv)
+                ivSpAwalMap.remove(iv)
+                ivSpAkhirMap.remove(iv)
+                ivTvMap.keys.forEach {
+                    ivTvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
                     i++
                 }
                 Toast.makeText(requireContext(), "Tab Deleted", Toast.LENGTH_SHORT).show()
@@ -2536,6 +2591,36 @@ class TabFragment(private val title: String) : Fragment() {
         updateDialog.show()
     }
     private fun deleteRecordAlertDialogSounding(id:Int,userDao: UserDao) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
+        builder.setPositiveButton("Yes") { dialogInterface, _ ->
+            lifecycleScope.launch {
+                userDao.deleteSounding(SoundingEntity(id))
+                Toast.makeText(context,"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
+            }
+        }
+        builder.setNegativeButton("No") { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
+
+    private fun setupListOfDataIntoRecyclerViewReport(reportList:ArrayList<ReportEntity>, userDao: UserDao) {
+        if (reportList.isNotEmpty()) {
+            val reportAdapter = ReportAdapter(reportList,{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
+            _binding2?.rvFinalList?.layoutManager = LinearLayoutManager(context)
+            _binding2?.rvFinalList?.adapter = reportAdapter
+            _binding2?.svFinalList?.visibility = View.VISIBLE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
+        } else {
+            _binding2?.svFinalList?.visibility = View.GONE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
+        }
+    }
+    private fun deleteRecordAlertDialogReport(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->

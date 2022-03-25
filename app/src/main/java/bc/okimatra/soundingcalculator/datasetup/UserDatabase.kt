@@ -10,7 +10,8 @@ import androidx.room.RoomDatabase
         PerusahaanEntity::class,
         PenggunaJasaEntity::class,
         PegawaiEntity::class,
-        SoundingEntity::class
+        SoundingEntity::class,
+        ReportEntity::class,
     ],
     version = 1
 )

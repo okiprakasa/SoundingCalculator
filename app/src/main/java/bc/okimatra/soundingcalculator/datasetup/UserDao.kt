@@ -84,6 +84,27 @@ interface UserDao {
     @Query("Select * from `sounding-raw-table` ORDER BY date DESC")
     fun fetchAllSounding():Flow<List<SoundingEntity>>
 
-    @Query("Select * from `sounding-raw-table` where id=:id")
+    @Query("Select * from `sounding-raw-table` WHERE id=:id")
     fun fetchSoundingById(id:Int):Flow<SoundingEntity>
+
+    @Query("Select * from `sounding-raw-table` WHERE no_tangki=:noTangki AND waktu=:waktu")
+    fun fetchSoundingByNoTangkiAndWaktu(noTangki:String, waktu:String):Flow<SoundingEntity>
+
+    @Insert
+    suspend fun insertReport(reportEntity: ReportEntity)
+
+    @Update
+    suspend fun updateReport(reportEntity: ReportEntity)
+
+    @Delete
+    suspend fun deleteReport(reportEntity: ReportEntity)
+
+    @Query("Select count(*) from `final-report-table`")
+    fun countAllReport():Flow<Int>
+
+    @Query("Select * from `final-report-table` ORDER BY date DESC")
+    fun fetchAllReport():Flow<List<ReportEntity>>
+
+    @Query("Select * from `final-report-table` where id=:id")
+    fun fetchReportById(id:Int):Flow<ReportEntity>
 }
