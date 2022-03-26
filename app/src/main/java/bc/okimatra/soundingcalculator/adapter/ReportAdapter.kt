@@ -43,10 +43,10 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         hasilSemua = (hasilSemua * 1000000).roundToLong()/1000000.toDouble()
         hasilSemua = (hasilSemua * 100000).roundToLong()/100000.toDouble()
 
-        holder.tvNama.text = item.perusahaan_sounding[-1]
+        holder.tvNama.text = item.perusahaan_sounding[0]
         holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki))
         holder.tvWaktu.text = item.waktu_aju.replace("-"," ")
-        holder.tvBentuk.text = item.bentuk[-1]
+        holder.tvBentuk.text = item.bentuk[0]
         holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited,hasilSemua.toString()))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))

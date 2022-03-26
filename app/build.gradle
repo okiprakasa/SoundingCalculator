@@ -37,12 +37,13 @@ android {
 }
 
 dependencies {
-    // Room and Lifecycle dependencies
+    // Room, Gson and Lifecycle dependencies
     implementation 'androidx.room:room-runtime:2.4.2'
     implementation 'androidx.room:room-ktx:2.4.2'
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
     kapt 'androidx.room:room-compiler:2.4.2'
     implementation 'android.arch.persistence.room:runtime:1.1.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
@@ -54,7 +55,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
 
     implementation 'com.cuberto.bubbleicontabbarandroid:bubbleicontabbarandroid:1.0.2'
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
     implementation 'androidx.cardview:cardview:1.0.0'
 
     //Pdf and Print Dependency
