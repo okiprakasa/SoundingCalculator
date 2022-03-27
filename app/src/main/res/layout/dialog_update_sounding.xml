@@ -326,6 +326,8 @@
         android:fontFamily="@font/poppins_light"
         android:textSize="13sp"
         android:scrollbars="vertical"
+        android:maxLines="1"
+        android:inputType="textCapCharacters"
         tools:ignore="Autofill"
         android:visibility="gone"/>
 

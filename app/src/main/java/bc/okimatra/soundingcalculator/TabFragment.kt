@@ -47,7 +47,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToLong
 
@@ -69,6 +68,10 @@ class TabFragment(private val title: String) : Fragment() {
     private lateinit var ivTvMap: MutableMap<ImageView, TextView>
     private lateinit var ivSpAwalMap: MutableMap<ImageView, Spinner>
     private lateinit var ivSpAkhirMap: MutableMap<ImageView, Spinner>
+    private lateinit var spAwalDbFinalMap: MutableMap<Spinner, Double>
+    private lateinit var spAkhirDbFinalMap: MutableMap<Spinner, Double>
+    private var soundingAwalTotal = 0.0
+    private var soundingAkhirlTotal = 0.0
     private var counterSounding = 1
     private var fabOverSounding = true
 
@@ -103,6 +106,23 @@ class TabFragment(private val title: String) : Fragment() {
             title === "Calculator" -> {
                 var results: List<Double>
                 binding1.apply{
+                    val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
+                    val tz = TimeZone.getDefault()
+                    val now = Date()
+                    val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+                        in 6.9..7.8 -> {"WIB"}
+                        in 7.9..8.8 -> {"WITA"}
+                        in 8.9..9.8 -> {"WIT"}
+                        in -13.0..-0.1 -> {
+                            "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                        }
+                        else -> {
+                            "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                        }
+                    }
+                    val currentTime = timeFormat.format(cal.time).toString() + " $timeZone"
+                    waktu.setText(currentTime)
+
                     waktu.setOnClickListener {
                         dateSetListener = DatePickerDialog.OnDateSetListener {
                                 _, year, month, dayOfMonth ->
@@ -113,20 +133,6 @@ class TabFragment(private val title: String) : Fragment() {
                             val sdf = SimpleDateFormat(timeID, Locale.getDefault())
                             val tanggalEng = sdf.format(cal.time).toString()
                             val tanggalID = dayConverter(monthConverter(tanggalEng))
-
-                            val tz = TimeZone.getDefault()
-                            val now = Date()
-                            val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
-                                in 6.9..7.8 -> {"WIB"}
-                                in 7.9..8.8 -> {"WITA"}
-                                in 8.9..9.8 -> {"WIT"}
-                                in -13.0..-0.1 -> {
-                                    "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-                                }
-                                else -> {
-                                    "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-                                }
-                            }
 
                             val mcurrentTime = Calendar.getInstance()
                             val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
@@ -282,7 +288,7 @@ class TabFragment(private val title: String) : Fragment() {
                     results = calculatorListener(listET)
 
                     simpanHasil.setOnClickListener {
-                        val nomorTangkiText = endSpaceRemover(_binding1?.noTangki?.text.toString())
+                        val nomorTangkiText = endSpaceRemover(_binding1?.noTangki?.text.toString().uppercase())
                         val lokasiSoundingText =  endSpaceRemover(_binding1?.lokasiSounding?.text.toString())
                         val waktuText = _binding1?.waktu?.text.toString()
                         when {
@@ -592,6 +598,10 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 binding2.apply{
+                    val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+                    val currentdate = dateFormat.format(cal.time).toString()
+                    tanggalBa.setText(currentdate)
+
                     rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                     rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                     finalTab.background = null
@@ -617,6 +627,7 @@ class TabFragment(private val title: String) : Fragment() {
                         finalTab.background = null
                         finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
                         fabFinalReport.visibility = View.GONE
+                        fabCancelReport.visibility = View.GONE
                         svSoundingList.visibility = View.VISIBLE
                         svFinalList.visibility = View.GONE
                         tvNoFinalDataAvailable.visibility = View.GONE
@@ -713,9 +724,7 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                            val timeID = "dd MMMM yyyy"
-                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
-                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalEng = dateFormat.format(cal.time).toString()
                             val tanggalID = dayConverter(monthConverter(tanggalEng))
                             tanggalBa.setText(tanggalID)
                         }
@@ -921,21 +930,21 @@ class TabFragment(private val title: String) : Fragment() {
                                         alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
                                         lokasi_sounding = lokasiSoundingList as ArrayList<String>,
                                         waktu = waktuList as ArrayList<String>,
-                                        nomor_dokumen = noDokumen.text.toString(),
-                                        produk = produk.text.toString(),
-                                        bentuk = bentuk.text.toString(),
+                                        nomor_dokumen = endSpaceRemover(noDokumen.text.toString()),
+                                        produk = endSpaceRemover(produk.text.toString()),
+                                        bentuk = endSpaceRemover(bentuk.text.toString()),
                                         waktu_date = Date().time,
                                         judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
                                         judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
                                         judulFraksi = judulFraksiList as ArrayList<String>,
                                         judulDataTabel = judulDataTabelList as ArrayList<String>,
-                                        nama_sarkut = namaSarkut.text.toString(),
+                                        nama_sarkut = endSpaceRemover(namaSarkut.text.toString()),
                                         tanggal_ba = tanggalBa.text.toString(),
-                                        lokasi_ba = lokasiBa.text.toString(),
-                                        jumlah_contoh = jumlahBarcon.text.toString(),
-                                        waktu_aju = waktuBarcon.text.toString(),
+                                        lokasi_ba = endSpaceRemover(lokasiBa.text.toString()),
+                                        jumlah_contoh = endSpaceRemover(jumlahBarcon.text.toString()),
+                                        waktu_aju = endSpaceRemover(waktuBarcon.text.toString()),
                                         hasil_pembulatan = hasilPembulatan.text.toString(),
-                                        hasil_perhitungan = hasilPerhitungan.text.toString()
+                                        hasil_perhitungan = endSpaceRemover(hasilPerhitungan.text.toString())
                                     ))
                                 }
                             }, 150) //wait on loading
@@ -952,11 +961,31 @@ class TabFragment(private val title: String) : Fragment() {
                                     setupListOfDataIntoRecyclerViewReport(list, userDao)
                                 }
                             }
+                            _binding2?.produk?.text?.clear()
+                            _binding2?.bentuk?.text?.clear()
+                            _binding2?.namaSarkut?.text?.clear()
+                            _binding2?.jumlahBarcon?.text?.clear()
+                            _binding2?.waktuBarcon?.text?.clear()
+                            _binding2?.tanggalBa?.text?.clear()
+                            _binding2?.noDokumen?.text?.clear()
+                            //Remove added input sounding
+                            ivTvMap.keys.forEach {
+                                if (it != addOrClose1) {
+                                    (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                    ivCvMap.remove(it)
+                                    ivSpAwalMap.remove(it)
+                                    ivSpAkhirMap.remove(it)
+                                    ivTvMap.remove(it)
+                                }
+                            }
                         }
                     }
 
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
                     addClickListener(binding2, btnAddSounding, userDao)
+                    spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                    spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                    hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
                     ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
                     ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
                     ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
@@ -1064,12 +1093,12 @@ class TabFragment(private val title: String) : Fragment() {
                         populateDropdownEmptyOut(spAkhir)
                     }
                 }
-                spinnerListener(binding, ivTitle, userDao) //When clicked will populate spAkhir
                 ivCvMap += mutableMapOf(ivTitle to cv)
                 removeListener(binding, ivTitle)
                 ivTvMap += mutableMapOf(ivTitle to tvTitle)
                 ivSpAwalMap += mutableMapOf(ivTitle to spAwal)
                 ivSpAkhirMap += mutableMapOf(ivTitle to spAkhir)
+                spinnerListener(binding, ivTitle, userDao) //When clicked will populate spAkhir
             }
         }
     }
@@ -1100,10 +1129,82 @@ class TabFragment(private val title: String) : Fragment() {
                 }
 
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val soundingAwal = spAwal.selectedItem.toString()
                     lifecycleScope.launch {
-                        userDao.fetchSoundingByNoTangki(spAwal.selectedItem.toString()).collect {
+                        userDao.fetchSoundingByNoTangkiNotWaktu(
+                            soundingAwal.subSequence(0, soundingAwal.indexOf(";")).toString(),
+                            monthExtract(
+                                soundingAwal.subSequence(
+                                    soundingAwal.indexOf(";") + 2,
+                                    soundingAwal.length
+                                ).toString()
+                            )
+                        ).collect {
                             populateDropdownSoundingwithEmpty(ArrayList(it), spAkhir, true)
                         }
+                    }
+                    if (soundingAwal != "Empty In; 0") {
+                        lifecycleScope.launch {
+                            userDao.fetchSoundingByNoTangkiAndWaktu(
+                                soundingAwal.subSequence(0, soundingAwal.indexOf(";")).toString(),
+                                monthExtract(
+                                    soundingAwal.subSequence(
+                                        soundingAwal.indexOf(";") + 2,
+                                        soundingAwal.length
+                                    ).toString()
+                                )
+                            ).collect { it1 ->
+                                spAwalDbFinalMap[spAwal] = it1.hasil_sounding
+                                soundingAwalTotal = 0.0
+                                spAwalDbFinalMap.keys.forEach {it2 ->
+                                    soundingAwalTotal += spAwalDbFinalMap[it2]!!
+                                }
+                                hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
+                            }
+                        }
+                    } else {
+                        spAwalDbFinalMap[spAwal] = 0.0
+                        soundingAwalTotal = 0.0
+                        spAwalDbFinalMap.keys.forEach {it2 ->
+                            soundingAwalTotal += spAwalDbFinalMap[it2]!!
+                        }
+                        hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
+                    }
+                }
+            }
+
+            spAkhir.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val soundingAkhir = spAkhir.selectedItem.toString()
+                    if (soundingAkhir != "Empty Out; 0") {
+                        lifecycleScope.launch {
+                            userDao.fetchSoundingByNoTangkiAndWaktu(
+                                soundingAkhir.subSequence(0, soundingAkhir.indexOf(";")).toString(),
+                                monthExtract(
+                                    soundingAkhir.subSequence(
+                                        soundingAkhir.indexOf(";") + 2,
+                                        soundingAkhir.length
+                                    ).toString()
+                                )
+                            ).collect { it1 ->
+                                spAkhirDbFinalMap[spAkhir] = it1.hasil_sounding
+                                soundingAkhirlTotal = 0.0
+                                spAkhirDbFinalMap.keys.forEach { it2 ->
+                                    soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
+                                }
+                                hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
+                            }
+                        }
+                    } else {
+                        spAkhirDbFinalMap[spAkhir] = 0.0
+                        soundingAkhirlTotal = 0.0
+                        spAkhirDbFinalMap.keys.forEach { it2 ->
+                            soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
+                        }
+                        hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
                     }
                 }
             }
@@ -2642,7 +2743,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
 
             tvUpdate.setOnClickListener {
-                val nomorTangkiText = endSpaceRemover(binding.noTangki.text.toString())
+                val nomorTangkiText = endSpaceRemover(binding.noTangki.text.toString().uppercase())
                 val lokasiSoundingText =  endSpaceRemover(binding.lokasiSounding.text.toString())
                 val waktuText = waktu.text.toString()
                 val tinggiCairanAngka = tinggiCairan.text.toString().toDouble()

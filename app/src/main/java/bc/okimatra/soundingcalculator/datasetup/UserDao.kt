@@ -87,8 +87,8 @@ interface UserDao {
     @Query("Select * from `sounding-raw-table` WHERE id=:id")
     fun fetchSoundingById(id:Int):Flow<SoundingEntity>
 
-    @Query("Select * from `sounding-raw-table` WHERE no_tangki=:noTangki")
-    fun fetchSoundingByNoTangki(noTangki: String):Flow<List<SoundingEntity>>
+    @Query("Select * from `sounding-raw-table` WHERE no_tangki=:noTangki AND waktu!=:waktu")
+    fun fetchSoundingByNoTangkiNotWaktu(noTangki: String, waktu:String):Flow<List<SoundingEntity>>
 
     @Query("Select * from `sounding-raw-table` WHERE no_tangki=:noTangki AND waktu=:waktu")
     fun fetchSoundingByNoTangkiAndWaktu(noTangki:String, waktu:String):Flow<SoundingEntity>

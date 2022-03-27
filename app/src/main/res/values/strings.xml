@@ -43,6 +43,7 @@
     <string name="tambah_sounding">TAMBAH INPUT SOUNDING</string>
     <string name="i">%s</string>
     <string name="hasil">Hasil: 0.000 MT</string>
+    <string name="kota">Kotabaru</string>
     <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>
     <string name="volume_app">Volume App: 0.000 L</string>
     <string name="volume_obs">Volume Obs: 0.000 L</string>
@@ -83,6 +84,7 @@
     <string name="number_5">%s.%s.%s%s</string>
     <string name="number_2">%s.%s%s</string>
     <string name="number_0">%s%s</string>
+    <string name="nol">0</string>
     <string name="second_edited">%s.%s.___._-___.___</string>
     <string name="bea_cukai">BEA CUKAI</string>
     <string name="makin_baik">MAKIN BAIK</string>

@@ -433,6 +433,7 @@
                                     android:background="@android:color/transparent"
                                     android:fontFamily="@font/poppins_light"
                                     android:hint="@string/hint_lokasi_ba"
+                                    android:text="@string/kota"
                                     android:paddingStart="15dp"
                                     android:paddingTop="10dp"
                                     android:paddingEnd="10dp"
@@ -558,7 +559,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/rounded_input"
-                                    android:spinnerMode="dropdown"/>
+                                    android:spinnerMode="dropdown" />
                             </RelativeLayout>
 
                             <TextView
@@ -648,6 +649,7 @@
                                 android:focusableInTouchMode="false"
                                 android:fontFamily="@font/poppins_light"
                                 android:hint="@string/hasil_perhitungan"
+                                android:text="@string/nol"
                                 android:paddingStart="15dp"
                                 android:paddingTop="10dp"
                                 android:paddingEnd="10dp"
