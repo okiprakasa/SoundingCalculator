@@ -21,6 +21,7 @@
     <string name="hint_jumlah_barcon">Cth: 1 botol (Tidak Wajib)</string>
     <string name="hint_sarana_pengangkut">Cth: MT. MESON V01/11</string>
     <string name="hint_no_ba">BAPFP-XX/KBC.150504/2022</string>
+    <string name="no_ba_edited">BAPFP-XX/KBC.150504/%s</string>
     <string name="suhu_cairan">Suhu Cairan (°C)</string>
     <string name="hint_suhu_cairan">Cth: 50</string>
     <string name="suhu_edited">%s °C</string>
@@ -119,6 +120,7 @@
     <string name="format_waktu">%s %02d:%02d %s</string>
     <string name="no_dokumen">Nomor Form 3D</string>
     <string name="hint_no_dokumen">Cth: DP1002002022020301244316</string>
+    <string name="no_dokumen_edited">DP100200%s</string>
     <string name="hint_alamat">Cth: Jl. A No. 1, Surabaya</string>
     <string name="update_record">Update Data</string>
     <string name="update">Update</string>

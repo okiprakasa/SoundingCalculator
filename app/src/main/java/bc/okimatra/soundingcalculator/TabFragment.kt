@@ -102,25 +102,35 @@ class TabFragment(private val title: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val userDao = (requireActivity().application as UserApp).db.userDao()
+
+        val timeID = "EEEE, dd-MMMM-yyyy"
+        val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+        val tanggalEng = sdf.format(cal.time).toString()
+        val tanggalID = dayConverter(monthConverter(tanggalEng))
+        val tz = TimeZone.getDefault()
+        val now = Date()
+        val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+            in 6.9..7.8 -> {"WIB"}
+            in 7.9..8.8 -> {"WITA"}
+            in 8.9..9.8 -> {"WIT"}
+            in -13.0..-0.1 -> {
+                "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+            }
+            else -> {
+                "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+            }
+        }
+        val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+        val currentyear = yearFormat.format(cal.time).toString()
+        val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
+        val currentTime = timeFormat.format(cal.time).toString() + " $timeZone"
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val currentdate = dateFormat.format(cal.time).toString()
+
         when {
             title === "Calculator" -> {
                 var results: List<Double>
                 binding1.apply{
-                    val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
-                    val tz = TimeZone.getDefault()
-                    val now = Date()
-                    val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
-                        in 6.9..7.8 -> {"WIB"}
-                        in 7.9..8.8 -> {"WITA"}
-                        in 8.9..9.8 -> {"WIT"}
-                        in -13.0..-0.1 -> {
-                            "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-                        }
-                        else -> {
-                            "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-                        }
-                    }
-                    val currentTime = timeFormat.format(cal.time).toString() + " $timeZone"
                     waktu.setText(currentTime)
 
                     waktu.setOnClickListener {
@@ -129,10 +139,6 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                            val timeID = "EEEE, dd-MMMM-yyyy"
-                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
-                            val tanggalEng = sdf.format(cal.time).toString()
-                            val tanggalID = dayConverter(monthConverter(tanggalEng))
 
                             val mcurrentTime = Calendar.getInstance()
                             val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
@@ -598,9 +604,9 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 binding2.apply{
-                    val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-                    val currentdate = dateFormat.format(cal.time).toString()
                     tanggalBa.setText(currentdate)
+                    noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
+                    noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
 
                     rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                     rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -724,8 +730,6 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                            val tanggalEng = dateFormat.format(cal.time).toString()
-                            val tanggalID = dayConverter(monthConverter(tanggalEng))
                             tanggalBa.setText(tanggalID)
                         }
                         DatePickerDialog(
@@ -743,24 +747,6 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                            val timeID = "EEEE, dd-MMMM-yyyy"
-                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
-                            val tanggalEng = sdf.format(cal.time).toString()
-                            val tanggalID = dayConverter(monthConverter(tanggalEng))
-
-                            val tz = TimeZone.getDefault()
-                            val now = Date()
-                            val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
-                                in 6.9..7.8 -> {"WIB"}
-                                in 7.9..8.8 -> {"WITA"}
-                                in 8.9..9.8 -> {"WIT"}
-                                in -13.0..-0.1 -> {
-                                    "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-                                }
-                                else -> {
-                                    "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-                                }
-                            }
 
                             val mcurrentTime = Calendar.getInstance()
                             val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
@@ -785,197 +771,233 @@ class TabFragment(private val title: String) : Fragment() {
                         ).show()
                     }
                     btnSave.setOnClickListener {
-                        if (emptyCheck(listOf(namaSarkut, tanggalBa, lokasiBa, jumlahBarcon, waktuBarcon))) {
-                            val listSounding = ArrayList<String>()
-                            ivSpAwalMap.keys.forEach {
-                                listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
-                                listSounding += arrayListOf(ivSpAkhirMap[it]!!.selectedItem.toString()) //ID from ivSpAwal = ivSpAkhir
+                        val produkValue = endSpaceRemover(produk.text.toString())
+                        val bentukValue = endSpaceRemover(bentuk.text.toString())
+                        val namaSarkutValue = endSpaceRemover(namaSarkut.text.toString())
+                        val noBaValue = endSpaceRemover(noBa.text.toString())
+                        val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString())
+                        val noDokumenValue = endSpaceRemover(noDokumen.text.toString().uppercase())
+                        val hasilPembulatanValue = endSpaceRemover(hasilPembulatan.text.toString())
+                        when {
+                            produkValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Produk/Jenis Barang Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
-                            Log.d("okimatra", listSounding.toString())
-                            val tinggiCairanList = MutableList(listSounding.size) {0.0}
-                            val suhuCairanList = MutableList(listSounding.size) {0.0}
-                            val suhuKalibrasiTangkiList = MutableList(listSounding.size) {0.0}
-                            val tinggiMejaList = MutableList(listSounding.size) {0.0}
-                            val faktorMuaiList = MutableList(listSounding.size) {0.0}
-                            val tinggiCairanTerkoreksiList = MutableList(listSounding.size) {0.0}
-                            val volumeKalibrasi1List = MutableList(listSounding.size) {0.0}
-                            val densityCairanList = MutableList(listSounding.size) {0.0}
-                            val volumeFraksiList = MutableList(listSounding.size) {0.0}
-                            val volumeKalibrasi2List = MutableList(listSounding.size) {0.0}
-                            val volumeMidList = MutableList(listSounding.size) {0.0}
-                            val volumeAppList = MutableList(listSounding.size) {0.0}
-                            val volumeObsList = MutableList(listSounding.size) {0.0}
-                            val volumeList = MutableList(listSounding.size) {0.0}
-                            val hasilSoundingList = MutableList(listSounding.size) {0.0}
-                            val noTangkiList = MutableList(listSounding.size) {""}
-                            val pegawaiSoundingList = MutableList(listSounding.size) {""}
-                            val nipPegawaiList = MutableList(listSounding.size) {""}
-                            val penggunaJasaSoundingList = MutableList(listSounding.size) {""}
-                            val jabatanPenggunaJasaList = MutableList(listSounding.size) {""}
-                            val perusahaanSoundingList = MutableList(listSounding.size) {""}
-                            val npwpPerusahaanSoundingList = MutableList(listSounding.size) {""}
-                            val alamatPerusahaanSoundingList = MutableList(listSounding.size) {""}
-                            val lokasiSoundingList = MutableList(listSounding.size) {""}
-                            val waktuList = MutableList(listSounding.size) {""}
-                            val judulKalibrasi1List = MutableList(listSounding.size) {""}
-                            val judulKalibrasi2List = MutableList(listSounding.size) {""}
-                            val judulFraksiList = MutableList(listSounding.size) {""}
-                            val judulDataTabelList = MutableList(listSounding.size) {""}
-                            for (i in listSounding.indices) {
-                                if (listSounding[i] != "Empty In; 0" && listSounding[i] != "Empty Out; 0") {
-                                    lifecycleScope.launch {
-                                        userDao.fetchSoundingByNoTangkiAndWaktu(
-                                            listSounding[i].subSequence(0, listSounding[i].indexOf(";")).toString(),
-                                            monthExtract(
-                                                listSounding[i].subSequence(
-                                                    listSounding[i].indexOf(";") + 2,
-                                                    listSounding[i].length
-                                                ).toString()
-                                            )
-                                        ).collect {
-                                            Log.d("okimatra1",tinggiCairanList.toString())
-                                            tinggiCairanList[i] = it.tinggi_cairan
-                                            Log.d("okimatra2",tinggiCairanList.toString())
-                                            suhuCairanList[i] = it.suhu_cairan
-                                            suhuKalibrasiTangkiList[i] = it.suhu_kalibrasi_tangki
-                                            tinggiMejaList[i] = it.tinggi_meja
-                                            faktorMuaiList[i] = it.faktor_muai
-                                            tinggiCairanTerkoreksiList[i] = it.tinggi_cairan_terkoreksi
-                                            volumeKalibrasi1List[i] = it.volume_kalibrasi1
-                                            densityCairanList[i] = it.density_cairan
-                                            volumeFraksiList[i] = it.volume_fraksi
-                                            volumeKalibrasi2List[i] = it.volume_kalibrasi2
-                                            volumeMidList[i] = it.volume_mid
-                                            volumeAppList[i] = it.volume_app
-                                            volumeObsList[i] = it.volume_obs
-                                            volumeList[i] = it.volume
-                                            hasilSoundingList[i] = it.hasil_sounding
-                                            noTangkiList[i] = it.no_tangki
-                                            pegawaiSoundingList[i] = it.pegawai_sounding
-                                            nipPegawaiList[i] = it.nip_pegawai
-                                            penggunaJasaSoundingList[i] = it.pengguna_jasa_sounding
-                                            jabatanPenggunaJasaList[i] = it.jabatan_pengguna_jasa
-                                            perusahaanSoundingList[i] = it.perusahaan_sounding
-                                            npwpPerusahaanSoundingList[i] = it.npwp_perusahaan_sounding
-                                            alamatPerusahaanSoundingList[i] = it.alamat_perusahaan_sounding
-                                            lokasiSoundingList[i] = it.lokasi_sounding
-                                            waktuList[i] = it.waktu
-                                            judulKalibrasi1List[i] = it.judulKalibrasi1
-                                            judulKalibrasi2List[i] = it.judulKalibrasi2
-                                            judulFraksiList[i] = it.judulFraksi
-                                            judulDataTabelList[i] = it.judulDataTabel
+                            bentukValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Bentuk Fisik/Warna/Bau Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            namaSarkutValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Nama Sarkut Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            noBaValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Nomor BA Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            noBaValue == String.format(getString(R.string.no_ba_edited),currentyear) -> {
+                                Toast.makeText(requireContext(), "Nomor BA Masih XX", Toast.LENGTH_SHORT).show()
+                            }
+                            lokasiBaValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Lokasi BA Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            noDokumenValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Nomor Form 3D Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            noDokumenValue == String.format(getString(R.string.no_dokumen_edited),currentyear) -> {
+                                Toast.makeText(requireContext(), "Mohon Cek Kembali Nomor Form 3D", Toast.LENGTH_SHORT).show()
+                            }
+                            hasilPembulatanValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Hasil Pembulatan Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                val listSounding = ArrayList<String>()
+                                ivSpAwalMap.keys.forEach {
+                                    listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
+                                    listSounding += arrayListOf(ivSpAkhirMap[it]!!.selectedItem.toString()) //ID from ivSpAwal = ivSpAkhir
+                                }
+                                Log.d("okimatra", listSounding.toString())
+                                val tinggiCairanList = MutableList(listSounding.size) {0.0}
+                                val suhuCairanList = MutableList(listSounding.size) {0.0}
+                                val suhuKalibrasiTangkiList = MutableList(listSounding.size) {0.0}
+                                val tinggiMejaList = MutableList(listSounding.size) {0.0}
+                                val faktorMuaiList = MutableList(listSounding.size) {0.0}
+                                val tinggiCairanTerkoreksiList = MutableList(listSounding.size) {0.0}
+                                val volumeKalibrasi1List = MutableList(listSounding.size) {0.0}
+                                val densityCairanList = MutableList(listSounding.size) {0.0}
+                                val volumeFraksiList = MutableList(listSounding.size) {0.0}
+                                val volumeKalibrasi2List = MutableList(listSounding.size) {0.0}
+                                val volumeMidList = MutableList(listSounding.size) {0.0}
+                                val volumeAppList = MutableList(listSounding.size) {0.0}
+                                val volumeObsList = MutableList(listSounding.size) {0.0}
+                                val volumeList = MutableList(listSounding.size) {0.0}
+                                val hasilSoundingList = MutableList(listSounding.size) {0.0}
+                                val noTangkiList = MutableList(listSounding.size) {""}
+                                val pegawaiSoundingList = MutableList(listSounding.size) {""}
+                                val nipPegawaiList = MutableList(listSounding.size) {""}
+                                val penggunaJasaSoundingList = MutableList(listSounding.size) {""}
+                                val jabatanPenggunaJasaList = MutableList(listSounding.size) {""}
+                                val perusahaanSoundingList = MutableList(listSounding.size) {""}
+                                val npwpPerusahaanSoundingList = MutableList(listSounding.size) {""}
+                                val alamatPerusahaanSoundingList = MutableList(listSounding.size) {""}
+                                val lokasiSoundingList = MutableList(listSounding.size) {""}
+                                val waktuList = MutableList(listSounding.size) {""}
+                                val judulKalibrasi1List = MutableList(listSounding.size) {""}
+                                val judulKalibrasi2List = MutableList(listSounding.size) {""}
+                                val judulFraksiList = MutableList(listSounding.size) {""}
+                                val judulDataTabelList = MutableList(listSounding.size) {""}
+                                for (i in listSounding.indices) {
+                                    if (listSounding[i] != "Empty In; 0" && listSounding[i] != "Empty Out; 0") {
+                                        lifecycleScope.launch {
+                                            userDao.fetchSoundingByNoTangkiAndWaktu(
+                                                listSounding[i].subSequence(0, listSounding[i].indexOf(";")).toString(),
+                                                monthExtract(
+                                                    listSounding[i].subSequence(
+                                                        listSounding[i].indexOf(";") + 2,
+                                                        listSounding[i].length
+                                                    ).toString()
+                                                )
+                                            ).collect {
+                                                Log.d("okimatra1",tinggiCairanList.toString())
+                                                tinggiCairanList[i] = it.tinggi_cairan
+                                                Log.d("okimatra2",tinggiCairanList.toString())
+                                                suhuCairanList[i] = it.suhu_cairan
+                                                suhuKalibrasiTangkiList[i] = it.suhu_kalibrasi_tangki
+                                                tinggiMejaList[i] = it.tinggi_meja
+                                                faktorMuaiList[i] = it.faktor_muai
+                                                tinggiCairanTerkoreksiList[i] = it.tinggi_cairan_terkoreksi
+                                                volumeKalibrasi1List[i] = it.volume_kalibrasi1
+                                                densityCairanList[i] = it.density_cairan
+                                                volumeFraksiList[i] = it.volume_fraksi
+                                                volumeKalibrasi2List[i] = it.volume_kalibrasi2
+                                                volumeMidList[i] = it.volume_mid
+                                                volumeAppList[i] = it.volume_app
+                                                volumeObsList[i] = it.volume_obs
+                                                volumeList[i] = it.volume
+                                                hasilSoundingList[i] = it.hasil_sounding
+                                                noTangkiList[i] = it.no_tangki
+                                                pegawaiSoundingList[i] = it.pegawai_sounding
+                                                nipPegawaiList[i] = it.nip_pegawai
+                                                penggunaJasaSoundingList[i] = it.pengguna_jasa_sounding
+                                                jabatanPenggunaJasaList[i] = it.jabatan_pengguna_jasa
+                                                perusahaanSoundingList[i] = it.perusahaan_sounding
+                                                npwpPerusahaanSoundingList[i] = it.npwp_perusahaan_sounding
+                                                alamatPerusahaanSoundingList[i] = it.alamat_perusahaan_sounding
+                                                lokasiSoundingList[i] = it.lokasi_sounding
+                                                waktuList[i] = it.waktu
+                                                judulKalibrasi1List[i] = it.judulKalibrasi1
+                                                judulKalibrasi2List[i] = it.judulKalibrasi2
+                                                judulFraksiList[i] = it.judulFraksi
+                                                judulDataTabelList[i] = it.judulDataTabel
+                                            }
                                         }
                                     }
+                                    else { //To add listSounding[i] sequentially because of lazy userDao
+                                        Log.d("okimatra3",tinggiCairanList.toString())
+                                        tinggiCairanList[i] = 0.0
+                                        Log.d("okimatra4",tinggiCairanList.toString())
+                                        suhuCairanList[i] = 0.0
+                                        suhuKalibrasiTangkiList[i] = 0.0
+                                        tinggiMejaList[i] = 0.0
+                                        faktorMuaiList[i] = 0.0
+                                        tinggiCairanTerkoreksiList[i] = 0.0
+                                        volumeKalibrasi1List[i] = 0.0
+                                        densityCairanList[i] = 0.0
+                                        volumeFraksiList[i] = 0.0
+                                        volumeKalibrasi2List[i] = 0.0
+                                        volumeMidList[i] = 0.0
+                                        volumeAppList[i] = 0.0
+                                        volumeObsList[i] = 0.0
+                                        volumeList[i] = 0.0
+                                        hasilSoundingList[i] = 0.0
+                                        noTangkiList[i] = ""
+                                        pegawaiSoundingList[i] = ""
+                                        nipPegawaiList[i] = ""
+                                        penggunaJasaSoundingList[i] = ""
+                                        jabatanPenggunaJasaList[i] = ""
+                                        perusahaanSoundingList[i] = ""
+                                        npwpPerusahaanSoundingList[i] = ""
+                                        alamatPerusahaanSoundingList[i] = ""
+                                        lokasiSoundingList[i] = ""
+                                        waktuList[i] = ""
+                                        judulKalibrasi1List[i] = ""
+                                        judulKalibrasi2List[i] = ""
+                                        judulFraksiList[i] = ""
+                                        judulDataTabelList[i] = ""
+                                    }
                                 }
-                                else { //To add listSounding[i] sequentially because of lazy userDao
-                                    Log.d("okimatra3",tinggiCairanList.toString())
-                                    tinggiCairanList[i] = 0.0
-                                    Log.d("okimatra4",tinggiCairanList.toString())
-                                    suhuCairanList[i] = 0.0
-                                    suhuKalibrasiTangkiList[i] = 0.0
-                                    tinggiMejaList[i] = 0.0
-                                    faktorMuaiList[i] = 0.0
-                                    tinggiCairanTerkoreksiList[i] = 0.0
-                                    volumeKalibrasi1List[i] = 0.0
-                                    densityCairanList[i] = 0.0
-                                    volumeFraksiList[i] = 0.0
-                                    volumeKalibrasi2List[i] = 0.0
-                                    volumeMidList[i] = 0.0
-                                    volumeAppList[i] = 0.0
-                                    volumeObsList[i] = 0.0
-                                    volumeList[i] = 0.0
-                                    hasilSoundingList[i] = 0.0
-                                    noTangkiList[i] = ""
-                                    pegawaiSoundingList[i] = ""
-                                    nipPegawaiList[i] = ""
-                                    penggunaJasaSoundingList[i] = ""
-                                    jabatanPenggunaJasaList[i] = ""
-                                    perusahaanSoundingList[i] = ""
-                                    npwpPerusahaanSoundingList[i] = ""
-                                    alamatPerusahaanSoundingList[i] = ""
-                                    lokasiSoundingList[i] = ""
-                                    waktuList[i] = ""
-                                    judulKalibrasi1List[i] = ""
-                                    judulKalibrasi2List[i] = ""
-                                    judulFraksiList[i] = ""
-                                    judulDataTabelList[i] = ""
-                                }
-                            }
-                            Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
-                                Log.d("okimatra4", tinggiCairanList.toString())
+                                Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
+                                    Log.d("okimatra4", tinggiCairanList.toString())
+                                    lifecycleScope.launch {
+                                        userDao.insertReport(ReportEntity(
+                                            tinggi_cairan = tinggiCairanList as ArrayList<Double>,
+                                            suhu_cairan = suhuCairanList as ArrayList<Double>,
+                                            suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
+                                            tinggi_meja = tinggiMejaList as ArrayList<Double>,
+                                            faktor_muai = faktorMuaiList as ArrayList<Double>,
+                                            tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
+                                            volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
+                                            density_cairan = densityCairanList as ArrayList<Double>,
+                                            volume_fraksi = volumeFraksiList as ArrayList<Double>,
+                                            volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
+                                            volume_mid = volumeMidList as ArrayList<Double>,
+                                            volume_app = volumeAppList as ArrayList<Double>,
+                                            volume_obs = volumeObsList as ArrayList<Double>,
+                                            volume = volumeList as ArrayList<Double>,
+                                            hasil_sounding = hasilSoundingList as ArrayList<Double>,
+                                            no_tangki = noTangkiList as ArrayList<String>,
+                                            pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
+                                            nip_pegawai = nipPegawaiList as ArrayList<String>,
+                                            pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
+                                            jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
+                                            perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
+                                            npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
+                                            alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
+                                            lokasi_sounding = lokasiSoundingList as ArrayList<String>,
+                                            waktu = waktuList as ArrayList<String>,
+                                            nomor_dokumen = noDokumenValue,
+                                            produk = produkValue,
+                                            bentuk = bentukValue,
+                                            waktu_date = Date().time,
+                                            judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
+                                            judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
+                                            judulFraksi = judulFraksiList as ArrayList<String>,
+                                            judulDataTabel = judulDataTabelList as ArrayList<String>,
+                                            nama_sarkut = namaSarkutValue,
+                                            tanggal_ba = tanggalBa.text.toString(),
+                                            lokasi_ba = lokasiBaValue,
+                                            jumlah_contoh = endSpaceRemover(jumlahBarcon.text.toString()),
+                                            waktu_aju = endSpaceRemover(waktuBarcon.text.toString()),
+                                            hasil_pembulatan = hasilPembulatanValue,
+                                            hasil_perhitungan = hasilPerhitungan.text.toString()
+                                        ))
+                                    }
+                                }, 150) //wait on loading
+                                fabOverSounding = false
+                                soundingContainer.visibility = View.GONE
+                                btnAddSounding.visibility = View.GONE
+                                btnSave.visibility = View.GONE
+                                dataHasilLayout.visibility = View.GONE
+                                fabCancelReport.visibility = View.GONE
+                                fabFinalReport.visibility = View.VISIBLE
                                 lifecycleScope.launch {
-                                    userDao.insertReport(ReportEntity(
-                                        tinggi_cairan = tinggiCairanList as ArrayList<Double>,
-                                        suhu_cairan = suhuCairanList as ArrayList<Double>,
-                                        suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
-                                        tinggi_meja = tinggiMejaList as ArrayList<Double>,
-                                        faktor_muai = faktorMuaiList as ArrayList<Double>,
-                                        tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
-                                        volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
-                                        density_cairan = densityCairanList as ArrayList<Double>,
-                                        volume_fraksi = volumeFraksiList as ArrayList<Double>,
-                                        volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
-                                        volume_mid = volumeMidList as ArrayList<Double>,
-                                        volume_app = volumeAppList as ArrayList<Double>,
-                                        volume_obs = volumeObsList as ArrayList<Double>,
-                                        volume = volumeList as ArrayList<Double>,
-                                        hasil_sounding = hasilSoundingList as ArrayList<Double>,
-                                        no_tangki = noTangkiList as ArrayList<String>,
-                                        pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
-                                        nip_pegawai = nipPegawaiList as ArrayList<String>,
-                                        pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
-                                        jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
-                                        perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
-                                        npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
-                                        alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
-                                        lokasi_sounding = lokasiSoundingList as ArrayList<String>,
-                                        waktu = waktuList as ArrayList<String>,
-                                        nomor_dokumen = endSpaceRemover(noDokumen.text.toString()),
-                                        produk = endSpaceRemover(produk.text.toString()),
-                                        bentuk = endSpaceRemover(bentuk.text.toString()),
-                                        waktu_date = Date().time,
-                                        judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
-                                        judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
-                                        judulFraksi = judulFraksiList as ArrayList<String>,
-                                        judulDataTabel = judulDataTabelList as ArrayList<String>,
-                                        nama_sarkut = endSpaceRemover(namaSarkut.text.toString()),
-                                        tanggal_ba = tanggalBa.text.toString(),
-                                        lokasi_ba = endSpaceRemover(lokasiBa.text.toString()),
-                                        jumlah_contoh = endSpaceRemover(jumlahBarcon.text.toString()),
-                                        waktu_aju = endSpaceRemover(waktuBarcon.text.toString()),
-                                        hasil_pembulatan = hasilPembulatan.text.toString(),
-                                        hasil_perhitungan = endSpaceRemover(hasilPerhitungan.text.toString())
-                                    ))
+                                    userDao.fetchAllReport().collect {
+                                        val list = ArrayList(it)
+                                        setupListOfDataIntoRecyclerViewReport(list, userDao)
+                                    }
                                 }
-                            }, 150) //wait on loading
-                            fabOverSounding = false
-                            soundingContainer.visibility = View.GONE
-                            btnAddSounding.visibility = View.GONE
-                            btnSave.visibility = View.GONE
-                            dataHasilLayout.visibility = View.GONE
-                            fabCancelReport.visibility = View.GONE
-                            fabFinalReport.visibility = View.VISIBLE
-                            lifecycleScope.launch {
-                                userDao.fetchAllReport().collect {
-                                    val list = ArrayList(it)
-                                    setupListOfDataIntoRecyclerViewReport(list, userDao)
-                                }
-                            }
-                            _binding2?.produk?.text?.clear()
-                            _binding2?.bentuk?.text?.clear()
-                            _binding2?.namaSarkut?.text?.clear()
-                            _binding2?.jumlahBarcon?.text?.clear()
-                            _binding2?.waktuBarcon?.text?.clear()
-                            _binding2?.tanggalBa?.text?.clear()
-                            _binding2?.noDokumen?.text?.clear()
-                            //Remove added input sounding
-                            ivTvMap.keys.forEach {
-                                if (it != addOrClose1) {
-                                    (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
-                                    ivCvMap.remove(it)
-                                    ivSpAwalMap.remove(it)
-                                    ivSpAkhirMap.remove(it)
-                                    ivTvMap.remove(it)
+                                _binding2?.produk?.text?.clear()
+                                _binding2?.bentuk?.text?.clear()
+                                _binding2?.namaSarkut?.text?.clear()
+                                _binding2?.hasilPembulatan?.text?.clear()
+                                _binding2?.waktuBarcon?.text?.clear()
+                                noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
+                                noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
+                                //Remove added input sounding
+                                ivTvMap.keys.forEach {
+                                    if (it != addOrClose1) {
+                                        (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                        ivCvMap.remove(it)
+                                        ivSpAwalMap.remove(it)
+                                        ivSpAkhirMap.remove(it)
+                                        ivTvMap.remove(it)
+                                    }
                                 }
                             }
                         }
