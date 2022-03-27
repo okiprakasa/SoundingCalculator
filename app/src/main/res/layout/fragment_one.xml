@@ -85,7 +85,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/tinggi_cairan"
                             android:layout_width="match_parent"
@@ -123,7 +122,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/suhu_cairan"
                             android:layout_width="match_parent"
@@ -190,7 +188,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/suhu_tetap"
                             android:layout_width="match_parent"
@@ -228,7 +225,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/tinggi_meja"
                             android:layout_width="match_parent"
@@ -266,7 +262,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/muai"
                             android:layout_width="match_parent"
@@ -505,7 +500,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/density_cairan"
                             android:layout_width="match_parent"
@@ -671,7 +665,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/no_tangki"
                             android:layout_width="match_parent"
@@ -762,7 +755,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/lokasi_sounding"
                             android:layout_width="match_parent"
@@ -797,7 +789,6 @@
                         android:layout_marginEnd="25dp"
                         android:background="@drawable/rounded_input">
 
-                        <!-- INPUT -->
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/waktu"
                             android:layout_width="match_parent"
@@ -813,117 +804,6 @@
                             android:paddingTop="10dp"
                             android:paddingEnd="5dp"
                             android:paddingBottom="10dp"
-                            android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
-
-                    </RelativeLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="14dp"
-                        android:fontFamily="@font/helvetica"
-                        android:gravity="center_horizontal"
-                        android:text="@string/no_dokumen"
-                        android:textSize="14sp" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginEnd="25dp"
-                        android:background="@drawable/rounded_input">
-
-                        <!-- INPUT -->
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/no_dokumen"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/poppins_light"
-                            android:hint="@string/hint_no_dokumen"
-                            android:paddingStart="15dp"
-                            android:paddingTop="10dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="10dp"
-                            android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
-
-                    </RelativeLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="14dp"
-                        android:fontFamily="@font/helvetica"
-                        android:gravity="center_horizontal"
-                        android:text="@string/produk"
-                        android:textSize="14sp"/>
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginEnd="25dp"
-                        android:background="@drawable/rounded_input">
-
-                        <!-- INPUT -->
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/produk"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/poppins_light"
-                            android:hint="@string/hint_produk"
-                            android:inputType="textMultiLine|textCapWords"
-                            android:paddingStart="15dp"
-                            android:paddingTop="10dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="10dp"
-                            android:scrollbars="vertical"
-                            android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp"
-                            tools:ignore="TooManyViews" />
-
-                    </RelativeLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="14dp"
-                        android:fontFamily="@font/helvetica"
-                        android:gravity="center_horizontal"
-                        android:text="@string/bentuk"
-                        android:textSize="14sp"/>
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginEnd="25dp"
-                        android:background="@drawable/rounded_input"
-                        tools:ignore="TooManyViews">
-
-                        <!-- INPUT -->
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/bentuk"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/poppins_light"
-                            android:hint="@string/hint_bentuk"
-                            android:inputType="textMultiLine"
-                            android:paddingStart="15dp"
-                            android:paddingTop="10dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="10dp"
-                            android:scrollbars="vertical"
                             android:textCursorDrawable="@drawable/cursor_color"
                             android:textSize="13sp" />
 

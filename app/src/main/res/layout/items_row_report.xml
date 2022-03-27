@@ -22,10 +22,9 @@
         <LinearLayout
             android:layout_weight="9"
             android:orientation="vertical"
-            android:layout_marginStart="10dp"
             android:layout_marginEnd="0dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
             android:paddingTop="4dp"
             android:paddingEnd="4dp"
             android:paddingStart="4dp"
@@ -71,6 +70,19 @@
                 android:fontFamily="@font/helvetica"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_bentuk"
+                android:text="@string/bentuk"
+                android:textSize="13sp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="-5dp"
+                android:fontFamily="@font/helvetica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
             <TextView
                 android:id="@+id/tv_nama_perusahaan"
                 android:text="@string/perusahaan"
@@ -82,6 +94,25 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="-5dp"
                 android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/iv_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_down"
+                android:layout_marginTop="-5dp"
+                android:contentDescription="@string/detail_arrow"/>
+
+            <ImageView
+                android:id="@+id/iv_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-5dp"
+                android:src="@drawable/ic_up"
+                android:contentDescription="@string/detail_arrow"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

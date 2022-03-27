@@ -6,19 +6,18 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
-import bc.okimatra.soundingcalculator.databinding.ItemsRowSoundingBinding
+import bc.okimatra.soundingcalculator.databinding.ItemsRowReportBinding
 import bc.okimatra.soundingcalculator.datasetup.ReportEntity
 import kotlin.math.roundToLong
 
 class ReportAdapter(private val items: ArrayList<ReportEntity>,
-//                    private val updateListener:(id:Int)->Unit,
                     private val deleteListener:(id:Int)->Unit,
                     private val pdfListener:(id:Int)->Unit):
     RecyclerView.Adapter<ReportAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemsRowSoundingBinding.inflate(
+            ItemsRowReportBinding.inflate(
             LayoutInflater.from(parent.context),parent,false)
         )
     }
@@ -46,7 +45,7 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         holder.tvNama.text = item.perusahaan_sounding[0]
         holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki))
         holder.tvWaktu.text = item.waktu_aju.replace("-"," ")
-        holder.tvBentuk.text = item.bentuk[0]
+        holder.tvBentuk.text = item.bentuk
         holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited,hasilSemua.toString()))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
@@ -80,7 +79,7 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         return items.size
     }
 
-    class ViewHolder(binding: ItemsRowSoundingBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding: ItemsRowReportBinding) : RecyclerView.ViewHolder(binding.root) {
         val llMain = binding.llMain
         val tvNama = binding.tvNamaPerusahaan
         val tvNoTangki = binding.tvNoTangki

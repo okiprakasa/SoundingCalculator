@@ -439,86 +439,6 @@
         tools:ignore="Autofill"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/judul_no_dokumen"
-        android:text="@string/no_dokumen"
-        android:layout_width="wrap_content"
-        android:layout_marginStart="10dp"
-        android:fontFamily="@font/helvetica"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        android:visibility="gone"/>
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/no_dokumen"
-        android:hint="@string/hint_no_dokumen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="-10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/login"
-        android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
-        android:scrollbars="vertical"
-        tools:ignore="Autofill"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/judul_produk"
-        android:text="@string/produk"
-        android:layout_width="wrap_content"
-        android:layout_marginStart="10dp"
-        android:fontFamily="@font/helvetica"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        android:visibility="gone"/>
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/produk"
-        android:hint="@string/hint_produk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="-10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/login"
-        android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
-        android:scrollbars="vertical"
-        tools:ignore="Autofill"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/judul_bentuk"
-        android:text="@string/bentuk"
-        android:layout_width="wrap_content"
-        android:layout_marginStart="10dp"
-        android:fontFamily="@font/helvetica"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        android:visibility="gone"/>
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/bentuk"
-        android:hint="@string/bentuk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="-10dp"
-        android:backgroundTint="@color/login"
-        android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
-        android:scrollbars="vertical"
-        tools:ignore="Autofill"
-        android:visibility="gone"/>
-
     <LinearLayout
         android:id="@+id/hasil_layout"
         android:layout_width="match_parent"
@@ -652,20 +572,6 @@
             android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/tvNext2"
-            android:text="@string/next"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="@font/nunito"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textColor="@color/login"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:visibility="gone"/>
-
-        <TextView
             android:id="@+id/tvUpdate"
             android:text="@string/update"
             android:layout_width="0dp"
@@ -695,20 +601,6 @@
 
         <TextView
             android:id="@+id/tvBack1"
-            android:text="@string/back"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:textSize="15sp"
-            android:padding="10dp"
-            android:gravity="center"
-            android:fontFamily="@font/nunito"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/tvBack2"
             android:text="@string/back"
             android:layout_width="0dp"
             android:layout_weight="1"

@@ -33,9 +33,6 @@ data class SoundingEntity(
     val alamat_perusahaan_sounding: String = "",
     val lokasi_sounding: String = "",
     val waktu: String = "",
-    val nomor_dokumen: String = "",
-    val produk: String = "",
-    val bentuk: String = "",
     @ColumnInfo(name = "date")
     val waktu_date: Long = 0L,
     val judulKalibrasi1: String = "",

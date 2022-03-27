@@ -260,15 +260,6 @@ class TabFragment(private val title: String) : Fragment() {
 
                     namaPenggunaJasa.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                         override fun onNothingSelected(parent: AdapterView<*>?) {
-                            lifecycleScope.launch {
-                                userDao.fetchServiceUserByName(namaPenggunaJasa.selectedItem.toString()).collect {
-                                    try {
-                                        lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
-                                    } catch (e: Exception) {
-                                        Log.d("okimatra", "" + e.message)
-                                    }
-                                }
-                            }
                         }
 
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -294,7 +285,6 @@ class TabFragment(private val title: String) : Fragment() {
                         val nomorTangkiText = endSpaceRemover(_binding1?.noTangki?.text.toString())
                         val lokasiSoundingText =  endSpaceRemover(_binding1?.lokasiSounding?.text.toString())
                         val waktuText = _binding1?.waktu?.text.toString()
-                        val bentukText = endSpaceRemover(_binding1?.bentuk?.text.toString())
                         when {
                             nomorTangkiText.isEmpty() -> {
                                 Toast.makeText(requireActivity(), "Nomor Tangki Belum Diisi", Toast.LENGTH_SHORT).show()
@@ -304,9 +294,6 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                             waktuText.isEmpty() -> {
                                 Toast.makeText(requireActivity(), "Waktu Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
-                            }
-                            bentukText.isEmpty() -> {
-                                Toast.makeText(requireActivity(), "Bentuk Fisik/Warna/Bau Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             else -> {
                                 val tinggiCairanAngka = _binding1?.tinggiCairan?.text.toString().toDouble()
@@ -318,8 +305,6 @@ class TabFragment(private val title: String) : Fragment() {
                                 val densityAngka = _binding1?.densityCairan?.text.toString().toDouble()
                                 val petugasSounding = _binding1?.namaPegawai?.selectedItem.toString()
                                 val penggunaJasa = _binding1?.namaPenggunaJasa?.selectedItem.toString()
-                                val nomorDokumen = endSpaceRemover(_binding1?.noDokumen?.text.toString())
-                                val produk = endSpaceRemover(_binding1?.produk?.text.toString())
                                 val judulKalibrasi1 = _binding1?.judulTabelKalibrasi?.text.toString().replace(".",",")
                                 val judulKalibrasi2 = _binding1?.judulTabelKalibrasi2?.text.toString().replace(".",",")
                                 val judulFraksi = _binding1?.judulTabelFraksi?.text.toString()
@@ -363,9 +348,6 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 alamat_perusahaan_sounding = alamat,
                                                                 lokasi_sounding = lokasiSoundingText,
                                                                 waktu = waktuText,
-                                                                nomor_dokumen = nomorDokumen,
-                                                                produk = produk,
-                                                                bentuk = bentukText,
                                                                 waktu_date = Date().time,
                                                                 judulKalibrasi1 = judulKalibrasi1,
                                                                 judulKalibrasi2 = judulKalibrasi2,
@@ -385,8 +367,6 @@ class TabFragment(private val title: String) : Fragment() {
                                                             _binding1?.noTangki?.text?.clear()
                                                             _binding1?.lokasiSounding?.text?.clear()
                                                             _binding1?.waktu?.text?.clear()
-                                                            _binding1?.produk?.text?.clear()
-                                                            _binding1?.bentuk?.text?.clear()
                                                             backFunction()
                                                         }
                                                     } catch (e: Exception) {
@@ -683,10 +663,11 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                     lifecycleScope.launch {
                                         userDao.fetchAllSounding().collect {
-                                            populateDropdownSounding(ArrayList(it), awal1, false)
-                                            populateDropdownSounding(ArrayList(it), akhir1, true)
+                                            populateDropdownSoundingwithEmpty(ArrayList(it), awal1, false)
+                                            populateDropdownEmptyOut(akhir1)
                                         }
                                     }
+                                    spinnerListener(binding2, addOrClose1, userDao)
                                 } else {
                                     Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui Save Data\n Pada Tab Calculator", Toast.LENGTH_LONG).show()
                                 }
@@ -698,6 +679,7 @@ class TabFragment(private val title: String) : Fragment() {
                         fabFinalReport.visibility = View.GONE
                         rvFinalList.visibility = View.GONE
                         tvNoFinalDataAvailable.visibility = View.GONE
+                        dataHasilLayout.visibility = View.VISIBLE
                         fabCancelReport.visibility = View.VISIBLE
                         soundingContainer.visibility = View.VISIBLE
                         btnAddSounding.visibility = View.VISIBLE
@@ -712,6 +694,7 @@ class TabFragment(private val title: String) : Fragment() {
                             soundingContainer.visibility = View.GONE
                             btnAddSounding.visibility = View.GONE
                             btnSave.visibility = View.GONE
+                            dataHasilLayout.visibility = View.GONE
                             fabFinalReport.visibility = View.VISIBLE
                             rvFinalList.visibility = View.VISIBLE
                             tvNoFinalDataAvailable.visibility = View.VISIBLE
@@ -825,9 +808,6 @@ class TabFragment(private val title: String) : Fragment() {
                             val alamatPerusahaanSoundingList = MutableList(listSounding.size) {""}
                             val lokasiSoundingList = MutableList(listSounding.size) {""}
                             val waktuList = MutableList(listSounding.size) {""}
-                            val nomorDokumenList = MutableList(listSounding.size) {""}
-                            val produkList = MutableList(listSounding.size) {""}
-                            val bentukList = MutableList(listSounding.size) {""}
                             val judulKalibrasi1List = MutableList(listSounding.size) {""}
                             val judulKalibrasi2List = MutableList(listSounding.size) {""}
                             val judulFraksiList = MutableList(listSounding.size) {""}
@@ -871,9 +851,6 @@ class TabFragment(private val title: String) : Fragment() {
                                             alamatPerusahaanSoundingList[i] = it.alamat_perusahaan_sounding
                                             lokasiSoundingList[i] = it.lokasi_sounding
                                             waktuList[i] = it.waktu
-                                            nomorDokumenList[i] = it.nomor_dokumen
-                                            produkList[i] = it.produk
-                                            bentukList[i] = it.bentuk
                                             judulKalibrasi1List[i] = it.judulKalibrasi1
                                             judulKalibrasi2List[i] = it.judulKalibrasi2
                                             judulFraksiList[i] = it.judulFraksi
@@ -909,16 +886,13 @@ class TabFragment(private val title: String) : Fragment() {
                                     alamatPerusahaanSoundingList[i] = ""
                                     lokasiSoundingList[i] = ""
                                     waktuList[i] = ""
-                                    nomorDokumenList[i] = listSounding[i]
-                                    produkList[i] = ""
-                                    bentukList[i] = ""
                                     judulKalibrasi1List[i] = ""
                                     judulKalibrasi2List[i] = ""
                                     judulFraksiList[i] = ""
                                     judulDataTabelList[i] = ""
                                 }
                             }
-                            Handler(Looper.getMainLooper()).postDelayed({
+                            Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
                                 Log.d("okimatra4", tinggiCairanList.toString())
                                 lifecycleScope.launch {
                                     userDao.insertReport(ReportEntity(
@@ -947,9 +921,9 @@ class TabFragment(private val title: String) : Fragment() {
                                         alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
                                         lokasi_sounding = lokasiSoundingList as ArrayList<String>,
                                         waktu = waktuList as ArrayList<String>,
-                                        nomor_dokumen = nomorDokumenList as ArrayList<String>,
-                                        produk = produkList as ArrayList<String>,
-                                        bentuk = bentukList as ArrayList<String>,
+                                        nomor_dokumen = noDokumen.text.toString(),
+                                        produk = produk.text.toString(),
+                                        bentuk = bentuk.text.toString(),
                                         waktu_date = Date().time,
                                         judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
                                         judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
@@ -959,7 +933,9 @@ class TabFragment(private val title: String) : Fragment() {
                                         tanggal_ba = tanggalBa.text.toString(),
                                         lokasi_ba = lokasiBa.text.toString(),
                                         jumlah_contoh = jumlahBarcon.text.toString(),
-                                        waktu_aju = waktuBarcon.text.toString()
+                                        waktu_aju = waktuBarcon.text.toString(),
+                                        hasil_pembulatan = hasilPembulatan.text.toString(),
+                                        hasil_perhitungan = hasilPerhitungan.text.toString()
                                     ))
                                 }
                             }, 150) //wait on loading
@@ -967,6 +943,7 @@ class TabFragment(private val title: String) : Fragment() {
                             soundingContainer.visibility = View.GONE
                             btnAddSounding.visibility = View.GONE
                             btnSave.visibility = View.GONE
+                            dataHasilLayout.visibility = View.GONE
                             fabCancelReport.visibility = View.GONE
                             fabFinalReport.visibility = View.VISIBLE
                             lifecycleScope.launch {
@@ -1023,10 +1000,10 @@ class TabFragment(private val title: String) : Fragment() {
                 tvTitle.gravity = titleSounding1.gravity
                 tvTitle.text = String.format(getString(R.string.data_sounding), counterSounding)
                 tvTitle.textSize = 19f
+                tvTitle.typeface = titleSounding1.typeface
 
                 val ivTitle = ImageView(requireContext())
                 ivTitle.id = View.generateViewId()
-//                ivTitle.tag = counterSounding
                 ivTitle.layoutParams = addOrClose1.layoutParams
                 ivTitle.contentDescription = addOrClose1.contentDescription
                 ivTitle.elevation = addOrClose1.elevation
@@ -1083,10 +1060,11 @@ class TabFragment(private val title: String) : Fragment() {
 
                 lifecycleScope.launch {
                     userDao.fetchAllSounding().collect {
-                        populateDropdownSounding(ArrayList(it), spAwal, false)
-                        populateDropdownSounding(ArrayList(it), spAkhir, true)
+                        populateDropdownSoundingwithEmpty(ArrayList(it), spAwal, false)
+                        populateDropdownEmptyOut(spAkhir)
                     }
                 }
+                spinnerListener(binding, ivTitle, userDao) //When clicked will populate spAkhir
                 ivCvMap += mutableMapOf(ivTitle to cv)
                 removeListener(binding, ivTitle)
                 ivTvMap += mutableMapOf(ivTitle to tvTitle)
@@ -1110,6 +1088,24 @@ class TabFragment(private val title: String) : Fragment() {
                     i++
                 }
                 Toast.makeText(requireContext(), "Tab Deleted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun spinnerListener(binding: FragmentTwoBinding, iv: ImageView, userDao: UserDao) {
+        val spAwal = ivSpAwalMap[iv]!!
+        val spAkhir = ivSpAkhirMap[iv]!!
+        binding.apply {
+            spAwal.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    lifecycleScope.launch {
+                        userDao.fetchSoundingByNoTangki(spAwal.selectedItem.toString()).collect {
+                            populateDropdownSoundingwithEmpty(ArrayList(it), spAkhir, true)
+                        }
+                    }
+                }
             }
         }
     }
@@ -1236,11 +1232,8 @@ class TabFragment(private val title: String) : Fragment() {
 //        doc.add(pID)
         doc.add(Paragraph("\n\n\n\n\n", appFontTiny))
         val metodeFraksi = it.volume_fraksi > 0
-
-        val nomorDokumen = it.nomor_dokumen.ifEmpty { "-" }
-        val produk = it.produk.ifEmpty { "-" }
         writeDataTitle("Data Umum", doc)
-        val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding", "No Dokumen", "Produk/Jenis Barang", "Bentuk Fisik/Warna/Bau")
+        val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding")
         val nilaiUmum = listOf(
             it.perusahaan_sounding,
             it.alamat_perusahaan_sounding,
@@ -1249,9 +1242,6 @@ class TabFragment(private val title: String) : Fragment() {
 //            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
 //            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
             it.lokasi_sounding,
-            nomorDokumen,
-            produk,
-            it.bentuk
         )
         writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
 
@@ -2515,9 +2505,6 @@ class TabFragment(private val title: String) : Fragment() {
                         noTangki.setText(it1.no_tangki)
                         lokasiSounding.setText(it1.lokasi_sounding)
                         waktu.setText(it1.waktu)
-                        noDokumen.setText(it1.nomor_dokumen)
-                        produk.setText(it1.produk)
-                        bentuk.setText(it1.bentuk)
                         waktuDate = it1.waktu_date
                         lifecycleScope.launch {
                             userDao.fetchAllUser().collect { it2 ->
@@ -2575,7 +2562,7 @@ class TabFragment(private val title: String) : Fragment() {
                     visibilityGone(listOf(fraksiTab,interpolasiTab,tvNext1,tvBack,judulTabelKalibrasi,judulTabelFraksi,judulDensityCairan,judulTabelKalibrasi2), listOf(tabelKalibrasi,tabelKalibrasi2,tabelFraksi,densityCairan))
                     tabLayout.visibility = View.GONE
                     hasilLayout.visibility = View.GONE
-                    visibilityVisible(listOf(judulNoTangki,judulNamaPegawai,judulNamaPenggunaJasa,judulLokasiSounding,tvNext2,tvBack1), listOf(noTangki,lokasiSounding))
+                    visibilityVisible(listOf(judulNoTangki,judulNamaPegawai,judulNamaPenggunaJasa,judulLokasiSounding,judulWaktu,tvUpdate,tvBack1), listOf(noTangki,lokasiSounding,waktu))
                     namaPegawai.visibility = View.VISIBLE
                     namaPenggunaJasa.visibility = View.VISIBLE
                 } else {
@@ -2584,7 +2571,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
 
             tvBack1.setOnClickListener {
-                visibilityGone(listOf(judulNoTangki,judulNamaPegawai,judulNamaPenggunaJasa,judulLokasiSounding,tvNext2,tvBack1), listOf(noTangki,lokasiSounding))
+                visibilityGone(listOf(judulNoTangki,judulNamaPegawai,judulNamaPenggunaJasa,judulLokasiSounding,judulWaktu,tvUpdate,tvBack1), listOf(noTangki,waktu,lokasiSounding))
                 namaPegawai.visibility = View.GONE
                 namaPenggunaJasa.visibility = View.GONE
                 visibilityVisible(listOf(fraksiTab,interpolasiTab,tvNext1,tvBack,judulTabelKalibrasi,judulDensityCairan), listOf(tabelKalibrasi,densityCairan))
@@ -2598,24 +2585,6 @@ class TabFragment(private val title: String) : Fragment() {
                     tabelKalibrasi2.visibility = View.VISIBLE
                     judulTabelKalibrasi2.visibility = View.VISIBLE
                 }
-            }
-
-            tvNext2.setOnClickListener {
-                if (emptyCheck(listOf(noTangki,lokasiSounding))) {
-                    visibilityGone(listOf(judulNoTangki,judulNamaPegawai,judulNamaPenggunaJasa,judulLokasiSounding,tvNext2,tvBack1), listOf(noTangki,lokasiSounding))
-                    namaPegawai.visibility = View.GONE
-                    namaPenggunaJasa.visibility = View.GONE
-                    visibilityVisible(listOf(tvUpdate,tvBack2, judulWaktu, judulNoDokumen, judulProduk,judulBentuk), listOf(waktu,noDokumen,produk,bentuk))
-                } else {
-                    Toast.makeText(context, "Mohon Cek Data Kembali", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            tvBack2.setOnClickListener {
-                visibilityGone(listOf(tvUpdate,tvBack2, judulWaktu, judulNoDokumen, judulProduk,judulBentuk), listOf(waktu,noDokumen,produk,bentuk))
-                visibilityVisible(listOf(judulNoTangki,judulNamaPegawai,judulNamaPenggunaJasa,judulLokasiSounding,tvNext2,tvBack1), listOf(noTangki,lokasiSounding))
-                namaPegawai.visibility = View.VISIBLE
-                namaPenggunaJasa.visibility = View.VISIBLE
             }
 
             waktu.setOnClickListener {
@@ -2676,7 +2645,6 @@ class TabFragment(private val title: String) : Fragment() {
                 val nomorTangkiText = endSpaceRemover(binding.noTangki.text.toString())
                 val lokasiSoundingText =  endSpaceRemover(binding.lokasiSounding.text.toString())
                 val waktuText = waktu.text.toString()
-                val bentukText = endSpaceRemover(binding.bentuk.text.toString())
                 val tinggiCairanAngka = tinggiCairan.text.toString().toDouble()
                 val suhuCairanAngka = suhuCairan.text.toString().toDouble()
                 val suhuKalibrasiAngka = suhuTetap.text.toString().toDouble()
@@ -2686,8 +2654,6 @@ class TabFragment(private val title: String) : Fragment() {
                 val densityAngka = densityCairan.text.toString().toDouble()
                 val petugasSounding = namaPegawai.selectedItem.toString()
                 val penggunaJasa = namaPenggunaJasa.selectedItem.toString()
-                val nomorDokumen = endSpaceRemover(noDokumen.text.toString())
-                val produk = endSpaceRemover(produk.text.toString())
                 results = soundingCalculatorUpdate(binding)
                 lifecycleScope.launch {
                     userDao.fetchServiceUserByName(penggunaJasa).collect { it3 ->
@@ -2733,9 +2699,6 @@ class TabFragment(private val title: String) : Fragment() {
                                                 alamat_perusahaan_sounding = alamat,
                                                 lokasi_sounding = lokasiSoundingText,
                                                 waktu = waktuText,
-                                                nomor_dokumen = nomorDokumen,
-                                                produk = produk,
-                                                bentuk = bentukText,
                                                 waktu_date = waktuDate,
                                                 judulKalibrasi1 = judulKalibrasi1,
                                                 judulKalibrasi2 = judulKalibrasi2,
@@ -2856,20 +2819,29 @@ class TabFragment(private val title: String) : Fragment() {
             spinner.adapter = adapter
         }
     }
-    private fun populateDropdownSounding(list:ArrayList<SoundingEntity>, spinner: Spinner, out: Boolean) {
+    private fun populateDropdownSoundingwithEmpty(list:ArrayList<SoundingEntity>, spinner: Spinner, out: Boolean) {
         val items = arrayListOf<String>()
+        if (out) items.add("Empty Out; 0") else items.add("Empty In; 0")
         if (list.isNotEmpty()) {
-            if (out) items.add("Empty Out; 0") else items.add("Empty In; 0")
             for (i in 0 until list.size) {
                 items.add(list[i].no_tangki + "; ${monthCompress(list[i].waktu)}")
             }
-            val adapter = ArrayAdapter(
-                requireContext(),
-                R.layout.dropdown_layout,
-                items
-            )
-            spinner.adapter = adapter
         }
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.dropdown_layout,
+            items
+        )
+        spinner.adapter = adapter
+    }
+    private fun populateDropdownEmptyOut(spinner: Spinner) {
+        val items = arrayListOf("Empty Out; 0")
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.dropdown_layout,
+            items
+        )
+        spinner.adapter = adapter
     }
 
     private fun emptyCheck(listEditText: List<AppCompatEditText>): Boolean{
