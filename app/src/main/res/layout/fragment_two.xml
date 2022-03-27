@@ -492,7 +492,19 @@
         android:src="@drawable/ic_add"
         android:backgroundTint="@color/login"
         app:borderWidth="0dp"
-        android:contentDescription="@string/final_report"
+        android:contentDescription="@string/add_final_report"
+        android:visibility="visible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCancelReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="75dp"
+        android:src="@drawable/ic_close_white"
+        android:backgroundTint="@color/login"
+        app:borderWidth="0dp"
+        android:contentDescription="@string/cancel"
         android:visibility="gone"/>
 
 </FrameLayout>

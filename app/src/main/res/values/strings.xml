@@ -117,6 +117,8 @@
     <string name="alamat">Alamat</string>
     <string name="raw_data">Raw Data</string>
     <string name="final_report">Final Report</string>
+    <string name="add_final_report">Tambah Final Report</string>
+    <string name="cancel">Cancel</string>
     <string name="produk">Produk</string>
     <string name="hint_produk">Contoh: CPO (Tidak Wajib)</string>
     <string name="bentuk">Bentuk Fisik/Warna/Bau</string>

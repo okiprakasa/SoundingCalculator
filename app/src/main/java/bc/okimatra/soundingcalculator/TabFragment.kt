@@ -676,6 +676,7 @@ class TabFragment(private val title: String) : Fragment() {
                                         fabFinalReport.visibility = View.GONE
                                         rvFinalList.visibility = View.GONE
                                         tvNoFinalDataAvailable.visibility = View.GONE
+                                        fabCancelReport.visibility = View.VISIBLE
                                         soundingContainer.visibility = View.VISIBLE
                                         btnAddSounding.visibility = View.VISIBLE
                                         btnSave.visibility = View.VISIBLE
@@ -694,14 +695,34 @@ class TabFragment(private val title: String) : Fragment() {
                     }
                     fabFinalReport.setOnClickListener {
                         fabOverSounding = false
-                        svFinalList.visibility = View.GONE
-                        svFinalList.visibility = View.VISIBLE
                         fabFinalReport.visibility = View.GONE
                         rvFinalList.visibility = View.GONE
                         tvNoFinalDataAvailable.visibility = View.GONE
+                        fabCancelReport.visibility = View.VISIBLE
                         soundingContainer.visibility = View.VISIBLE
                         btnAddSounding.visibility = View.VISIBLE
                         btnSave.visibility = View.VISIBLE
+                    }
+                    fabCancelReport.setOnClickListener {
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("Keluar").setMessage("Apakah Anda yakin ingin membatalkan penambahan data?")
+                        builder.setPositiveButton("Yes") { dialogInterface, _ ->
+                            fabOverSounding = true
+                            fabCancelReport.visibility = View.GONE
+                            soundingContainer.visibility = View.GONE
+                            btnAddSounding.visibility = View.GONE
+                            btnSave.visibility = View.GONE
+                            fabFinalReport.visibility = View.VISIBLE
+                            rvFinalList.visibility = View.VISIBLE
+                            tvNoFinalDataAvailable.visibility = View.VISIBLE
+                            dialogInterface.dismiss()
+                        }
+                        builder.setNegativeButton("No") { dialogInterface, _ ->
+                            dialogInterface.dismiss()
+                        }
+                        val alertDialog: AlertDialog = builder.create()
+                        alertDialog.setCancelable(false)
+                        alertDialog.show()
                     }
                     tanggalBa.setOnClickListener {
                         dateSetListener = DatePickerDialog.OnDateSetListener {
@@ -946,6 +967,7 @@ class TabFragment(private val title: String) : Fragment() {
                             soundingContainer.visibility = View.GONE
                             btnAddSounding.visibility = View.GONE
                             btnSave.visibility = View.GONE
+                            fabCancelReport.visibility = View.GONE
                             fabFinalReport.visibility = View.VISIBLE
                             lifecycleScope.launch {
                                 userDao.fetchAllReport().collect {
@@ -1116,6 +1138,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     doc.close()
 
                                     val file = File(outPath)
+                                    file.listFiles()
                                     val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
                                     try {
                                         val intent = Intent(Intent.ACTION_VIEW)
@@ -1140,7 +1163,7 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }).check()
                 } catch (e: Exception) {
-                    Log.d("okimara", "" + e.message)
+                    Log.d("okimatra", "" + e.message)
                 }
             }
         }
@@ -2760,10 +2783,10 @@ class TabFragment(private val title: String) : Fragment() {
             val reportAdapter = ReportAdapter(reportList,{deleteId->deleteRecordAlertDialogReport(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
             _binding2?.rvFinalList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvFinalList?.adapter = reportAdapter
-            _binding2?.svFinalList?.visibility = View.VISIBLE
+            _binding2?.rvFinalList?.visibility = View.VISIBLE
             _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
         } else {
-            _binding2?.svFinalList?.visibility = View.GONE
+            _binding2?.rvFinalList?.visibility = View.GONE
             _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
         }
     }

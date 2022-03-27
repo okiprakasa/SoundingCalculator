@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable-v24/ic_action_add_24dp.xml" value="0.225" />
+        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable-v24/ic_add.xml" value="0.248" />
+        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_action_delete.xml" value="0.248" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_action_edit.xml" value="0.239" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_baseline_picture_as_pdf_24.xml" value="0.225" />
+        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_close.xml" value="0.248" />
+        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_close_white.xml" value="0.248" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_down.xml" value="0.225" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/ic_up.xml" value="0.225" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/rounded_button_white.xml" value="0.24" />
@@ -19,7 +23,7 @@
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_four.xml" value="0.192481884057971" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_one.xml" value="0.21707818930041153" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_three.xml" value="0.2825520833333333" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_two.xml" value="0.19384057971014493" />
+        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_two.xml" value="0.4" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/items_row.xml" value="0.19384057971014493" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/items_row_company.xml" value="0.264" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/items_row_sounding.xml" value="0.4" />
