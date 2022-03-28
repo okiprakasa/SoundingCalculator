@@ -123,7 +123,7 @@ class TabFragment(private val title: String) : Fragment() {
         val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
         val currentyear = yearFormat.format(cal.time).toString()
         val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
-        val currentTime = timeFormat.format(cal.time).toString() + " $timeZone"
+        val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
         val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
         val currentdate = dateFormat.format(cal.time).toString()
 
