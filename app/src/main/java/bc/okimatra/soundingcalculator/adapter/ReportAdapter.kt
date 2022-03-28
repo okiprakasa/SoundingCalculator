@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
 import bc.okimatra.soundingcalculator.databinding.ItemsRowReportBinding
 import bc.okimatra.soundingcalculator.datasetup.ReportEntity
-import kotlin.math.roundToLong
 
 class ReportAdapter(private val items: ArrayList<ReportEntity>,
                     private val deleteListener:(id:Int)->Unit,
@@ -26,27 +25,20 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         val context = holder.itemView.context
         val item = items[position]
         val noTangkiUnik = item.no_tangki.distinctBy { it.uppercase() }
-        var noSemuaTangki = ""
-        for (nomor in noTangkiUnik) {
-            noSemuaTangki += ", ${nomor.uppercase()}"
-        }
-        var hasilSemua = 0.0
-        for (i in item.hasil_sounding.indices) {
-            if (i % 2 == 0) {
-                hasilSemua += item.hasil_sounding[i]
+        var noSemuaTangki = String()
+        for (i in noTangkiUnik.indices) {
+            if (i!=0) {
+                noSemuaTangki += ", ${noTangkiUnik[i].uppercase()}"
             } else {
-                hasilSemua -= item.hasil_sounding[i]
+                noSemuaTangki = noTangkiUnik[i]
             }
         }
-        //Handle Double Rounding Error
-        hasilSemua = (hasilSemua * 1000000).roundToLong()/1000000.toDouble()
-        hasilSemua = (hasilSemua * 100000).roundToLong()/100000.toDouble()
 
         holder.tvNama.text = item.perusahaan_sounding[0]
-        holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki))
-        holder.tvWaktu.text = item.waktu_aju.replace("-"," ")
-        holder.tvBentuk.text = item.bentuk
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited,hasilSemua.toString()))
+        holder.tvNoTangki.text = item.nomor_ba
+        holder.tvWaktu.text = item.tanggal_ba.replace("-"," ")
+        holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi_no_tangki, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.bentuk))
+        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_pembulatan.replace(".",",")))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 //
@@ -86,7 +78,6 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         val tvWaktu = binding.tvWaktu
         val tvHasil = binding.tvHasilSounding
         val tvBentuk = binding.tvBentuk
-//        val ivEdit = binding.ivEdit
         val ivDelete = binding.ivDelete
         val ivUp = binding.ivUp
         val ivDown = binding.ivDown

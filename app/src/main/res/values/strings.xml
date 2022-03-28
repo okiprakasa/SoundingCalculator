@@ -77,6 +77,7 @@
     <string name="tabel_kalibrasi2_edited">"Tabel Kalibrasi ($s0 m)</string>
     <string name="tabel_fraksi_edited">Tabel Fraksi (%s mm)</string>
     <string name="hasil_akhir_edited">Hasil: %s MT</string>
+    <string name="deskripsi_no_tangki">%s\n%s</string>
     <string name="before_edited">__.___.___._-___.___</string>
     <string name="number_15">%s.%s.%s.%s-%s.%s</string>
     <string name="number_12">%s.%s.%s.%s-%s.%s%s</string>

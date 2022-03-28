@@ -603,7 +603,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 binding2.apply{
-                    tanggalBa.setText(currentdate)
+                    tanggalBa.setText(monthConverter(currentdate))
                     noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
                     noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
 
@@ -975,11 +975,12 @@ class TabFragment(private val title: String) : Fragment() {
                                             jumlah_contoh = endSpaceRemover(jumlahBarcon.text.toString()),
                                             waktu_aju = endSpaceRemover(waktuBarcon.text.toString()),
                                             hasil_pembulatan = hasilPembulatanValue,
-                                            hasil_perhitungan = hasilPerhitungan.text.toString()
+                                            hasil_perhitungan = hasilPerhitungan.text.toString(),
+                                            nomor_ba = noBaValue
                                         ))
                                     }
                                 }, 150) //wait on loading
-                                fabOverSounding = false
+                                fabOverSounding = true
                                 soundingContainer.visibility = View.GONE
                                 btnAddSounding.visibility = View.GONE
                                 btnSave.visibility = View.GONE
@@ -996,6 +997,7 @@ class TabFragment(private val title: String) : Fragment() {
                                 _binding2?.bentuk?.text?.clear()
                                 _binding2?.namaSarkut?.text?.clear()
                                 _binding2?.hasilPembulatan?.text?.clear()
+                                _binding2?.jumlahBarcon?.text?.clear()
                                 _binding2?.waktuBarcon?.text?.clear()
                                 noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
                                 noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
