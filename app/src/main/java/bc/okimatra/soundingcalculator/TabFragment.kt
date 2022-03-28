@@ -378,7 +378,6 @@ class TabFragment(private val title: String) : Fragment() {
                                                             _binding1?.tabelKalibrasi2?.text?.clear()
                                                             _binding1?.noTangki?.text?.clear()
                                                             _binding1?.lokasiSounding?.text?.clear()
-                                                            _binding1?.waktu?.text?.clear()
                                                             backFunction()
                                                         }
                                                     } catch (e: Exception) {
@@ -854,37 +853,48 @@ class TabFragment(private val title: String) : Fragment() {
                                                     ).toString()
                                                 )
                                             ).collect {
-                                                Log.d("okimatra1",tinggiCairanList.toString())
-                                                tinggiCairanList[i] = it.tinggi_cairan
-                                                Log.d("okimatra2",tinggiCairanList.toString())
-                                                suhuCairanList[i] = it.suhu_cairan
-                                                suhuKalibrasiTangkiList[i] = it.suhu_kalibrasi_tangki
-                                                tinggiMejaList[i] = it.tinggi_meja
-                                                faktorMuaiList[i] = it.faktor_muai
-                                                tinggiCairanTerkoreksiList[i] = it.tinggi_cairan_terkoreksi
-                                                volumeKalibrasi1List[i] = it.volume_kalibrasi1
-                                                densityCairanList[i] = it.density_cairan
-                                                volumeFraksiList[i] = it.volume_fraksi
-                                                volumeKalibrasi2List[i] = it.volume_kalibrasi2
-                                                volumeMidList[i] = it.volume_mid
-                                                volumeAppList[i] = it.volume_app
-                                                volumeObsList[i] = it.volume_obs
-                                                volumeList[i] = it.volume
-                                                hasilSoundingList[i] = it.hasil_sounding
-                                                noTangkiList[i] = it.no_tangki
-                                                pegawaiSoundingList[i] = it.pegawai_sounding
-                                                nipPegawaiList[i] = it.nip_pegawai
-                                                penggunaJasaSoundingList[i] = it.pengguna_jasa_sounding
-                                                jabatanPenggunaJasaList[i] = it.jabatan_pengguna_jasa
-                                                perusahaanSoundingList[i] = it.perusahaan_sounding
-                                                npwpPerusahaanSoundingList[i] = it.npwp_perusahaan_sounding
-                                                alamatPerusahaanSoundingList[i] = it.alamat_perusahaan_sounding
-                                                lokasiSoundingList[i] = it.lokasi_sounding
-                                                waktuList[i] = it.waktu
-                                                judulKalibrasi1List[i] = it.judulKalibrasi1
-                                                judulKalibrasi2List[i] = it.judulKalibrasi2
-                                                judulFraksiList[i] = it.judulFraksi
-                                                judulDataTabelList[i] = it.judulDataTabel
+                                                try {
+                                                    Log.d("okimatra1", tinggiCairanList.toString())
+                                                    tinggiCairanList[i] = it.tinggi_cairan
+                                                    Log.d("okimatra2", tinggiCairanList.toString())
+                                                    suhuCairanList[i] = it.suhu_cairan
+                                                    suhuKalibrasiTangkiList[i] =
+                                                        it.suhu_kalibrasi_tangki
+                                                    tinggiMejaList[i] = it.tinggi_meja
+                                                    faktorMuaiList[i] = it.faktor_muai
+                                                    tinggiCairanTerkoreksiList[i] =
+                                                        it.tinggi_cairan_terkoreksi
+                                                    volumeKalibrasi1List[i] = it.volume_kalibrasi1
+                                                    densityCairanList[i] = it.density_cairan
+                                                    volumeFraksiList[i] = it.volume_fraksi
+                                                    volumeKalibrasi2List[i] = it.volume_kalibrasi2
+                                                    volumeMidList[i] = it.volume_mid
+                                                    volumeAppList[i] = it.volume_app
+                                                    volumeObsList[i] = it.volume_obs
+                                                    volumeList[i] = it.volume
+                                                    hasilSoundingList[i] = it.hasil_sounding
+                                                    noTangkiList[i] = it.no_tangki
+                                                    pegawaiSoundingList[i] = it.pegawai_sounding
+                                                    nipPegawaiList[i] = it.nip_pegawai
+                                                    penggunaJasaSoundingList[i] =
+                                                        it.pengguna_jasa_sounding
+                                                    jabatanPenggunaJasaList[i] =
+                                                        it.jabatan_pengguna_jasa
+                                                    perusahaanSoundingList[i] =
+                                                        it.perusahaan_sounding
+                                                    npwpPerusahaanSoundingList[i] =
+                                                        it.npwp_perusahaan_sounding
+                                                    alamatPerusahaanSoundingList[i] =
+                                                        it.alamat_perusahaan_sounding
+                                                    lokasiSoundingList[i] = it.lokasi_sounding
+                                                    waktuList[i] = it.waktu
+                                                    judulKalibrasi1List[i] = it.judulKalibrasi1
+                                                    judulKalibrasi2List[i] = it.judulKalibrasi2
+                                                    judulFraksiList[i] = it.judulFraksi
+                                                    judulDataTabelList[i] = it.judulDataTabel
+                                                } catch (e: Exception) {
+                                                    Log.d("okimatra", e.message.toString())
+                                                }
                                             }
                                         }
                                     }
@@ -1162,7 +1172,11 @@ class TabFragment(private val title: String) : Fragment() {
                                 ).toString()
                             )
                         ).collect {
-                            populateDropdownSoundingwithEmpty(ArrayList(it), spAkhir, true)
+                            try {
+                                populateDropdownSoundingwithEmpty(ArrayList(it), spAkhir, true)
+                            } catch (e: Exception) {
+                                Log.d("okimatra", e.message.toString())
+                            }
                         }
                     }
                     if (soundingAwal != "Empty In; 0") {
@@ -1176,12 +1190,24 @@ class TabFragment(private val title: String) : Fragment() {
                                     ).toString()
                                 )
                             ).collect { it1 ->
-                                spAwalDbFinalMap[spAwal] = it1.hasil_sounding
-                                soundingAwalTotal = 0.0
-                                spAwalDbFinalMap.keys.forEach {it2 ->
-                                    soundingAwalTotal += spAwalDbFinalMap[it2]!!
+                                try {
+                                    spAwalDbFinalMap[spAwal] = it1.hasil_sounding
+                                    soundingAwalTotal = 0.0
+                                    spAwalDbFinalMap.keys.forEach { it2 ->
+                                        soundingAwalTotal += spAwalDbFinalMap[it2]!!
+                                    }
+                                    hasilPerhitungan.setText(
+                                        zeroRemover(
+                                            "${
+                                                roundDigits(
+                                                    soundingAwalTotal - soundingAkhirlTotal
+                                                )
+                                            }"
+                                        )
+                                    )
+                                } catch (e: Exception) {
+                                    Log.d("okimatra", e.message.toString())
                                 }
-                                hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
                             }
                         }
                     } else {
@@ -1212,12 +1238,24 @@ class TabFragment(private val title: String) : Fragment() {
                                     ).toString()
                                 )
                             ).collect { it1 ->
-                                spAkhirDbFinalMap[spAkhir] = it1.hasil_sounding
-                                soundingAkhirlTotal = 0.0
-                                spAkhirDbFinalMap.keys.forEach { it2 ->
-                                    soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
+                                try {
+                                    spAkhirDbFinalMap[spAkhir] = it1.hasil_sounding
+                                    soundingAkhirlTotal = 0.0
+                                    spAkhirDbFinalMap.keys.forEach { it2 ->
+                                        soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
+                                    }
+                                    hasilPerhitungan.setText(
+                                        zeroRemover(
+                                            "${
+                                                roundDigits(
+                                                    soundingAwalTotal - soundingAkhirlTotal
+                                                )
+                                            }"
+                                        )
+                                    )
+                                } catch (e: Exception) {
+                                    Log.d("okimatra", e.message.toString())
                                 }
-                                hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
                             }
                         }
                     } else {
