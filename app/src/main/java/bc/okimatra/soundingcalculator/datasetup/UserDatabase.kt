@@ -13,6 +13,7 @@ import androidx.room.TypeConverters
         PegawaiEntity::class,
         SoundingEntity::class,
         ReportEntity::class,
+        KantorEntity::class
     ],
     version = 1
 )

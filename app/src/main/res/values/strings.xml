@@ -142,6 +142,7 @@
     <string name="lokasi_edited">Tangki Timbun KB %s</string>
     <string name="nama_pegawai">Petugas Sounding</string>
     <string name="hint_nama_pegawai">Nama Petugas Sounding</string>
+    <string name="hint_kantor_pegawai">Kantor Pegawai</string>
     <string name="hint_nama_pengguna_jasa">Nama Petugas Pengguna Jasa</string>
     <string name="lokasi_sounding">Lokasi Sounding</string>
     <string name="lokasi_ba">Lokasi BA</string>

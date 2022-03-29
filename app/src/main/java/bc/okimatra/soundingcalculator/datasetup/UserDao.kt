@@ -110,4 +110,13 @@ interface UserDao {
 
     @Query("Select * from `final-report-table` where id=:id")
     fun fetchReportById(id:Int):Flow<ReportEntity>
+
+    @Insert
+    suspend fun insertKantor(kantorEntity: KantorEntity)
+
+    @Query("Select count(*) from `office-table`")
+    fun countAllKantor():Flow<Int>
+
+    @Query("Select * from `office-table`")
+    fun fetchAllKantor():Flow<List<KantorEntity>>
 }

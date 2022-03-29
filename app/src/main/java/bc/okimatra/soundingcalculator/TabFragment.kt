@@ -106,6 +106,10 @@ class TabFragment(private val title: String) : Fragment() {
     private var appFontBig= Font(baseFontBig, 16f, Font.BOLD)
 
     private var baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
+    private var fontArialBigBold = Font(baseFontArial, 13f, Font.BOLD, BaseColor.BLACK)
+    private var fontArialRegular = Font(baseFontArial, 11f, Font.NORMAL, BaseColor.BLACK)
+    private var fontArialRegularBold = Font(baseFontArial, 11f, Font.BOLD, BaseColor.BLACK)
+    private var fontArialSmall = Font(baseFontArial, 8f, Font.NORMAL, BaseColor.BLACK)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
@@ -1090,6 +1094,26 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
     private fun headerFinalReport(doc: Document, writer: PdfWriter) {
+        doc.add(Paragraph("\n\n", fontArialRegular))
+        val table1 = PdfPTable(1)
+        table1.setWidths(floatArrayOf(1f))
+        table1.isLockedWidth = true
+        table1.totalWidth = PageSize.A4.width-80f
+
+        val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
+        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKAI", fontArialRegular))
+        header.alignment = Element.ALIGN_LEFT
+        val tittleCell = PdfPCell(header)
+        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
+        tittleCell.verticalAlignment = Element.ALIGN_CENTER
+        tittleCell.paddingBottom = 10f
+        tittleCell.paddingTop = 10f
+        tittleCell.paddingLeft = 10f
+        tittleCell.paddingRight = 10f
+        table1.addCell(tittleCell)
+        doc.add(table1)
+    }
+    private fun headerRawReport(doc: Document, writer: PdfWriter) {
         val tableBotPadding = 10f
         val tableHorizontalPadding = 20f
         val tableTopPadding = 20f
@@ -1099,23 +1123,23 @@ class TabFragment(private val title: String) : Fragment() {
         headerTable.isLockedWidth = true
         headerTable.totalWidth = PageSize.A4.width
 
-        val logoKantor = ResourcesCompat.getDrawable(resources, R.drawable.kemenkeu, null)
-        val bitDwLogoKantor = logoKantor as BitmapDrawable
-        val bmpLogoKantor = bitDwLogoKantor.bitmap
-        val streamLogoKantor = ByteArrayOutputStream()
-        bmpLogoKantor.compress(Bitmap.CompressFormat.PNG, 100, streamLogoKantor)
-        val imageLogoKantor = Image.getInstance(streamLogoKantor.toByteArray())
-        val scalerLogoKantor: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoKantor.width * 10
-        imageLogoKantor.scalePercent(scalerLogoKantor)
+        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
+        val bitDwLogoBC = logoBC as BitmapDrawable
+        val bmpLogoBC = bitDwLogoBC.bitmap
+        val streamLogoBC = ByteArrayOutputStream()
+        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
+        val imageLogoBC = Image.getInstance(streamLogoBC.toByteArray())
+        val scalerLogoBC: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoBC.width * 10
+        imageLogoBC.scalePercent(scalerLogoBC)
 
-        val cellLogoKantor = PdfPCell(Image.getInstance(imageLogoKantor))
-        cellLogoKantor.border = Rectangle.NO_BORDER
-        cellLogoKantor.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        cellLogoKantor.verticalAlignment = Rectangle.ALIGN_CENTER
-        cellLogoKantor.paddingTop = tableTopPadding
-        cellLogoKantor.paddingBottom = tableBotPadding
-        cellLogoKantor.paddingRight = tableHorizontalPadding
-        headerTable.addCell(cellLogoKantor)
+        val cellLogoBC = PdfPCell(Image.getInstance(imageLogoBC))
+        cellLogoBC.border = Rectangle.NO_BORDER
+        cellLogoBC.horizontalAlignment = Rectangle.ALIGN_RIGHT
+        cellLogoBC.verticalAlignment = Rectangle.ALIGN_CENTER
+        cellLogoBC.paddingTop = tableTopPadding
+        cellLogoBC.paddingBottom = tableBotPadding
+        cellLogoBC.paddingRight = tableHorizontalPadding
+        headerTable.addCell(cellLogoBC)
 
         val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBig)
         para.alignment = Element.ALIGN_MIDDLE
@@ -1127,14 +1151,15 @@ class TabFragment(private val title: String) : Fragment() {
         tittleCell.paddingBottom = tableBotPadding
         tittleCell.paddingRight = tableHorizontalPadding
         headerTable.addCell(tittleCell)
+
         doc.add(headerTable)
 
         val colorPrimary = BaseColor(0, 0, 0)
         val canvas: PdfContentByte = writer.directContent
         canvas.setColorStroke(colorPrimary)
-        canvas.moveTo(40.0, 755.0)
+        canvas.moveTo(0.0, 755.0)
         // Drawing the line
-        canvas.lineTo(PageSize.A4.width.toDouble()-40.0, 755.0)
+        canvas.lineTo(PageSize.A4.width.toDouble(), 755.0)
         canvas.setLineWidth(1.5f)
         canvas.closePathStroke()
     }
@@ -1559,56 +1584,6 @@ class TabFragment(private val title: String) : Fragment() {
                 }
             }
         }
-    }
-    private fun headerRawReport(doc: Document, writer: PdfWriter) {
-        val tableBotPadding = 10f
-        val tableHorizontalPadding = 20f
-        val tableTopPadding = 20f
-
-        val headerTable = PdfPTable(2)
-        headerTable.setWidths(floatArrayOf(1f, 3.5f))
-        headerTable.isLockedWidth = true
-        headerTable.totalWidth = PageSize.A4.width
-
-        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
-        val bitDwLogoBC = logoBC as BitmapDrawable
-        val bmpLogoBC = bitDwLogoBC.bitmap
-        val streamLogoBC = ByteArrayOutputStream()
-        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
-        val imageLogoBC = Image.getInstance(streamLogoBC.toByteArray())
-        val scalerLogoBC: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoBC.width * 10
-        imageLogoBC.scalePercent(scalerLogoBC)
-
-        val cellLogoBC = PdfPCell(Image.getInstance(imageLogoBC))
-        cellLogoBC.border = Rectangle.NO_BORDER
-        cellLogoBC.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        cellLogoBC.verticalAlignment = Rectangle.ALIGN_CENTER
-        cellLogoBC.paddingTop = tableTopPadding
-        cellLogoBC.paddingBottom = tableBotPadding
-        cellLogoBC.paddingRight = tableHorizontalPadding
-        headerTable.addCell(cellLogoBC)
-
-        val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBig)
-        para.alignment = Element.ALIGN_MIDDLE
-        val tittleCell = PdfPCell(para)
-        tittleCell.border = Rectangle.NO_BORDER
-        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
-        tittleCell.verticalAlignment = Element.ALIGN_MIDDLE
-        tittleCell.paddingTop = tableTopPadding-3f
-        tittleCell.paddingBottom = tableBotPadding
-        tittleCell.paddingRight = tableHorizontalPadding
-        headerTable.addCell(tittleCell)
-
-        doc.add(headerTable)
-
-        val colorPrimary = BaseColor(0, 0, 0)
-        val canvas: PdfContentByte = writer.directContent
-        canvas.setColorStroke(colorPrimary)
-        canvas.moveTo(0.0, 755.0)
-        // Drawing the line
-        canvas.lineTo(PageSize.A4.width.toDouble(), 755.0)
-        canvas.setLineWidth(1.5f)
-        canvas.closePathStroke()
     }
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
 //        idTable.widthPercentage = 100f

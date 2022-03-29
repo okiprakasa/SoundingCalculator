@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +61,6 @@
 
         </RelativeLayout>
 
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,7 +88,6 @@
                 android:textSize="13sp" />
 
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -120,6 +117,23 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="53dp"
+            android:layout_marginTop="12.7dp"
+            android:layout_marginRight="53dp"
+            android:background="@drawable/rounded_input">
+
+            <Spinner
+                android:id="@+id/kantor_pegawai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_input"
+                android:hint="@string/hint_kantor_pegawai"
+                android:spinnerMode="dropdown" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btn_start"
