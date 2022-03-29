@@ -47,6 +47,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToLong
 
@@ -54,15 +55,36 @@ import kotlin.math.roundToLong
 class TabFragment(private val title: String) : Fragment() {
     private var _binding1: FragmentOneBinding? = null
     private val binding1 get() = _binding1!!
-
     private var _binding2: FragmentTwoBinding? = null
     private val binding2 get() = _binding2!!
-
     private var _binding3: FragmentThreeBinding? = null
     private val binding3 get() = _binding3!!
 
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    private val timeID = "EEEE, dd-MMMM-yyyy"
+    private val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+    private val tanggalEng = sdf.format(cal.time).toString()
+    private val tanggalID = dayConverter(monthConverter(tanggalEng))
+    private val tz = TimeZone.getDefault()
+    private val now = Date()
+    private val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+        in 6.9..7.8 -> {"WIB"}
+        in 7.9..8.8 -> {"WITA"}
+        in 8.9..9.8 -> {"WIT"}
+        in -13.0..-0.1 -> {
+            "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+        }
+        else -> {
+            "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+        }
+    }
+    private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+    private val currentyear = yearFormat.format(cal.time).toString()
+    private val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
+    private val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
+    private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+    private val currentdate = dateFormat.format(cal.time).toString()
 
     private lateinit var ivCvMap: MutableMap<ImageView, CardView>
     private lateinit var ivTvMap: MutableMap<ImageView, TextView>
@@ -83,6 +105,8 @@ class TabFragment(private val title: String) : Fragment() {
     private var baseFontBig = BaseFont.createFont("res/font/nexa.otf", "UTF-8", BaseFont.EMBEDDED)
     private var appFontBig= Font(baseFontBig, 16f, Font.BOLD)
 
+    private var baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
             title === "Calculator" -> {
@@ -102,30 +126,6 @@ class TabFragment(private val title: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val userDao = (requireActivity().application as UserApp).db.userDao()
-
-        val timeID = "EEEE, dd-MMMM-yyyy"
-        val sdf = SimpleDateFormat(timeID, Locale.getDefault())
-        val tanggalEng = sdf.format(cal.time).toString()
-        val tanggalID = dayConverter(monthConverter(tanggalEng))
-        val tz = TimeZone.getDefault()
-        val now = Date()
-        val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
-            in 6.9..7.8 -> {"WIB"}
-            in 7.9..8.8 -> {"WITA"}
-            in 8.9..9.8 -> {"WIT"}
-            in -13.0..-0.1 -> {
-                "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-            }
-            else -> {
-                "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-            }
-        }
-        val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-        val currentyear = yearFormat.format(cal.time).toString()
-        val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
-        val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
-        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        val currentdate = dateFormat.format(cal.time).toString()
 
         when {
             title === "Calculator" -> {
@@ -395,214 +395,8 @@ class TabFragment(private val title: String) : Fragment() {
                     }
                 }
             }
-            title === "User" -> {
-                lifecycleScope.launch {
-                    userDao.fetchAllUser().collect {
-                        val list = ArrayList(it)
-                        setupListOfUserDataIntoRecyclerView(list,userDao)
-                    }
-                }
-
-                binding3.apply {
-
-                    var number = ""
-                    var numberOld = ""
-                    var textOld = ""
-                    val holder = "__.___.___._-___.___"
-                    var cursorPosition: Int
-                    var cursor: Int
-
-                    etNPWPId.setOnFocusChangeListener { _, _ ->
-                        if (etNPWPId.text.toString().isEmpty()) {
-                            etNPWPId.setText(getString(R.string.before_edited))
-                        }
-                        if (etNPWPId.selectionStart > number.length) {
-                            etNPWPId.setSelection(number.length)
-                        }
-                    }
-
-                    nama.setOnFocusChangeListener { _, _ ->
-                        if (etNPWPId.text.toString().isEmpty() || etNPWPId.text.toString() == getString(R.string.before_edited)) {
-                            etNPWPId.setText("")
-                        }
-                    }
-
-                    etAlamatId.setOnFocusChangeListener { _, _ ->
-                        if (etNPWPId.text.toString().isEmpty() || etNPWPId.text.toString() == getString(R.string.before_edited)) {
-                            etNPWPId.setText("")
-                        }
-                    }
-
-                    etNPWPId.addTextChangedListener(object : TextWatcher {
-                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                            number = s.toString().replace("_","").replace(".","").replace("-","")
-                            cursorPosition = etNPWPId.selectionStart
-
-                            if (cursorPosition > number.length) {
-                                etNPWPId.setSelection(number.length)
-                            }
-
-                            if ((numberOld != number || etNPWPId.text.toString().length != 20) && etNPWPId.hasFocus()) {
-                                numberOld = number
-                                cursor = numberOld.length
-                                when (numberOld.length) {
-                                    15 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_15),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12)))
-                                        cursor += 5
-                                    }
-                                    in 13..14 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_12),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12),holder.substring(numberOld.length+5)))
-                                        cursor += 5
-                                    }
-                                    in 10..12 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_9),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9),holder.substring(numberOld.length+4)))
-                                        cursor += 4
-                                    }
-                                    9 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_9_exact),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),holder.substring(numberOld.length+3)))
-                                        cursor += 3
-                                    }
-                                    in 6..8 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_5),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5),holder.substring(numberOld.length+2)))
-                                        cursor += 2
-                                    }
-                                    in 3..5 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_2),numberOld.substring(0,2),numberOld.substring(2),holder.substring(numberOld.length+1)))
-                                        cursor += 1
-                                    }
-                                    in 1..2 -> {
-                                        etNPWPId.setText(String.format(getString(R.string.number_0),numberOld.substring(0),holder.substring(numberOld.length)))
-                                    }
-                                    0 -> {
-                                        etNPWPId.setText(holder)
-                                    }
-                                    else -> {
-                                        etNPWPId.setText(textOld)
-                                    }
-                                }
-                                etNPWPId.post {
-                                    etNPWPId.setSelection(cursor)
-                                }
-                            }
-                        }
-
-                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                            textOld = s.toString()
-                        }
-
-                        override fun afterTextChanged(s: Editable) {
-
-                        }
-                    })
-
-                    etNPWPId.setOnClickListener {
-                        if (etNPWPId.selectionStart > number.length) {
-                            etNPWPId.setSelection(number.length)
-                        }
-                    }
-
-                    penggunaJasaTab.setOnClickListener {
-                        lifecycleScope.launch {
-                            userDao.countAllCompany().collect { it1 ->
-                                if (it1>0) {
-                                    penggunaJasaTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                                    penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                                    pegawaiTab.background = null
-                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                                    perusahaanTab.background = null
-                                    perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                                    pegawaiLayout.visibility = View.GONE //NIP
-                                    btnAddUser.visibility = View.GONE
-                                    npwpLayout.visibility = View.GONE
-                                    alamatLayout.visibility = View.GONE
-                                    btnAddCompany.visibility = View.GONE
-                                    penggunajasaLayout.visibility = View.VISIBLE //Jabatan
-                                    btnAddPenggunaJasa.visibility = View.VISIBLE
-                                    perusahaanLayout.visibility = View.VISIBLE //Perusahaan
-                                    nama.hint = getText(R.string.hint_pengguna_jasa)
-                                    svCompanyList.visibility = View.GONE
-                                    lifecycleScope.launch {
-                                        userDao.fetchAllServiceUser().collect {
-                                            val list = ArrayList(it)
-                                            setupListOfServiceUserDataIntoRecyclerView(list, userDao)
-                                        }
-                                    }
-                                    lifecycleScope.launch {
-                                        userDao.fetchAllCompany().collect {
-                                            populateDropdownCompany(ArrayList(it), perusahaan)
-                                        }
-                                    }
-                                }
-                                else {
-                                    Toast.makeText(context, "Mohon Tambahkan Data\nPerusahaanTerlebih Dahulu\nPada Tab Company", Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        }
-                    }
-
-                    pegawaiTab.setOnClickListener {
-                        pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                        penggunaJasaTab.background = null
-                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        perusahaanTab.background = null
-                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        npwpLayout.visibility = View.GONE
-                        alamatLayout.visibility = View.GONE
-                        btnAddCompany.visibility = View.GONE
-                        penggunajasaLayout.visibility = View.GONE
-                        btnAddPenggunaJasa.visibility = View.GONE
-                        btnAddUser.visibility = View.VISIBLE
-                        pegawaiLayout.visibility = View.VISIBLE
-                        nama.hint = getText(R.string.hint_nama)
-                        svUserList.visibility = View.VISIBLE
-                        svServiceUserList.visibility = View.GONE
-                        perusahaanLayout.visibility = View.GONE
-                        svCompanyList.visibility = View.GONE
-                    }
-
-                    perusahaanTab.setOnClickListener {
-                        perusahaanTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                        penggunaJasaTab.background = null
-                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        pegawaiTab.background = null
-                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
-                        npwpLayout.visibility = View.VISIBLE
-                        alamatLayout.visibility = View.VISIBLE
-                        btnAddCompany.visibility = View.VISIBLE
-                        penggunajasaLayout.visibility = View.GONE
-                        btnAddPenggunaJasa.visibility = View.GONE
-                        btnAddUser.visibility = View.GONE
-                        pegawaiLayout.visibility = View.GONE
-                        svServiceUserList.visibility = View.GONE
-                        perusahaanLayout.visibility = View.GONE
-                        nama.hint = getText(R.string.hint_perusahaan)
-                        svUserList.visibility = View.GONE
-                        lifecycleScope.launch {
-                            userDao.fetchAllCompany().collect {
-                                val list = ArrayList(it)
-                                setupListOfDataIntoRecyclerViewCompany(list, userDao)
-                            }
-                        }
-                        svCompanyList.visibility = View.VISIBLE
-                    }
-                }
-
-                _binding3?.btnAddCompany?.setOnClickListener {
-                    addRecordCompany(userDao)
-                }
-
-                _binding3?.btnAddUser?.setOnClickListener {
-                    addRecordUser(userDao)
-                }
-
-                _binding3?.btnAddPenggunaJasa?.setOnClickListener {
-                    addRecordServiceUser(userDao)
-                }
-            }
-            else -> {
-                binding2.apply{
+            title === "Data" -> {
+                binding2.apply {
                     tanggalBa.setText(monthConverter(currentdate))
                     noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
                     noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
@@ -1026,6 +820,212 @@ class TabFragment(private val title: String) : Fragment() {
                     ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
                 }
             }
+            else -> {
+                lifecycleScope.launch {
+                    userDao.fetchAllUser().collect {
+                        val list = ArrayList(it)
+                        setupListOfUserDataIntoRecyclerView(list,userDao)
+                    }
+                }
+
+                binding3.apply {
+
+                    var number = ""
+                    var numberOld = ""
+                    var textOld = ""
+                    val holder = "__.___.___._-___.___"
+                    var cursorPosition: Int
+                    var cursor: Int
+
+                    etNPWPId.setOnFocusChangeListener { _, _ ->
+                        if (etNPWPId.text.toString().isEmpty()) {
+                            etNPWPId.setText(getString(R.string.before_edited))
+                        }
+                        if (etNPWPId.selectionStart > number.length) {
+                            etNPWPId.setSelection(number.length)
+                        }
+                    }
+
+                    nama.setOnFocusChangeListener { _, _ ->
+                        if (etNPWPId.text.toString().isEmpty() || etNPWPId.text.toString() == getString(R.string.before_edited)) {
+                            etNPWPId.setText("")
+                        }
+                    }
+
+                    etAlamatId.setOnFocusChangeListener { _, _ ->
+                        if (etNPWPId.text.toString().isEmpty() || etNPWPId.text.toString() == getString(R.string.before_edited)) {
+                            etNPWPId.setText("")
+                        }
+                    }
+
+                    etNPWPId.addTextChangedListener(object : TextWatcher {
+                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                            number = s.toString().replace("_","").replace(".","").replace("-","")
+                            cursorPosition = etNPWPId.selectionStart
+
+                            if (cursorPosition > number.length) {
+                                etNPWPId.setSelection(number.length)
+                            }
+
+                            if ((numberOld != number || etNPWPId.text.toString().length != 20) && etNPWPId.hasFocus()) {
+                                numberOld = number
+                                cursor = numberOld.length
+                                when (numberOld.length) {
+                                    15 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_15),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12)))
+                                        cursor += 5
+                                    }
+                                    in 13..14 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_12),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9,12),numberOld.substring(12),holder.substring(numberOld.length+5)))
+                                        cursor += 5
+                                    }
+                                    in 10..12 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_9),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),numberOld.substring(9),holder.substring(numberOld.length+4)))
+                                        cursor += 4
+                                    }
+                                    9 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_9_exact),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5,8),numberOld.substring(8,9),holder.substring(numberOld.length+3)))
+                                        cursor += 3
+                                    }
+                                    in 6..8 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_5),numberOld.substring(0,2),numberOld.substring(2,5),numberOld.substring(5),holder.substring(numberOld.length+2)))
+                                        cursor += 2
+                                    }
+                                    in 3..5 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_2),numberOld.substring(0,2),numberOld.substring(2),holder.substring(numberOld.length+1)))
+                                        cursor += 1
+                                    }
+                                    in 1..2 -> {
+                                        etNPWPId.setText(String.format(getString(R.string.number_0),numberOld.substring(0),holder.substring(numberOld.length)))
+                                    }
+                                    0 -> {
+                                        etNPWPId.setText(holder)
+                                    }
+                                    else -> {
+                                        etNPWPId.setText(textOld)
+                                    }
+                                }
+                                etNPWPId.post {
+                                    etNPWPId.setSelection(cursor)
+                                }
+                            }
+                        }
+
+                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                            textOld = s.toString()
+                        }
+
+                        override fun afterTextChanged(s: Editable) {
+
+                        }
+                    })
+
+                    etNPWPId.setOnClickListener {
+                        if (etNPWPId.selectionStart > number.length) {
+                            etNPWPId.setSelection(number.length)
+                        }
+                    }
+
+                    penggunaJasaTab.setOnClickListener {
+                        lifecycleScope.launch {
+                            userDao.countAllCompany().collect { it1 ->
+                                if (it1>0) {
+                                    penggunaJasaTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                                    penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                                    pegawaiTab.background = null
+                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    perusahaanTab.background = null
+                                    perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    pegawaiLayout.visibility = View.GONE //NIP
+                                    btnAddUser.visibility = View.GONE
+                                    npwpLayout.visibility = View.GONE
+                                    alamatLayout.visibility = View.GONE
+                                    btnAddCompany.visibility = View.GONE
+                                    penggunajasaLayout.visibility = View.VISIBLE //Jabatan
+                                    btnAddPenggunaJasa.visibility = View.VISIBLE
+                                    perusahaanLayout.visibility = View.VISIBLE //Perusahaan
+                                    nama.hint = getText(R.string.hint_pengguna_jasa)
+                                    svCompanyList.visibility = View.GONE
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllServiceUser().collect {
+                                            val list = ArrayList(it)
+                                            setupListOfServiceUserDataIntoRecyclerView(list, userDao)
+                                        }
+                                    }
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllCompany().collect {
+                                            populateDropdownCompany(ArrayList(it), perusahaan)
+                                        }
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(context, "Mohon Tambahkan Data\nPerusahaanTerlebih Dahulu\nPada Tab Company", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                    }
+
+                    pegawaiTab.setOnClickListener {
+                        pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        penggunaJasaTab.background = null
+                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        perusahaanTab.background = null
+                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        npwpLayout.visibility = View.GONE
+                        alamatLayout.visibility = View.GONE
+                        btnAddCompany.visibility = View.GONE
+                        penggunajasaLayout.visibility = View.GONE
+                        btnAddPenggunaJasa.visibility = View.GONE
+                        btnAddUser.visibility = View.VISIBLE
+                        pegawaiLayout.visibility = View.VISIBLE
+                        nama.hint = getText(R.string.hint_nama)
+                        svUserList.visibility = View.VISIBLE
+                        svServiceUserList.visibility = View.GONE
+                        perusahaanLayout.visibility = View.GONE
+                        svCompanyList.visibility = View.GONE
+                    }
+
+                    perusahaanTab.setOnClickListener {
+                        perusahaanTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        penggunaJasaTab.background = null
+                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        pegawaiTab.background = null
+                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        npwpLayout.visibility = View.VISIBLE
+                        alamatLayout.visibility = View.VISIBLE
+                        btnAddCompany.visibility = View.VISIBLE
+                        penggunajasaLayout.visibility = View.GONE
+                        btnAddPenggunaJasa.visibility = View.GONE
+                        btnAddUser.visibility = View.GONE
+                        pegawaiLayout.visibility = View.GONE
+                        svServiceUserList.visibility = View.GONE
+                        perusahaanLayout.visibility = View.GONE
+                        nama.hint = getText(R.string.hint_perusahaan)
+                        svUserList.visibility = View.GONE
+                        lifecycleScope.launch {
+                            userDao.fetchAllCompany().collect {
+                                val list = ArrayList(it)
+                                setupListOfDataIntoRecyclerViewCompany(list, userDao)
+                            }
+                        }
+                        svCompanyList.visibility = View.VISIBLE
+                    }
+                }
+
+                _binding3?.btnAddCompany?.setOnClickListener {
+                    addRecordCompany(userDao)
+                }
+
+                _binding3?.btnAddUser?.setOnClickListener {
+                    addRecordUser(userDao)
+                }
+
+                _binding3?.btnAddPenggunaJasa?.setOnClickListener {
+                    addRecordServiceUser(userDao)
+                }
+            }
         }
     }
     override fun onDestroyView() {
@@ -1033,6 +1033,239 @@ class TabFragment(private val title: String) : Fragment() {
         _binding1 = null
         _binding2 = null
         _binding3 = null
+    }
+
+    private fun pdfReportSounding(id: Int, userDao: UserDao) {
+        lifecycleScope.launch {
+            userDao.fetchReportById(id).collect {
+                try {
+                    Dexter.withContext(requireActivity())
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                if (report.areAllPermissionsGranted()) {
+                                    val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
+                                    val currentDate = sdf.format(Calendar.getInstance().time)
+                                    val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
+                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
+                                    Log.d("loc", outPath)
+                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
+                                    doc.open()
+                                    doc.setMargins(0f, 0f, 40f, 40f)
+                                    headerFinalReport(doc, writer)
+//                                    bodyFinalReport(doc, it)
+                                    doc.close()
+
+                                    val file = File(outPath)
+                                    file.listFiles()
+                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW)
+                                        intent.setDataAndType(path, "application/pdf")
+                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(requireActivity(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
+                                    }
+
+
+                                } else {
+                                    Toast.makeText(requireActivity(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: List<PermissionRequest>,
+                                token: PermissionToken
+                            ) {
+                                token.continuePermissionRequest()
+                            }
+                        }).check()
+                } catch (e: Exception) {
+                    Log.d("okimatra", "" + e.message)
+                }
+            }
+        }
+    }
+    private fun headerFinalReport(doc: Document, writer: PdfWriter) {
+        val tableBotPadding = 10f
+        val tableHorizontalPadding = 20f
+        val tableTopPadding = 20f
+
+        val headerTable = PdfPTable(2)
+        headerTable.setWidths(floatArrayOf(1f, 3.5f))
+        headerTable.isLockedWidth = true
+        headerTable.totalWidth = PageSize.A4.width
+
+        val logoKantor = ResourcesCompat.getDrawable(resources, R.drawable.kemenkeu, null)
+        val bitDwLogoKantor = logoKantor as BitmapDrawable
+        val bmpLogoKantor = bitDwLogoKantor.bitmap
+        val streamLogoKantor = ByteArrayOutputStream()
+        bmpLogoKantor.compress(Bitmap.CompressFormat.PNG, 100, streamLogoKantor)
+        val imageLogoKantor = Image.getInstance(streamLogoKantor.toByteArray())
+        val scalerLogoKantor: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoKantor.width * 10
+        imageLogoKantor.scalePercent(scalerLogoKantor)
+
+        val cellLogoKantor = PdfPCell(Image.getInstance(imageLogoKantor))
+        cellLogoKantor.border = Rectangle.NO_BORDER
+        cellLogoKantor.horizontalAlignment = Rectangle.ALIGN_RIGHT
+        cellLogoKantor.verticalAlignment = Rectangle.ALIGN_CENTER
+        cellLogoKantor.paddingTop = tableTopPadding
+        cellLogoKantor.paddingBottom = tableBotPadding
+        cellLogoKantor.paddingRight = tableHorizontalPadding
+        headerTable.addCell(cellLogoKantor)
+
+        val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBig)
+        para.alignment = Element.ALIGN_MIDDLE
+        val tittleCell = PdfPCell(para)
+        tittleCell.border = Rectangle.NO_BORDER
+        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
+        tittleCell.verticalAlignment = Element.ALIGN_MIDDLE
+        tittleCell.paddingTop = tableTopPadding-3f
+        tittleCell.paddingBottom = tableBotPadding
+        tittleCell.paddingRight = tableHorizontalPadding
+        headerTable.addCell(tittleCell)
+        doc.add(headerTable)
+
+        val colorPrimary = BaseColor(0, 0, 0)
+        val canvas: PdfContentByte = writer.directContent
+        canvas.setColorStroke(colorPrimary)
+        canvas.moveTo(40.0, 755.0)
+        // Drawing the line
+        canvas.lineTo(PageSize.A4.width.toDouble()-40.0, 755.0)
+        canvas.setLineWidth(1.5f)
+        canvas.closePathStroke()
+    }
+    private fun bodyFinalReport(doc: Document, it: SoundingEntity) {
+//        idTable.widthPercentage = 100f
+//        idTable.tableEvent = BorderEvent()
+//        idTable.deleteBodyRows()
+//        val pID = Paragraph()
+//        pID.add(idTable)
+//        pID.indentationLeft = horizontalPadding
+//        doc.add(pID)
+        doc.add(Paragraph("\n\n\n\n\n", appFontTiny))
+        val metodeFraksi = it.volume_fraksi > 0
+        writeDataTitle("Data Umum", doc)
+        val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding")
+        val nilaiUmum = listOf(
+            it.perusahaan_sounding,
+            it.alamat_perusahaan_sounding,
+            it.no_tangki,
+            (it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," "),
+//            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
+//            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
+            it.lokasi_sounding,
+        )
+        writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
+
+        writeDataTitle("Data Lapangan", doc)
+        val judulLapangan = listOf("Tinggi Cairan", "Suhu Cairan")
+        val nilaiLapangan = listOf(
+            "${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+            "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
+        )
+        writeDatawithSemicolomn(judulLapangan, nilaiLapangan, doc)
+
+        writeDataTitle("Data Tangki", doc)
+        val judulTangki = listOf("Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki")
+        val nilaiTangki = listOf(
+            "${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C",
+            "${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm",
+            zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")
+        )
+        writeDatawithSemicolomn(judulTangki, nilaiTangki, doc)
+
+        writeDataTitle("Data Tabel", doc)
+        val judulTabel: List<String>
+        val nilaiTabel: List<String>
+        if (metodeFraksi) {
+            judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Cairan")
+            nilaiTabel = listOf(
+                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
+            )
+        } else {
+            judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Produk")
+            nilaiTabel = listOf(
+                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
+            )
+        }
+        writeDatawithSemicolomn(judulTabel, nilaiTabel, doc)
+
+        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
+        writeDataTitle("Hasil Perhitungan $metode", doc)
+        val calcData = listOf("Tinggi Terkoreksi", "Volume App", "Volume Obs", "Volume", "Hasil Akhir Muatan")
+        val calcValue = listOf(
+            "${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m",
+            "${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L",
+            "${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L",
+            "${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL",
+            "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
+        )
+        writeDatawithSemicolomn(calcData, calcValue, doc)
+        doc.add(Paragraph("\n", appFontMiddle))
+
+//        val ttdValue = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n")
+//        writeAuthentication(ttdValue, doc)
+//        val nama = Chunk(it.pegawai_sounding, regularFont)
+//        nama.setUnderline(0.5f, -2f)
+//        val para = Paragraph(nama)
+//        para.indentationLeft = 380f
+//        doc.add(para)
+
+        val ttdPenggunaJasa = listOf("Mengetahui,", "Eksportir", "\n\n\n")
+        val ttdPegawai = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n\n")
+        writeAuthenticationwithCustomer(ttdPenggunaJasa, ttdPegawai, doc)
+
+        val table = PdfPTable(2)
+        table.setWidths(floatArrayOf(1f, 1f))
+        table.isLockedWidth = true
+        table.totalWidth = PageSize.A4.width
+        val namaPJ = Chunk(it.pengguna_jasa_sounding, regularFont)
+        namaPJ.setUnderline(0.5f, -2f)
+        val pjCell = PdfPCell(Phrase(namaPJ))
+        pjCell.border = Rectangle.NO_BORDER
+        pjCell.horizontalAlignment = Element.ALIGN_LEFT
+        pjCell.verticalAlignment = Element.ALIGN_TOP
+        pjCell.paddingLeft = 57f
+        table.addCell(pjCell)
+        val namaPeg = Chunk(it.pegawai_sounding, regularFont)
+        namaPeg.setUnderline(0.5f, -2f)
+        val pegCell = PdfPCell(Phrase(namaPeg))
+        pegCell.border = Rectangle.NO_BORDER
+        pegCell.horizontalAlignment = Element.ALIGN_LEFT
+        pegCell.verticalAlignment = Element.ALIGN_TOP
+        pegCell.paddingLeft = 72f
+        table.addCell(pegCell)
+        doc.add(table)
+        table.deleteBodyRows()
+
+        val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
+                " " + it.nip_pegawai.subSequence(8,14).toString() +
+                " " + it.nip_pegawai.subSequence(14,15).toString() +
+                " " + it.nip_pegawai.subSequence(15,it.nip_pegawai.length).toString()
+        val nip = listOf(nipSpace)
+        val jabatan = listOf(it.jabatan_pengguna_jasa)
+        writeAuthenticationwithCustomer(jabatan, nip, doc)
+    }
+    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
+        if (soundingList.isNotEmpty()) {
+            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
+            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
+            _binding2?.rvSoundingList?.adapter = soundingAdapter
+            _binding2?.svSoundingList?.visibility = View.VISIBLE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
+        } else {
+            _binding2?.svSoundingList?.visibility = View.GONE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
+        }
     }
 
     private fun addClickListener(binding: FragmentTwoBinding, btn: Button, userDao: UserDao) {
@@ -1366,14 +1599,6 @@ class TabFragment(private val title: String) : Fragment() {
         tittleCell.paddingRight = tableHorizontalPadding
         headerTable.addCell(tittleCell)
 
-        val logoKantor = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc_ktb, null)
-        val bitDwLogoKantor = logoKantor as BitmapDrawable
-        val bmpLogoKantor = bitDwLogoKantor.bitmap
-        val streamLogoKantor = ByteArrayOutputStream()
-        bmpLogoKantor.compress(Bitmap.CompressFormat.PNG, 100, streamLogoKantor)
-        val imageLogoKantor = Image.getInstance(streamLogoKantor.toByteArray())
-        val scalerLogoKantor: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoKantor.width * 10
-        imageLogoKantor.scalePercent(scalerLogoKantor)
         doc.add(headerTable)
 
         val colorPrimary = BaseColor(0, 0, 0)
@@ -2323,7 +2548,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun setupListOfDataIntoRecyclerViewCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
         if (perusahaanList.isNotEmpty()) {
-            val companyAdapter = PerusahaanAdapter(perusahaanList, { updateId ->updateRecordDialogCompany(updateId,userDao)}) {deleteId->deleteRecordAlertDialogCompany(deleteId,userDao)}
+            val companyAdapter = PerusahaanAdapter(perusahaanList, {updateId->updateRecordDialogCompany(updateId,userDao)}) {deleteId->deleteRecordAlertDialogCompany(deleteId,userDao)}
             _binding3?.rvCompanyList?.layoutManager = LinearLayoutManager(context)
             _binding3?.rvCompanyList?.adapter = companyAdapter
             _binding3?.svCompanyList?.visibility = View.VISIBLE
@@ -2523,18 +2748,6 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
-    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
-        if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
-            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
-            _binding2?.rvSoundingList?.adapter = soundingAdapter
-            _binding2?.svSoundingList?.visibility = View.VISIBLE
-            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
-        } else {
-            _binding2?.svSoundingList?.visibility = View.GONE
-            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
-        }
-    }
     private fun updateRecordDialogSounding(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
@@ -2906,7 +3119,7 @@ class TabFragment(private val title: String) : Fragment() {
     private fun setupListOfDataIntoRecyclerViewReport(reportList:ArrayList<ReportEntity>, userDao: UserDao) {
         _binding2?.soundingParent?.visibility = View.VISIBLE
         if (reportList.isNotEmpty()) {
-            val reportAdapter = ReportAdapter(reportList,{deleteId->deleteRecordAlertDialogReport(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
+            val reportAdapter = ReportAdapter(reportList,{deleteId->deleteRecordAlertDialogReport(deleteId,userDao)},{pdfId->pdfReportSounding(pdfId,userDao)})
             _binding2?.rvFinalList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvFinalList?.adapter = reportAdapter
             _binding2?.rvFinalList?.visibility = View.VISIBLE
@@ -2972,13 +3185,11 @@ class TabFragment(private val title: String) : Fragment() {
             for (i in 0 until list.size) {
                 items.add(list[i].nama_pengguna_jasa)
             }
-            val adapter = activity?.let { it ->
-                ArrayAdapter(
-                    it,
+            val adapter = ArrayAdapter(
+                    requireContext(),
                     R.layout.dropdown_layout,
                     items
                 )
-            }
             spinner.adapter = adapter
         }
     }

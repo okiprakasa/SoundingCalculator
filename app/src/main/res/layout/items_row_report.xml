@@ -129,15 +129,6 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/ivEdit"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/image"
-                android:scaleType="center"
-                android:src="@drawable/ic_action_edit" />
-
-            <ImageView
                 android:id="@+id/ivDelete"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

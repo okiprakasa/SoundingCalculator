@@ -41,10 +41,6 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_pembulatan.replace(".",",")))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
-//
-//        holder.ivEdit.setOnClickListener {
-//         updateListener.invoke(item.id)
-//        }
 
         holder.ivDelete.setOnClickListener {
           deleteListener.invoke(item.id)
