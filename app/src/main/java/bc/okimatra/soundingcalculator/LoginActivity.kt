@@ -144,10 +144,9 @@ class LoginActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 userDao.fetchAllKantor().collect {
-                    val listKantor = arrayListOf(it)
                     val items = arrayListOf<String>()
-                    for (j in 0 until listKantor.size) {
-                        items.add(listKantor[j].kota)
+                    for (j in it.indices) {
+                        items.add(it[j].kota)
                     }
                     val adapter = ArrayAdapter(
                         applicationContext,
