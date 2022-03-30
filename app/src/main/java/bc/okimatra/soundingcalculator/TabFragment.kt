@@ -483,7 +483,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                     spinnerListener(binding2, addOrClose1, userDao)
                                 } else {
-                                    Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui Save Data\n Pada Tab Calculator", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui Simpan Data\n Pada Tab Calculator", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }

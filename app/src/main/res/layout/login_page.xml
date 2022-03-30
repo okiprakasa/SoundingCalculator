@@ -131,6 +131,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_input"
                 android:hint="@string/hint_kantor_pegawai"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:spinnerMode="dropdown" />
 
         </RelativeLayout>

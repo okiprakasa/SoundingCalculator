@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
-import bc.okimatra.soundingcalculator.databinding.ItemsRowBinding
+import bc.okimatra.soundingcalculator.databinding.ItemsRowCompanyBinding
 import bc.okimatra.soundingcalculator.datasetup.PegawaiEntity
 
 class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
@@ -15,7 +15,7 @@ class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemsRowBinding.inflate(
+            ItemsRowCompanyBinding.inflate(
             LayoutInflater.from(parent.context),parent,false)
         )
     }
@@ -29,7 +29,8 @@ class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
                 " " + item.nip.subSequence(15,item.nip.length).toString()
 
         holder.tvName.text = item.nama_pegawai
-        holder.tvNIP.text = nipSpace
+        holder.tvBarisKedua.text = nipSpace
+        holder.tvBarisKetiga.text = item.kota_pegawai
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
@@ -50,10 +51,11 @@ class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
         return items.size
     }
 
-    class ViewHolder(binding: ItemsRowBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding: ItemsRowCompanyBinding) : RecyclerView.ViewHolder(binding.root) {
         val llMain = binding.llMain
         val tvName = binding.tvName
-        val tvNIP = binding.tvNIP
+        val tvBarisKedua = binding.barisKedua
+        val tvBarisKetiga = binding.barisKetiga
         val ivEdit = binding.ivEdit
         val ivDelete = binding.ivDelete
     }
