@@ -45,7 +45,7 @@
         android:id="@+id/update_nama"
         android:layout_width="0dp"
         android:layout_marginEnd="5dp"
-        android:backgroundTint="@color/login"
+        android:backgroundTint="@color/appTheme"
         android:layout_height="wrap_content"
         android:hint="@string/hint_pengguna_jasa"
         android:fontFamily="@font/poppins_light"
@@ -78,7 +78,7 @@
         android:layout_marginTop="-10dp"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textPersonName"
-        android:backgroundTint="@color/login"
+        android:backgroundTint="@color/appTheme"
         android:hint="@string/hint_jabatan"
         android:fontFamily="@font/poppins_light"
         android:layout_marginEnd="5dp"
@@ -109,7 +109,7 @@
         android:layout_marginTop="-10dp"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textPersonName"
-        android:backgroundTint="@color/login"
+        android:backgroundTint="@color/appTheme"
         android:hint="@string/hint_perusahaan"
         android:fontFamily="@font/poppins_light"
         android:layout_marginEnd="5dp"
@@ -129,7 +129,7 @@
         android:fontFamily="@font/nunito"
         android:textSize="15sp"
         android:text="@string/update"
-        android:textColor="@color/login"
+        android:textColor="@color/appTheme"
         android:textStyle="bold" />
 
     <TextView

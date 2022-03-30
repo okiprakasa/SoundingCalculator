@@ -24,15 +24,25 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.itemView.context
         val item = items[position]
+        val hariTanggal = item.waktu.replace("-"," ").subSequence(0, item.waktu.indexOf(":")-3).toString()
+        val pukul = item.waktu.subSequence(item.waktu.indexOf(":")-2, item.waktu.length).toString()
 
+        if (item.no_tangki.length<9) {
+            holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,item.no_tangki))
+        } else {
+            holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,"${item.no_tangki.subSequence(0,7)}..."))
+        }
+        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_sounding.toString()))
+        holder.tvWaktu.text = hariTanggal
+        holder.tvJamSounding.text = String.format(context.getString(R.string.waktu_edited, pukul))
         holder.tvNama.text = item.perusahaan_sounding
-        holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,item.no_tangki))
-        holder.tvWaktu.text = item.waktu.replace("-"," ")
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited,item.hasil_sounding.toString()))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
         holder.ivEdit.setOnClickListener {
+         updateListener.invoke(item.id)
+        }
+        holder.iconBackground.setOnClickListener {
          updateListener.invoke(item.id)
         }
 
@@ -54,9 +64,11 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         val tvNama = binding.tvNamaPerusahaan
         val tvNoTangki = binding.tvNoTangki
         val tvWaktu = binding.tvWaktu
-        val tvHasil = binding.tvHasilSounding
+        val tvJamSounding = binding.tvJamSounding
+        val tvHasil = binding.tvHasil
         val ivEdit = binding.ivEdit
         val ivDelete = binding.ivDelete
         val background = binding.background
+        val iconBackground = binding.layoutIcon
     }
 }

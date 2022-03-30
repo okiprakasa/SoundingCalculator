@@ -49,7 +49,7 @@
                 android:paddingTop="5dp"
                 android:textSize="15sp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/login"
+                android:textColor="@color/appTheme"
                 android:fontFamily="@font/nunito"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -712,7 +712,7 @@
                     android:fontFamily="@font/nunito"
                     android:gravity="center"
                     android:text="@string/tambah_sounding"
-                    android:textColor="@color/login"
+                    android:textColor="@color/appTheme"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -771,7 +771,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="75dp"
         android:src="@drawable/ic_add"
-        android:backgroundTint="@color/login"
+        android:backgroundTint="@color/appTheme"
         app:borderWidth="0dp"
         android:contentDescription="@string/add_final_report"
         android:visibility="visible"/>
@@ -783,7 +783,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="75dp"
         android:src="@drawable/ic_close_white"
-        android:backgroundTint="@color/login"
+        android:backgroundTint="@color/appTheme"
         app:borderWidth="0dp"
         android:contentDescription="@string/cancel"
         android:visibility="gone"/>

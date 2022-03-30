@@ -171,7 +171,7 @@ class TabFragment(private val title: String) : Fragment() {
                         interpolasiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         fraksiTab.background = null
-                        fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         judulTabelFraksi.visibility = View.GONE
                         fraksi.visibility = View.GONE
                         if ("m" !in judulTabelKalibrasi.text.toString()) {
@@ -187,7 +187,7 @@ class TabFragment(private val title: String) : Fragment() {
                         fraksiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         interpolasiTab.background = null
-                        interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         judulTabelKalibrasi2.visibility = View.GONE
                         kalibrasi2.visibility = View.GONE
                         if ("m" !in judulTabelKalibrasi.text.toString()) {
@@ -303,13 +303,13 @@ class TabFragment(private val title: String) : Fragment() {
                         val waktuText = _binding1?.waktu?.text.toString()
                         when {
                             nomorTangkiText.isEmpty() -> {
-                                Toast.makeText(requireActivity(), "Nomor Tangki Belum Diisi", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Nomor Tangki Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             lokasiSoundingText.isEmpty() -> {
-                                Toast.makeText(requireActivity(), "Lokasi Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Lokasi Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             waktuText.isEmpty() -> {
-                                Toast.makeText(requireActivity(), "Waktu Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Waktu Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             else -> {
                                 val tinggiCairanAngka = _binding1?.tinggiCairan?.text.toString().toDouble()
@@ -408,7 +408,7 @@ class TabFragment(private val title: String) : Fragment() {
                     rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                     rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                     finalTab.background = null
-                    finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                    finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                     fabFinalReport.visibility = View.GONE
                     svSoundingList.visibility = View.VISIBLE
                     svFinalList.visibility = View.GONE
@@ -428,7 +428,7 @@ class TabFragment(private val title: String) : Fragment() {
                         rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         finalTab.background = null
-                        finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         fabFinalReport.visibility = View.GONE
                         fabCancelReport.visibility = View.GONE
                         svSoundingList.visibility = View.VISIBLE
@@ -454,7 +454,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     finalTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                                     finalTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                                     rawDataTab.background = null
-                                    rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                                     if (fabOverSounding) {
                                         soundingContainer.visibility = View.GONE
                                         btnAddSounding.visibility = View.GONE
@@ -943,9 +943,9 @@ class TabFragment(private val title: String) : Fragment() {
                                     penggunaJasaTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                                     penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                                     pegawaiTab.background = null
-                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                                     perusahaanTab.background = null
-                                    perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                                    perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                                     pegawaiLayout.visibility = View.GONE //NIP
                                     btnAddUser.visibility = View.GONE
                                     npwpLayout.visibility = View.GONE
@@ -980,9 +980,9 @@ class TabFragment(private val title: String) : Fragment() {
                         pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         penggunaJasaTab.background = null
-                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         perusahaanTab.background = null
-                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         npwpLayout.visibility = View.GONE
                         alamatLayout.visibility = View.GONE
                         btnAddCompany.visibility = View.GONE
@@ -1002,9 +1002,9 @@ class TabFragment(private val title: String) : Fragment() {
                         perusahaanTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         penggunaJasaTab.background = null
-                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         pegawaiTab.background = null
-                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         npwpLayout.visibility = View.VISIBLE
                         alamatLayout.visibility = View.VISIBLE
                         btnAddCompany.visibility = View.VISIBLE
@@ -1052,7 +1052,7 @@ class TabFragment(private val title: String) : Fragment() {
         lifecycleScope.launch {
             userDao.fetchReportById(id).collect {
                 try {
-                    Dexter.withContext(requireActivity())
+                    Dexter.withContext(requireContext())
                         .withPermissions(
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -1062,7 +1062,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
                                     val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
+                                    val outPath = requireContext().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
                                     Log.d("loc", outPath)
                                     val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                     doc.open()
@@ -1080,12 +1080,12 @@ class TabFragment(private val title: String) : Fragment() {
                                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         startActivity(intent)
                                     } catch (e: ActivityNotFoundException) {
-                                        Toast.makeText(requireActivity(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
                                     }
 
 
                                 } else {
-                                    Toast.makeText(requireActivity(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
@@ -1544,7 +1544,7 @@ class TabFragment(private val title: String) : Fragment() {
         lifecycleScope.launch {
             userDao.fetchSoundingById(id).collect {
                 try {
-                    Dexter.withContext(requireActivity())
+                    Dexter.withContext(requireContext())
                         .withPermissions(
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -1554,7 +1554,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
                                     val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                    val outPath = requireActivity().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
+                                    val outPath = requireContext().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
                                     Log.d("loc", outPath)
                                     val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                     doc.open()
@@ -1572,12 +1572,12 @@ class TabFragment(private val title: String) : Fragment() {
                                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         startActivity(intent)
                                     } catch (e: ActivityNotFoundException) {
-                                        Toast.makeText(requireActivity(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
                                     }
 
 
                                 } else {
-                                    Toast.makeText(requireActivity(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
@@ -2211,7 +2211,7 @@ class TabFragment(private val title: String) : Fragment() {
                 updateRecordDialogUser(updateId,userDao)
             }){deleteId->deleteRecordAlertDialogUser(deleteId,userDao)
             }
-            _binding3?.rvUserList?.layoutManager = LinearLayoutManager(requireActivity())
+            _binding3?.rvUserList?.layoutManager = LinearLayoutManager(requireContext())
             _binding3?.rvUserList?.adapter = itemAdapter
             _binding3?.svUserList?.visibility = View.VISIBLE
             _binding3?.svServiceUserList?.visibility = View.GONE
@@ -2828,7 +2828,7 @@ class TabFragment(private val title: String) : Fragment() {
                 interpolasiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                 interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                 fraksiTab.background = null
-                fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                 judulTabelFraksi.visibility = View.GONE
                 tabelFraksi.visibility = View.GONE
                 if ("m" !in judulTabelKalibrasi.text.toString()) {
@@ -2844,7 +2844,7 @@ class TabFragment(private val title: String) : Fragment() {
                 fraksiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                 fraksiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                 interpolasiTab.background = null
-                interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.login))
+                interpolasiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                 judulTabelKalibrasi2.visibility = View.GONE
                 tabelKalibrasi2.visibility = View.GONE
                 if ("m" !in judulTabelKalibrasi.text.toString()) {
@@ -3115,7 +3115,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                 judulFraksi = judulFraksi,
                                                 judulDataTabel = dataTabel
                                             ))
-                                            Toast.makeText(requireActivity(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(requireContext(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                                             updateDialog.dismiss()
                                         }
                                     }  catch (e: Exception) {

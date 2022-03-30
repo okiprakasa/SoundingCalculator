@@ -76,7 +76,7 @@
     <string name="tabel_kalibrasi_edited3">Tabel Kalibrasi ($s.000 m)</string>
     <string name="tabel_kalibrasi2_edited">"Tabel Kalibrasi ($s0 m)</string>
     <string name="tabel_fraksi_edited">Tabel Fraksi (%s mm)</string>
-    <string name="hasil_akhir_edited">Hasil: %s MT</string>
+    <string name="hasil_akhir_edited">%s MT</string>
     <string name="deskripsi_no_tangki">%s\n%s</string>
     <string name="before_edited">__.___.___._-___.___</string>
     <string name="number_15">%s.%s.%s.%s-%s.%s</string>
@@ -135,7 +135,7 @@
     <string name="produk">Produk/Jenis Barang</string>
     <string name="hint_produk">Cth: RBD Palm Olein</string>
     <string name="bentuk">Bentuk Fisik/Warna/Bau</string>
-    <string name="hint_bentuk">Cth: Cairan kuning bening tidak berbau</string>
+    <string name="hint_bentuk">Cth: Semi padat berwarna putih</string>
     <string name="no_tangki">Nomor Tangki</string>
     <string name="hint_no_tangki">Cth: R17-A</string>
     <string name="next">Next</string>
@@ -149,7 +149,8 @@
     <string name="lokasi_ba">Lokasi BA</string>
     <string name="hint_lokasi_ba">Cth: Kotabaru</string>
     <string name="hint_lokasi_sounding">Cth: Tangki Darat PT. A</string>
-    <string name="no_tangki_edited">No Tangki: %s   </string>
+    <string name="no_tangki_edited">No Tangki: %s</string>
+    <string name="waktu_edited">Pukul %s</string>
     <string name="delete">Delete</string>
     <string name="judul_hapus">Hapus Data</string>
     <string name="hint_hapus_sounding">Apakah Anda yakin akan menghapus data sounding Tangki: %s %s pada %s?</string>

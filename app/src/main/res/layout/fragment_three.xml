@@ -44,7 +44,7 @@
             android:paddingTop="5dp"
             android:textSize="13sp"
             android:paddingBottom="5dp"
-            android:textColor="@color/login"
+            android:textColor="@color/appTheme"
             android:fontFamily="@font/nunito"
             android:textStyle="bold"/>
 
@@ -58,7 +58,7 @@
             android:paddingTop="5dp"
             android:textSize="13sp"
             android:paddingBottom="5dp"
-            android:textColor="@color/login"
+            android:textColor="@color/appTheme"
             android:fontFamily="@font/nunito"
             android:textStyle="bold"/>
 
@@ -82,7 +82,7 @@
             android:textSize="12sp"/>
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/nama"
             android:layout_width="0dp"
             android:layout_weight="9"
@@ -117,7 +117,7 @@
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/nip"
             android:layout_width="0dp"
             android:layout_weight="9"
@@ -151,7 +151,7 @@
             android:textSize="12sp" />
 
         <Spinner
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/kantor_pegawai"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/jabatan"
             android:layout_width="0dp"
             android:layout_weight="9"
@@ -214,7 +214,7 @@
             android:textSize="12sp"/>
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/etNPWPId"
             android:layout_width="0dp"
             android:layout_marginEnd="5dp"
@@ -253,7 +253,7 @@
             android:textSize="12sp"/>
 
         <EditText
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/etAlamatId"
             android:layout_width="0dp"
             android:layout_weight="9"
@@ -288,7 +288,7 @@
             android:textSize="12sp" />
 
         <Spinner
-            android:backgroundTint="@color/login"
+            android:backgroundTint="@color/appTheme"
             android:id="@+id/perusahaan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

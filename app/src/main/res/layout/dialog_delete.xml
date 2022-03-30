@@ -45,7 +45,7 @@
             android:gravity="center"
             android:fontFamily="@font/nunito"
             android:textSize="15sp"
-            android:textColor="@color/login"
+            android:textColor="@color/appTheme"
             android:textStyle="bold" />
 
         <TextView
