@@ -841,6 +841,12 @@ class TabFragment(private val title: String) : Fragment() {
                     var cursorPosition: Int
                     var cursor: Int
 
+                    lifecycleScope.launch {
+                        userDao.fetchAllKantor().collect {
+                            populateDropdownKantor(ArrayList(it), kantorPegawai)
+                        }
+                    }
+
                     etNPWPId.setOnFocusChangeListener { _, _ ->
                         if (etNPWPId.text.toString().isEmpty()) {
                             etNPWPId.setText(getString(R.string.before_edited))
@@ -944,6 +950,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     btnAddUser.visibility = View.GONE
                                     npwpLayout.visibility = View.GONE
                                     alamatLayout.visibility = View.GONE
+                                    kantorLayout.visibility = View.GONE
                                     btnAddCompany.visibility = View.GONE
                                     penggunajasaLayout.visibility = View.VISIBLE //Jabatan
                                     btnAddPenggunaJasa.visibility = View.VISIBLE
@@ -983,6 +990,7 @@ class TabFragment(private val title: String) : Fragment() {
                         btnAddPenggunaJasa.visibility = View.GONE
                         btnAddUser.visibility = View.VISIBLE
                         pegawaiLayout.visibility = View.VISIBLE
+                        kantorLayout.visibility = View.VISIBLE
                         nama.hint = getText(R.string.hint_nama)
                         svUserList.visibility = View.VISIBLE
                         svServiceUserList.visibility = View.GONE
@@ -1006,6 +1014,7 @@ class TabFragment(private val title: String) : Fragment() {
                         pegawaiLayout.visibility = View.GONE
                         svServiceUserList.visibility = View.GONE
                         perusahaanLayout.visibility = View.GONE
+                        kantorLayout.visibility = View.GONE
                         nama.hint = getText(R.string.hint_perusahaan)
                         svUserList.visibility = View.GONE
                         lifecycleScope.launch {
@@ -1016,18 +1025,18 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                         svCompanyList.visibility = View.VISIBLE
                     }
-                }
 
-                _binding3?.btnAddCompany?.setOnClickListener {
-                    addRecordCompany(userDao)
-                }
+                    btnAddCompany.setOnClickListener {
+                        addRecordCompany(userDao)
+                    }
 
-                _binding3?.btnAddUser?.setOnClickListener {
-                    addRecordUser(userDao)
-                }
+                    btnAddUser.setOnClickListener {
+                        addRecordUser(userDao)
+                    }
 
-                _binding3?.btnAddPenggunaJasa?.setOnClickListener {
-                    addRecordServiceUser(userDao)
+                    btnAddPenggunaJasa.setOnClickListener {
+                        addRecordServiceUser(userDao)
+                    }
                 }
             }
         }
@@ -2256,10 +2265,21 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-                    userDao.insertUser(PegawaiEntity(nama_pegawai = name, nip = nip))
-                    Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
-                    _binding3?.nama?.text?.clear()
-                    _binding3?.nip?.text?.clear()
+                    userDao.fetchKantorByKota(binding3.kantorPegawai.selectedItem.toString()).collect {
+                        lifecycleScope.launch {
+                            userDao.insertUser(PegawaiEntity(nama_pegawai = name,
+                                nip = nip,
+                                kota_pegawai = it.kota,
+                                kantor_pegawai = it.kantor,
+                                kanwil_pegawai = it.kanwil,
+                                lokasi_ba_pegawai = it.lokasi_ba,
+                                format_ba_pegawai = it.format_ba
+                            ))
+                            Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
+                            _binding3?.nama?.text?.clear()
+                            _binding3?.nip?.text?.clear()
+                        }
+                    }
                 }
             }
         }
@@ -2270,6 +2290,33 @@ class TabFragment(private val title: String) : Fragment() {
         val binding = DialogUpdateBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        lifecycleScope.launch {
+            userDao.fetchAllKantor().collect { it ->
+                populateDropdownKantor(ArrayList(it), binding.updateKantor)
+                val items = arrayListOf<String>()
+                for (i in 0 until ArrayList(it).size) {
+                    items.add(ArrayList(it)[i].kota)
+                }
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    R.layout.dropdown_layout,
+                    items
+                )
+                lifecycleScope.launch {
+                    userDao.fetchUserById(id).collect {
+                        try {
+                            binding.updateNama.setText(it.nama_pegawai)
+                            binding.updateNip.setText(it.nip)
+                            val spinnerPosition = adapter.getPosition(it.kota_pegawai)
+                            binding.updateKantor.setSelection(spinnerPosition)
+                        } catch (e: Exception) {
+                            Log.e("okimatra", "" + e.message)
+                        }
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             userDao.fetchUserById(id).collect {
                 try {
@@ -2323,10 +2370,22 @@ class TabFragment(private val title: String) : Fragment() {
                 }
                 else -> {
                     lifecycleScope.launch {
-                        userDao.updateUser(PegawaiEntity(id, name, nip))
-                        Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
-                            .show()
-                        updateDialog.dismiss()
+                        userDao.fetchKantorByKota(binding.updateKantor.selectedItem.toString()).collect {
+                            lifecycleScope.launch {
+                                userDao.updateUser(PegawaiEntity(id,
+                                    name,
+                                    nip,
+                                    kota_pegawai = it.kota,
+                                    kantor_pegawai = it.kantor,
+                                    kanwil_pegawai = it.kanwil,
+                                    lokasi_ba_pegawai = it.lokasi_ba,
+                                    format_ba_pegawai = it.format_ba
+                                ))
+                                Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
+                                    .show()
+                                updateDialog.dismiss()
+                            }
+                        }
                     }
                 }
             }
@@ -3127,6 +3186,22 @@ class TabFragment(private val title: String) : Fragment() {
         if (list.isNotEmpty()) {
             for (i in 0 until list.size) {
                 items.add(list[i].nama_pegawai)
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            spinner.adapter = adapter
+        }
+    }
+    private fun populateDropdownKantor(list:ArrayList<KantorEntity>, spinner: Spinner) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            for (i in 0 until list.size) {
+                items.add(list[i].kota)
             }
             val adapter = activity?.let { it ->
                 ArrayAdapter(

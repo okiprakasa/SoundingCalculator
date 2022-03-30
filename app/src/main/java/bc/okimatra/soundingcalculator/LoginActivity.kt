@@ -199,7 +199,18 @@ class LoginActivity : AppCompatActivity() {
                     }
                     else -> {
                         lifecycleScope.launch {
-                            userDao.insertUser(PegawaiEntity(nama_pegawai = nama, nip =  nip))
+                            userDao.fetchKantorByKota(kantorPegawai.selectedItem.toString()).collect {
+                                lifecycleScope.launch {
+                                    userDao.insertUser(PegawaiEntity(nama_pegawai = nama,
+                                        nip = nip,
+                                        kota_pegawai = it.kota,
+                                        kantor_pegawai = it.kantor,
+                                        kanwil_pegawai = it.kanwil,
+                                        lokasi_ba_pegawai = it.lokasi_ba,
+                                        format_ba_pegawai = it.format_ba
+                                    ))
+                                }
+                            }
                         }
                         val intent = Intent(this@LoginActivity,MainActivity::class.java)
                         startActivity(intent)

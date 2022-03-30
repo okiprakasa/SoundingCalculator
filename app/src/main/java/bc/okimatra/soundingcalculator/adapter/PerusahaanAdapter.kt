@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
-import bc.okimatra.soundingcalculator.databinding.ItemsRowCompanyBinding
+import bc.okimatra.soundingcalculator.databinding.ItemsRowBinding
 import bc.okimatra.soundingcalculator.datasetup.PerusahaanEntity
 
 class PerusahaanAdapter(private val items: ArrayList<PerusahaanEntity>,
@@ -15,7 +15,7 @@ class PerusahaanAdapter(private val items: ArrayList<PerusahaanEntity>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemsRowCompanyBinding.inflate(
+            ItemsRowBinding.inflate(
             LayoutInflater.from(parent.context),parent,false)
         )
     }
@@ -47,7 +47,7 @@ class PerusahaanAdapter(private val items: ArrayList<PerusahaanEntity>,
         return items.size
     }
 
-    class ViewHolder(binding: ItemsRowCompanyBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding: ItemsRowBinding) : RecyclerView.ViewHolder(binding.root) {
         val llMain = binding.llMain
         val tvName = binding.tvName
         val tvNPWP = binding.barisKedua

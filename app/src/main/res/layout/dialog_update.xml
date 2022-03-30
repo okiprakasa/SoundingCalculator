@@ -86,9 +86,40 @@
         android:maxLength="18"
         tools:ignore="Autofill" />
 
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_nip"
+        android:id="@+id/judul_kantor"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="@string/kantor"
+        android:textSize="15sp" />
+
+    <Spinner
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/judul_kantor"
+        android:id="@+id/update_kantor"
+        android:layout_width="0dp"
+        android:layout_marginStart="-5dp"
+        android:layout_marginTop="-10dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textPersonName"
+        android:backgroundTint="@color/login"
+        android:hint="@string/hint_perusahaan"
+        android:fontFamily="@font/poppins_light"
+        android:layout_marginEnd="5dp"
+        android:textSize="13sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"/>
+
 
     <TextView
-        app:layout_constraintTop_toBottomOf="@id/update_nip"
+        app:layout_constraintTop_toBottomOf="@id/update_kantor"
         app:layout_constraintEnd_toStartOf="@id/tvCancel"
         android:id="@+id/tvUpdate"
         android:layout_width="wrap_content"
@@ -102,7 +133,7 @@
         android:textStyle="bold" />
 
     <TextView
-        app:layout_constraintTop_toBottomOf="@id/update_nip"
+        app:layout_constraintTop_toBottomOf="@id/update_kantor"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/tvCancel"
         android:layout_width="wrap_content"

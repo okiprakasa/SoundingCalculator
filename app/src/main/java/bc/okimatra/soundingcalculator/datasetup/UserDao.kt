@@ -119,4 +119,7 @@ interface UserDao {
 
     @Query("Select * from `office-table`")
     fun fetchAllKantor():Flow<List<KantorEntity>>
+
+    @Query("Select * from `office-table` WHERE kota=:kota")
+    fun fetchKantorByKota(kota:String):Flow<KantorEntity>
 }
