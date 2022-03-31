@@ -15,4 +15,5 @@ data class PegawaiEntity(
     val kanwil_pegawai: String="",
     val lokasi_ba_pegawai: String="",
     val format_ba_pegawai: String="",
+    val format_3d_pegawai: String=""
         )

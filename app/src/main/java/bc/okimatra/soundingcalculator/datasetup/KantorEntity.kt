@@ -13,4 +13,5 @@ data class KantorEntity(
     val kanwil: String="",
     val lokasi_ba: String="",
     val format_ba: String="",
+    val format_3d: String=""
         )

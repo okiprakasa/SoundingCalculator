@@ -17,6 +17,7 @@
     <string name="akhir_edited">Akhir %s</string>
     <string name="sarana_pengangkut">Nama Sarkut</string>
     <string name="no_ba">Nomor BA</string>
+    <string name="no_ba_holder">%s…%s</string>
     <string name="jumlah_barcon">Jumlah Contoh</string>
     <string name="hint_jumlah_barcon">Cth: 1 botol</string>
     <string name="text_jumlah_barcon">1 botol</string>

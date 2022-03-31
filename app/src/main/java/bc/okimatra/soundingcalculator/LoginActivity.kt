@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
             var checker = 0
             lifecycleScope.launch {
                 userDao.countAllKantor().collect { it1 ->
-                    if (it1!=10) {
+                    if (it1!=12) {
                         if (checker == 0) {
                             checker = 1
                             insertKantorDB(userDao,
@@ -76,70 +76,96 @@ class LoginActivity : AppCompatActivity() {
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Balikpapan".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Timur".uppercase(),
                                 "Balikpapan",
-                                "BAPFP-X/KBC.160107/$year"
+                                "BAPFP-X/KBC.160107/$year",
+                                "DP100300/$year"
                             )
                             insertKantorDB(userDao,
                                 "Banjarmasin",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Banjarmasin".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Banjarmasin",
-                                "BAPFP-X/KBC.150105/$year"
+                                "BAPFP-X/KBC.150105/$year",
+                                "DP100100$year"
                             )
                             insertKantorDB(userDao,
                                 "Bitung",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Bitung".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Sulawesi Bagian Utara".uppercase(),
                                 "Bitung",
-                                "BAPFP-X/KBC.180404/$year"
+                                "BAPFP-X/KBC.180404/$year",
+                                "DP111100$year"
+                            )
+                            insertKantorDB(userDao,
+                                "Bontang",
+                                "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Bontang".uppercase(),
+                                "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Timur".uppercase(),
+                                "Bontang",
+                                "BAPFP-X/KBC.1603/$year",
+                                "DP100600$year"
                             )
                             insertKantorDB(userDao,
                                 "Gresik",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Gresik".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Jawa Timur I".uppercase(),
                                 "Gresik",
-                                "BAPFP-X/KBC.110408/$year"
+                                "BAPFP-X/KBC.110408/$year",
+                                "DP070300$year"
                             )
                             insertKantorDB(userDao,
                                 "Kotabaru",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Kotabaru".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Kotabaru",
-                                "BAPFP-X/KBC.150504/$year"
+                                "BAPFP-X/KBC.150504/$year",
+                                "DP100200$year"
                             )
                             insertKantorDB(userDao,
                                 "Pangkalan Bun",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Pangkalan Bun".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Pangkalan Bun",
-                                "BAPFP-X/KBC.1503/$year"
+                                "BAPFP-X/KBC.1503/$year",
+                                "DP090800$year"
                             )
                             insertKantorDB(userDao,
                                 "Pantoloan",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Pantoloan".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Sulawesi Bagian Utara".uppercase(),
                                 "Pasangkayu",
-                                "BAPFP-X/KBC.180104/$year"
+                                "BAPFP-X/KBC.180104/$year",
+                                "DP110800$year"
+                            )
+                            insertKantorDB(userDao,
+                                "Samarinda",
+                                "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Samarinda".uppercase(),
+                                "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Timur".uppercase(),
+                                "Samarinda",
+                                "BAPFP-X/KBC.1602/$year",
+                                "DP100500$year"
                             )
                             insertKantorDB(userDao,
                                 "Sampit",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Sampit".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Sampit, Kotawaringin Timur",
-                                "BAPFP-X/KBC.1502/$year"
+                                "BAPFP-X/KBC.1502/$year",
+                                "DP090700$year"
                             )
                             insertKantorDB(userDao,
                                 "Tanjung Emas",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean Tanjung Emas".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Jawa Tengah Dan DI Yogyakarta".uppercase(),
                                 "Semarang",
-                                "BAPFP-X/KBC.100106/$year"
+                                "BAPFP-X/KBC.100106/$year",
+                                "DP060100$year"
                             )
                             insertKantorDB(userDao,
                                 "Tanjung Perak",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean Tanjung Perak".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Jawa Timur I".uppercase(),
                                 "Surabaya",
-                                "BAPFP-X/WBC.11/KPP.MP.0112/$year"
+                                "BAPFP-X/KBC.110102/$year",
+                                "DP070100$year"
                             )
                         }
                     }
@@ -207,7 +233,8 @@ class LoginActivity : AppCompatActivity() {
                                         kantor_pegawai = it.kantor,
                                         kanwil_pegawai = it.kanwil,
                                         lokasi_ba_pegawai = it.lokasi_ba,
-                                        format_ba_pegawai = it.format_ba
+                                        format_ba_pegawai = it.format_ba,
+                                        format_3d_pegawai = it.format_3d
                                     ))
                                 }
                             }
@@ -221,14 +248,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun insertKantorDB(userDao: UserDao, kota: String, kantor: String, kanwil: String, lokasiBa: String, formatBa: String) {
+    private fun insertKantorDB(userDao: UserDao, kota: String, kantor: String, kanwil: String, lokasiBa: String, formatBa: String, format3d: String) {
         lifecycleScope.launch {
             userDao.insertKantor(KantorEntity(
                 kota = kota,
                 kantor = kantor,
                 kanwil = kanwil,
                 lokasi_ba = lokasiBa,
-                format_ba = formatBa
+                format_ba = formatBa,
+                format_3d = format3d
             ))
         }
     }

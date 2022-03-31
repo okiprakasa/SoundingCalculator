@@ -2292,7 +2292,8 @@ class TabFragment(private val title: String) : Fragment() {
                                 kantor_pegawai = it.kantor,
                                 kanwil_pegawai = it.kanwil,
                                 lokasi_ba_pegawai = it.lokasi_ba,
-                                format_ba_pegawai = it.format_ba
+                                format_ba_pegawai = it.format_ba,
+                                format_3d_pegawai = it.format_3d
                             ))
                             Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
                             _binding3?.nama?.text?.clear()
@@ -2398,7 +2399,8 @@ class TabFragment(private val title: String) : Fragment() {
                                     kantor_pegawai = it.kantor,
                                     kanwil_pegawai = it.kanwil,
                                     lokasi_ba_pegawai = it.lokasi_ba,
-                                    format_ba_pegawai = it.format_ba
+                                    format_ba_pegawai = it.format_ba,
+                                    format_3d_pegawai = it.format_3d
                                 ))
                                 Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
                                     .show()

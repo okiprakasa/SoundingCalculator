@@ -35,7 +35,11 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         }
 
         holder.tvNama.text = item.perusahaan_sounding[0]
-        holder.tvNoTangki.text = item.nomor_ba
+        if (item.nomor_ba.length < 30) {
+            holder.tvNoTangki.text = item.nomor_ba
+        } else {
+            holder.tvNoTangki.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba.subSequence(0, 18),item.nomor_ba.subSequence(item.nomor_ba.length-8, item.nomor_ba.length))
+        }
         holder.tvWaktu.text = item.tanggal_ba.replace("-"," ")
         holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi_no_tangki, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.bentuk))
         holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_pembulatan.replace(".",",")))
