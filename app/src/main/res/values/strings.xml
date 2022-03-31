@@ -18,7 +18,8 @@
     <string name="sarana_pengangkut">Nama Sarkut</string>
     <string name="no_ba">Nomor BA</string>
     <string name="jumlah_barcon">Jumlah Contoh</string>
-    <string name="hint_jumlah_barcon">Cth: 1 botol (Tidak Wajib)</string>
+    <string name="hint_jumlah_barcon">Cth: 1 botol</string>
+    <string name="text_jumlah_barcon">1 botol</string>
     <string name="hint_sarana_pengangkut">Cth: MT. MESON V01/11</string>
     <string name="hint_no_ba">BAPFP-XX/KBC.150504/2022</string>
     <string name="no_ba_edited">BAPFP-XX/KBC.150504/%s</string>
@@ -116,7 +117,7 @@
     <string name="waktu">Waktu Sounding</string>
     <string name="tanggal_ba">Tanggal BA</string>
     <string name="waktu_barcon">Waktu Aju Contoh</string>
-    <string name="hint_waktu_barcon">Waktu Aju Contoh (Tidak Wajib)</string>
+    <string name="hint_waktu_barcon">Waktu Aju Contoh</string>
     <string name="hint_tanggal_ba">Tanggal Penerbitan BA</string>
     <string name="hint_waktu">Masukkan Waktu Sounding</string>
     <string name="format_waktu">%s %02d:%02d %s</string>
@@ -135,7 +136,7 @@
     <string name="produk">Produk/Jenis Barang</string>
     <string name="hint_produk">Cth: RBD Palm Olein</string>
     <string name="bentuk">Bentuk Fisik/Warna/Bau</string>
-    <string name="hint_bentuk">Cth: Semi padat berwarna putih</string>
+    <string name="hint_bentuk">Cth: Cairan kuning bening</string>
     <string name="no_tangki">Nomor Tangki</string>
     <string name="hint_no_tangki">Cth: R17-A</string>
     <string name="next">Next</string>
@@ -147,7 +148,7 @@
     <string name="hint_nama_pengguna_jasa">Nama Petugas Pengguna Jasa</string>
     <string name="lokasi_sounding">Lokasi Sounding</string>
     <string name="lokasi_ba">Lokasi BA</string>
-    <string name="hint_lokasi_ba">Cth: Kotabaru</string>
+    <string name="hint_lokasi_ba">Cth: %s</string>
     <string name="hint_lokasi_sounding">Cth: Tangki Darat PT. A</string>
     <string name="no_tangki_edited">No Tangki: %s</string>
     <string name="waktu_edited">Pukul %s</string>

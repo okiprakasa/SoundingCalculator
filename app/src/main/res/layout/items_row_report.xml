@@ -20,83 +20,82 @@
         android:baselineAligned="false">
 
         <LinearLayout
-
-
-
             android:layout_weight="9"
             android:orientation="vertical"
-            android:layout_marginEnd="0dp"
             android:layout_marginTop="5dp"
-            android:layout_marginStart="10dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"
+            android:layout_marginEnd="0dp"
             android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_no_tangki"
-                android:text="@string/no_tangki"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="center_vertical"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:fontFamily="@font/nunito"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_tittle">
 
-            <TextView
-                android:id="@+id/tv_waktu"
-                android:text="@string/waktu"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="-4dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:fontFamily="@font/nunito"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_no_tangki"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="@string/no_tangki"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:id="@+id/tv_waktu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-4dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="@string/waktu"
+                    android:textSize="13sp"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_hasil_sounding"
-                android:text="@string/hasil"
-                android:textSize="13sp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="0dp"
-                android:fontFamily="@font/helvetica"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/helvetica"
+                android:text="@string/hasil"
+                android:textSize="13sp"/>
 
             <TextView
                 android:id="@+id/tv_bentuk"
-                android:text="@string/bentuk"
-                android:textSize="13sp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="-5dp"
-                android:fontFamily="@font/helvetica"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="@string/bentuk"
+                android:textSize="13sp"
+                android:fontFamily="@font/helvetica"
                 android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_nama_perusahaan"
-                android:text="@string/perusahaan"
-                android:textSize="13sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
                 android:layout_marginBottom="4dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="14dp"
                 android:layout_marginEnd="4dp"
                 android:fontFamily="@font/helvetica"
-                android:layout_width="match_parent"
-                android:layout_marginTop="-5dp"
-                android:layout_height="wrap_content"/>
+                android:text="@string/perusahaan"
+                android:textSize="13sp"
+                android:textColor="@color/black"/>
 
             <ImageView
                 android:id="@+id/iv_down"

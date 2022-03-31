@@ -32,7 +32,7 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         } else {
             holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,"${item.no_tangki.subSequence(0,7)}..."))
         }
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_sounding.toString()))
+        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_sounding.toString().replace(".",",")))
         holder.tvWaktu.text = hariTanggal
         holder.tvJamSounding.text = String.format(context.getString(R.string.waktu_edited, pukul))
         holder.tvNama.text = item.perusahaan_sounding

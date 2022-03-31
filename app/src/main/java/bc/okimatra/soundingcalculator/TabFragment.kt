@@ -81,10 +81,10 @@ class TabFragment(private val title: String) : Fragment() {
     }
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     private val currentyear = yearFormat.format(cal.time).toString()
-    private val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
-    private val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
-    private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-    private val currentdate = dateFormat.format(cal.time).toString()
+//    private val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
+//    private val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
+//private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+//    private val currentdate = dateFormat.format(cal.time).toString()
 
     private lateinit var ivCvMap: MutableMap<ImageView, CardView>
     private lateinit var ivTvMap: MutableMap<ImageView, TextView>
@@ -135,7 +135,6 @@ class TabFragment(private val title: String) : Fragment() {
             title === "Calculator" -> {
                 var results: List<Double>
                 binding1.apply{
-                    waktu.setText(currentTime)
 
                     waktu.setOnClickListener {
                         dateSetListener = DatePickerDialog.OnDateSetListener {
@@ -401,9 +400,17 @@ class TabFragment(private val title: String) : Fragment() {
             }
             title === "Data" -> {
                 binding2.apply {
-                    tanggalBa.setText(monthConverter(currentdate))
+                    lifecycleScope.launch {
+                        userDao.fetchAllUser().collect {
+                            if (it.isNotEmpty()) {
+                                noBa.setText(it[0].format_ba_pegawai)
+                                noBa.hint = it[0].format_ba_pegawai
+                                lokasiBa.setText(it[0].lokasi_ba_pegawai)
+                                lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), it[0].lokasi_ba_pegawai)
+                            }
+                        }
+                    }
                     noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
-                    noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
 
                     rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                     rawDataTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -571,9 +578,13 @@ class TabFragment(private val title: String) : Fragment() {
                         val produkValue = endSpaceRemover(produk.text.toString())
                         val bentukValue = endSpaceRemover(bentuk.text.toString())
                         val namaSarkutValue = endSpaceRemover(namaSarkut.text.toString())
+                        val jumlahContohValue = endSpaceRemover(jumlahBarcon.text.toString())
+                        val waktuAjuValue = waktuBarcon.text.toString()
                         val noBaValue = endSpaceRemover(noBa.text.toString())
+                        val tanggalBaValue = tanggalBa.text.toString()
                         val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString())
                         val noDokumenValue = endSpaceRemover(noDokumen.text.toString().uppercase())
+                        val hasilPerhitunganValue = hasilPerhitungan.text.toString()
                         val hasilPembulatanValue = endSpaceRemover(hasilPembulatan.text.toString())
                         when {
                             produkValue.isEmpty() -> {
@@ -585,11 +596,20 @@ class TabFragment(private val title: String) : Fragment() {
                             namaSarkutValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Nama Sarkut Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
+                            jumlahContohValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Jumlah Contoh Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            waktuAjuValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Waktu Aju Contoh Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
                             noBaValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Nomor BA Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
-                            noBaValue == String.format(getString(R.string.no_ba_edited),currentyear) -> {
-                                Toast.makeText(requireContext(), "Nomor BA Masih XX", Toast.LENGTH_SHORT).show()
+                            noBaValue.contains("BAPFP-X") -> {
+                                Toast.makeText(requireContext(), "Nomor BA Masih X", Toast.LENGTH_SHORT).show()
+                            }
+                            tanggalBaValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Tanggal BA Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
                             lokasiBaValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Lokasi BA Masih Kosong", Toast.LENGTH_SHORT).show()
@@ -597,8 +617,8 @@ class TabFragment(private val title: String) : Fragment() {
                             noDokumenValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Nomor Form 3D Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
-                            noDokumenValue == String.format(getString(R.string.no_dokumen_edited),currentyear) -> {
-                                Toast.makeText(requireContext(), "Mohon Cek Kembali Nomor Form 3D", Toast.LENGTH_SHORT).show()
+                            noDokumenValue.length < 24 -> {
+                                Toast.makeText(requireContext(), "Nomor Form 3D Belum Lengkap", Toast.LENGTH_SHORT).show()
                             }
                             hasilPembulatanValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Hasil Pembulatan Masih Kosong", Toast.LENGTH_SHORT).show()
@@ -768,47 +788,46 @@ class TabFragment(private val title: String) : Fragment() {
                                             judulFraksi = judulFraksiList as ArrayList<String>,
                                             judulDataTabel = judulDataTabelList as ArrayList<String>,
                                             nama_sarkut = namaSarkutValue,
-                                            tanggal_ba = tanggalBa.text.toString(),
+                                            tanggal_ba = tanggalBaValue,
                                             lokasi_ba = lokasiBaValue,
-                                            jumlah_contoh = endSpaceRemover(jumlahBarcon.text.toString()),
-                                            waktu_aju = endSpaceRemover(waktuBarcon.text.toString()),
+                                            jumlah_contoh = jumlahContohValue,
+                                            waktu_aju = waktuAjuValue,
                                             hasil_pembulatan = hasilPembulatanValue,
-                                            hasil_perhitungan = hasilPerhitungan.text.toString(),
+                                            hasil_perhitungan = hasilPerhitunganValue,
                                             nomor_ba = noBaValue
                                         ))
+
+                                        fabOverSounding = true
+                                        soundingContainer.visibility = View.GONE
+                                        btnAddSounding.visibility = View.GONE
+                                        btnSave.visibility = View.GONE
+                                        dataHasilLayout.visibility = View.GONE
+                                        fabCancelReport.visibility = View.GONE
+                                        fabFinalReport.visibility = View.VISIBLE
+                                        lifecycleScope.launch {
+                                            userDao.fetchAllReport().collect {
+                                                val list = ArrayList(it)
+                                                setupListOfDataIntoRecyclerViewReport(list, userDao)
+                                            }
+                                        }
+                                        _binding2?.produk?.text?.clear()
+                                        _binding2?.bentuk?.text?.clear()
+                                        _binding2?.namaSarkut?.text?.clear()
+                                        _binding2?.hasilPembulatan?.text?.clear()
+                                        noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
+                                        noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
+                                        //Remove added input sounding
+                                        ivTvMap.keys.forEach {
+                                            if (it != addOrClose1) {
+                                                (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                                ivCvMap.remove(it)
+                                                ivSpAwalMap.remove(it)
+                                                ivSpAkhirMap.remove(it)
+                                                ivTvMap.remove(it)
+                                            }
+                                        }
                                     }
                                 }, 150) //wait on loading
-                                fabOverSounding = true
-                                soundingContainer.visibility = View.GONE
-                                btnAddSounding.visibility = View.GONE
-                                btnSave.visibility = View.GONE
-                                dataHasilLayout.visibility = View.GONE
-                                fabCancelReport.visibility = View.GONE
-                                fabFinalReport.visibility = View.VISIBLE
-                                lifecycleScope.launch {
-                                    userDao.fetchAllReport().collect {
-                                        val list = ArrayList(it)
-                                        setupListOfDataIntoRecyclerViewReport(list, userDao)
-                                    }
-                                }
-                                _binding2?.produk?.text?.clear()
-                                _binding2?.bentuk?.text?.clear()
-                                _binding2?.namaSarkut?.text?.clear()
-                                _binding2?.hasilPembulatan?.text?.clear()
-                                _binding2?.jumlahBarcon?.text?.clear()
-                                _binding2?.waktuBarcon?.text?.clear()
-                                noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
-                                noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
-                                //Remove added input sounding
-                                ivTvMap.keys.forEach {
-                                    if (it != addOrClose1) {
-                                        (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
-                                        ivCvMap.remove(it)
-                                        ivSpAwalMap.remove(it)
-                                        ivSpAkhirMap.remove(it)
-                                        ivTvMap.remove(it)
-                                    }
-                                }
                             }
                         }
                     }
