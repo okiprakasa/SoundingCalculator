@@ -83,11 +83,12 @@ class TabFragment(private val title: String) : Fragment() {
     private val currentyear = yearFormat.format(cal.time).toString()
 //    private val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
 //    private val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
-//private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+//    private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
 //    private val currentdate = dateFormat.format(cal.time).toString()
 
     private lateinit var ivCvMap: MutableMap<ImageView, CardView>
     private lateinit var ivTvMap: MutableMap<ImageView, TextView>
+    private lateinit var ivTvHasilMap: MutableMap<ImageView, TextView>
     private lateinit var ivSpAwalMap: MutableMap<ImageView, Spinner>
     private lateinit var ivSpAkhirMap: MutableMap<ImageView, Spinner>
     private lateinit var spAwalDbFinalMap: MutableMap<Spinner, Double>
@@ -748,7 +749,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                 }
                                 Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
-                                    Log.d("okimatra4", tinggiCairanList.toString())
+                                    Log.d("okimatra", tinggiCairanList.toString())
                                     lifecycleScope.launch {
                                         userDao.insertReport(ReportEntity(
                                             tinggi_cairan = tinggiCairanList as ArrayList<Double>,
@@ -819,6 +820,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                 ivSpAwalMap.remove(it)
                                                 ivSpAkhirMap.remove(it)
                                                 ivTvMap.remove(it)
+                                                ivTvHasilMap.remove(it)
                                             }
                                         }
                                     }
@@ -834,6 +836,7 @@ class TabFragment(private val title: String) : Fragment() {
                     hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
                     ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
                     ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                    ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
                     ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
                     ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
                 }
@@ -1381,6 +1384,13 @@ class TabFragment(private val title: String) : Fragment() {
                 spAkhir.layoutParams = akhir1.layoutParams
                 spAkhir.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
 
+                val tvHasil = TextView(requireContext())
+                tvHasil.text = getString(R.string.hasil)
+                tvHasil.textSize = 14f
+                tvHasil.layoutParams = hasilSounding1.layoutParams
+                tvHasil.typeface = ResourcesCompat.getFont(requireContext(), R.font.helvetica)
+                tvHasil.gravity = hasilSounding1.gravity
+
                 llTitle.addView(tvTitleLeft)
                 llTitle.addView(tvTitle)
                 llTitle.addView(ivTitle)
@@ -1391,6 +1401,7 @@ class TabFragment(private val title: String) : Fragment() {
                 ll.addView(tvAkhir)
                 rlETAkhir.addView(spAkhir)
                 ll.addView(rlETAkhir)
+                ll.addView(tvHasil)
                 cv.addView(ll)
                 soundingContainer.addView(cv)
 //
@@ -1413,6 +1424,9 @@ class TabFragment(private val title: String) : Fragment() {
                 ivTvMap += mutableMapOf(ivTitle to tvTitle)
                 ivSpAwalMap += mutableMapOf(ivTitle to spAwal)
                 ivSpAkhirMap += mutableMapOf(ivTitle to spAkhir)
+                ivTvHasilMap += mutableMapOf(ivTitle to tvHasil)
+                spAwalDbFinalMap = mutableMapOf(spAwal to 0.0)
+                spAkhirDbFinalMap = mutableMapOf(spAkhir to 0.0)
                 spinnerListener(binding, ivTitle, userDao) //When clicked will populate spAkhir
             }
         }
@@ -1438,6 +1452,7 @@ class TabFragment(private val title: String) : Fragment() {
     private fun spinnerListener(binding: FragmentTwoBinding, iv: ImageView, userDao: UserDao) {
         val spAwal = ivSpAwalMap[iv]!!
         val spAkhir = ivSpAkhirMap[iv]!!
+        val tvHasil = ivTvHasilMap[iv]!!
         binding.apply {
             spAwal.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -1480,6 +1495,8 @@ class TabFragment(private val title: String) : Fragment() {
                                         soundingAwalTotal += spAwalDbFinalMap[it2]!!
                                     }
                                     hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
+                                    tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${roundDigits(
+                                        spAwalDbFinalMap[spAwal]!! - spAkhirDbFinalMap[spAkhir]!!)}")))
                                 } catch (e: Exception) {
                                     Log.d("okimatra", e.message.toString())
                                 }
@@ -1492,6 +1509,9 @@ class TabFragment(private val title: String) : Fragment() {
                             soundingAwalTotal += spAwalDbFinalMap[it2]!!
                         }
                         hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
+                        tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${roundDigits(
+                            spAwalDbFinalMap[spAwal]!! -
+                                    spAkhirDbFinalMap[spAkhir]!!)}")))
                     }
                 }
             }
@@ -1520,6 +1540,8 @@ class TabFragment(private val title: String) : Fragment() {
                                         soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
                                     }
                                     hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
+                                    tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${roundDigits(
+                                        spAwalDbFinalMap[spAwal]!! - spAkhirDbFinalMap[spAkhir]!!)}")))
                                 } catch (e: Exception) {
                                     Log.d("okimatra", e.message.toString())
                                 }
@@ -1532,6 +1554,8 @@ class TabFragment(private val title: String) : Fragment() {
                             soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
                         }
                         hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
+                        tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${roundDigits(
+                            spAwalDbFinalMap[spAwal]!! - spAkhirDbFinalMap[spAkhir]!!)}")))
                     }
                 }
             }

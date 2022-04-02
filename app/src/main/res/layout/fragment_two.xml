@@ -276,7 +276,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/waktu_barcon"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"/>
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -285,7 +285,6 @@
                                 android:layout_marginTop="3dp"
                                 android:layout_marginEnd="25dp"
                                 android:background="@drawable/rounded_input">
-
 
                                 <androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/waktu_barcon"
@@ -487,10 +486,10 @@
                         android:id="@+id/soundingCardView1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="30dp"
                         android:layout_marginBottom="10dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="5dp">
 
@@ -513,7 +512,7 @@
                                     android:id="@+id/titleLeft"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"/>
+                                    android:layout_weight="1" />
 
                                 <TextView
                                     android:id="@+id/titleSounding1"
@@ -523,7 +522,7 @@
                                     android:fontFamily="@font/nunito"
                                     android:gravity="center_horizontal"
                                     android:text="@string/data_sounding"
-                                    android:textSize="19sp"/>
+                                    android:textSize="19sp" />
 
                                 <ImageView
                                     android:id="@+id/addOrClose1"
@@ -533,7 +532,7 @@
                                     android:contentDescription="@string/top_border"
                                     android:elevation="20dp"
                                     android:src="@drawable/ic_close"
-                                    android:visibility="invisible"/>
+                                    android:visibility="invisible" />
                             </LinearLayout>
 
                             <TextView
@@ -544,7 +543,7 @@
                                 android:layout_marginTop="20dp"
                                 android:fontFamily="@font/helvetica"
                                 android:text="@string/awal"
-                                android:textSize="14sp"/>
+                                android:textSize="14sp" />
 
                             <RelativeLayout
                                 android:id="@+id/soundingRL"
@@ -589,6 +588,18 @@
                                     android:spinnerMode="dropdown" />
                             </RelativeLayout>
 
+                            <TextView
+                                android:id="@+id/hasil_sounding_1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginEnd="25dp"
+                                android:fontFamily="@font/helvetica"
+                                android:gravity="center_horizontal"
+                                android:text="@string/hasil"
+                                android:textSize="14sp" />
+
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
@@ -601,10 +612,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="20dp"
+                    android:visibility="visible"
                     app:cardElevation="5dp">
 
                     <LinearLayout
@@ -621,7 +629,7 @@
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
                             android:text="@string/hasil"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
