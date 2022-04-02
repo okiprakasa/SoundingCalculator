@@ -35,7 +35,7 @@
                 android:background="@drawable/rounded_tittle">
 
                 <TextView
-                    android:id="@+id/tv_no_tangki"
+                    android:id="@+id/tv_no_ba"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -70,6 +70,7 @@
                 android:layout_marginEnd="4dp"
                 android:fontFamily="@font/helvetica"
                 android:text="@string/hasil"
+                android:textColor="@color/black"
                 android:textSize="13sp"/>
 
             <TextView
@@ -85,17 +86,17 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/tv_nama_perusahaan"
+                android:id="@+id/tv_perusahaan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-5dp"
-                android:layout_marginBottom="4dp"
                 android:layout_marginStart="14dp"
+                android:layout_marginTop="-5dp"
                 android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/helvetica"
                 android:text="@string/perusahaan"
-                android:textSize="13sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="13sp" />
 
             <ImageView
                 android:id="@+id/iv_down"

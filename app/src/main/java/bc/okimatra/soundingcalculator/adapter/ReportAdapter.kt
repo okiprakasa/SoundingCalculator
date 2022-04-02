@@ -34,15 +34,15 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
             }
         }
 
-        holder.tvNama.text = item.perusahaan_sounding[0]
         if (item.nomor_ba.length < 30) {
-            holder.tvNoTangki.text = item.nomor_ba
+            holder.tvNoBa.text = item.nomor_ba
         } else {
-            holder.tvNoTangki.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba.subSequence(0, 18),item.nomor_ba.subSequence(item.nomor_ba.length-8, item.nomor_ba.length))
+            holder.tvNoBa.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba.subSequence(0, 18),item.nomor_ba.subSequence(item.nomor_ba.length-8, item.nomor_ba.length))
         }
         holder.tvWaktu.text = item.tanggal_ba.replace("-"," ")
-        holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi_no_tangki, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.bentuk))
         holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_perhitungan.replace(".",",")))
+        holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi, item.produk, item.bentuk, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki))))
+        holder.tvPerusahaan.text = item.perusahaan_sounding[0]
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
@@ -73,8 +73,8 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
 
     class ViewHolder(binding: ItemsRowReportBinding) : RecyclerView.ViewHolder(binding.root) {
         val llMain = binding.llMain
-        val tvNama = binding.tvNamaPerusahaan
-        val tvNoTangki = binding.tvNoTangki
+        val tvPerusahaan = binding.tvPerusahaan
+        val tvNoBa = binding.tvNoBa
         val tvWaktu = binding.tvWaktu
         val tvHasil = binding.tvHasilSounding
         val tvBentuk = binding.tvBentuk
