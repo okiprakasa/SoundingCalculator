@@ -46,6 +46,8 @@
     <string name="tambah_sounding">TAMBAH INPUT SOUNDING</string>
     <string name="i">%s</string>
     <string name="hasil">Hasil: 0.000 MT</string>
+    <string name="hasil_final">Hasil Akhir: 0.000 MT</string>
+    <string name="hasil_final_edited">Hasil Akhir: %s MT</string>
     <string name="kota">Kotabaru</string>
     <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>
     <string name="volume_app">Volume App: 0.000 L</string>

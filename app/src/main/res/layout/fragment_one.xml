@@ -574,7 +574,6 @@
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
-
                     <TextView
                         android:id="@+id/hasil_volume"
                         android:layout_width="match_parent"

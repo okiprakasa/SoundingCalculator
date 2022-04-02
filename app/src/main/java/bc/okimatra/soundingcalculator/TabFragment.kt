@@ -381,6 +381,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                             _binding1?.tabelKalibrasi2?.text?.clear()
                                                             _binding1?.noTangki?.text?.clear()
                                                             _binding1?.lokasiSounding?.text?.clear()
+                                                            _binding1?.waktu?.text?.clear()
                                                             backFunction()
                                                         }
                                                     } catch (e: Exception) {
@@ -584,8 +585,7 @@ class TabFragment(private val title: String) : Fragment() {
                         val tanggalBaValue = tanggalBa.text.toString()
                         val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString())
                         val noDokumenValue = endSpaceRemover(noDokumen.text.toString().uppercase())
-                        val hasilPerhitunganValue = hasilPerhitungan.text.toString()
-                        val hasilPembulatanValue = endSpaceRemover(hasilPembulatan.text.toString())
+                        val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir: ","").replace(" MT","")
                         when {
                             produkValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Produk/Jenis Barang Masih Kosong", Toast.LENGTH_SHORT).show()
@@ -619,9 +619,6 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                             noDokumenValue.length < 24 -> {
                                 Toast.makeText(requireContext(), "Nomor Form 3D Belum Lengkap", Toast.LENGTH_SHORT).show()
-                            }
-                            hasilPembulatanValue.isEmpty() -> {
-                                Toast.makeText(requireContext(), "Hasil Pembulatan Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
                             else -> {
                                 val listSounding = ArrayList<String>()
@@ -792,7 +789,6 @@ class TabFragment(private val title: String) : Fragment() {
                                             lokasi_ba = lokasiBaValue,
                                             jumlah_contoh = jumlahContohValue,
                                             waktu_aju = waktuAjuValue,
-                                            hasil_pembulatan = hasilPembulatanValue,
                                             hasil_perhitungan = hasilPerhitunganValue,
                                             nomor_ba = noBaValue
                                         ))
@@ -813,7 +809,6 @@ class TabFragment(private val title: String) : Fragment() {
                                         _binding2?.produk?.text?.clear()
                                         _binding2?.bentuk?.text?.clear()
                                         _binding2?.namaSarkut?.text?.clear()
-                                        _binding2?.hasilPembulatan?.text?.clear()
                                         noDokumen.setText(String.format(getString(R.string.no_dokumen_edited),currentyear))
                                         noBa.setText(String.format(getString(R.string.no_ba_edited),currentyear))
                                         //Remove added input sounding
@@ -836,7 +831,7 @@ class TabFragment(private val title: String) : Fragment() {
                     addClickListener(binding2, btnAddSounding, userDao)
                     spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
                     spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
-                    hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
+                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
                     ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
                     ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
                     ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
@@ -1484,15 +1479,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     spAwalDbFinalMap.keys.forEach { it2 ->
                                         soundingAwalTotal += spAwalDbFinalMap[it2]!!
                                     }
-                                    hasilPerhitungan.setText(
-                                        zeroRemover(
-                                            "${
-                                                roundDigits(
-                                                    soundingAwalTotal - soundingAkhirlTotal
-                                                )
-                                            }"
-                                        )
-                                    )
+                                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
                                 } catch (e: Exception) {
                                     Log.d("okimatra", e.message.toString())
                                 }
@@ -1504,7 +1491,7 @@ class TabFragment(private val title: String) : Fragment() {
                         spAwalDbFinalMap.keys.forEach {it2 ->
                             soundingAwalTotal += spAwalDbFinalMap[it2]!!
                         }
-                        hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
+                        hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
                     }
                 }
             }
@@ -1532,15 +1519,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     spAkhirDbFinalMap.keys.forEach { it2 ->
                                         soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
                                     }
-                                    hasilPerhitungan.setText(
-                                        zeroRemover(
-                                            "${
-                                                roundDigits(
-                                                    soundingAwalTotal - soundingAkhirlTotal
-                                                )
-                                            }"
-                                        )
-                                    )
+                                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
                                 } catch (e: Exception) {
                                     Log.d("okimatra", e.message.toString())
                                 }
@@ -1552,7 +1531,7 @@ class TabFragment(private val title: String) : Fragment() {
                         spAkhirDbFinalMap.keys.forEach { it2 ->
                             soundingAkhirlTotal += spAkhirDbFinalMap[it2]!!
                         }
-                        hasilPerhitungan.setText(zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}"))
+                        hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingAwalTotal - soundingAkhirlTotal)}")))
                     }
                 }
             }

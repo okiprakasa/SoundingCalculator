@@ -42,7 +42,7 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         }
         holder.tvWaktu.text = item.tanggal_ba.replace("-"," ")
         holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi_no_tangki, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.bentuk))
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_pembulatan.replace(".",",")))
+        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_perhitungan.replace(".",",")))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
