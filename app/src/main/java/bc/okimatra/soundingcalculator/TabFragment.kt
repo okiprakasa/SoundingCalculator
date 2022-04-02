@@ -502,7 +502,7 @@ class TabFragment(private val title: String) : Fragment() {
                         fabFinalReport.visibility = View.GONE
                         rvFinalList.visibility = View.GONE
                         tvNoFinalDataAvailable.visibility = View.GONE
-                        dataHasilLayout.visibility = View.VISIBLE
+                        hasilPerhitungan.visibility = View.VISIBLE
                         fabCancelReport.visibility = View.VISIBLE
                         soundingContainer.visibility = View.VISIBLE
                         btnAddSounding.visibility = View.VISIBLE
@@ -517,7 +517,7 @@ class TabFragment(private val title: String) : Fragment() {
                             soundingContainer.visibility = View.GONE
                             btnAddSounding.visibility = View.GONE
                             btnSave.visibility = View.GONE
-                            dataHasilLayout.visibility = View.GONE
+                            hasilPerhitungan.visibility = View.GONE
                             fabFinalReport.visibility = View.VISIBLE
                             rvFinalList.visibility = View.VISIBLE
                             tvNoFinalDataAvailable.visibility = View.VISIBLE
@@ -798,7 +798,7 @@ class TabFragment(private val title: String) : Fragment() {
                                         soundingContainer.visibility = View.GONE
                                         btnAddSounding.visibility = View.GONE
                                         btnSave.visibility = View.GONE
-                                        dataHasilLayout.visibility = View.GONE
+                                        hasilPerhitungan.visibility = View.GONE
                                         fabCancelReport.visibility = View.GONE
                                         fabFinalReport.visibility = View.VISIBLE
                                         lifecycleScope.launch {
