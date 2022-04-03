@@ -39,6 +39,7 @@ data class ReportEntity(
     val judulKalibrasi2: ArrayList<String> = arrayListOf(""),
     val judulFraksi: ArrayList<String> = arrayListOf(""),
     val judulDataTabel: ArrayList<String> = arrayListOf(""),
+    val hasil: ArrayList<String> = arrayListOf(""),
     val hasil_perhitungan: String = "",
     val nomor_dokumen: String = "",
     val produk: String = "",

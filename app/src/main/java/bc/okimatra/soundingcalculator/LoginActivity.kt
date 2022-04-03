@@ -76,96 +76,96 @@ class LoginActivity : AppCompatActivity() {
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Balikpapan".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Timur".uppercase(),
                                 "Balikpapan",
-                                "BAPFP-X/KBC.160107/$year",
-                                "DP100300/$year"
+                                "BAPFP-X/KBC.160107/",
+                                "DP100300"
                             )
                             insertKantorDB(userDao,
                                 "Banjarmasin",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Banjarmasin".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Banjarmasin",
-                                "BAPFP-X/KBC.150105/$year",
-                                "DP100100$year"
+                                "BAPFP-X/KBC.150105/",
+                                "DP100100"
                             )
                             insertKantorDB(userDao,
                                 "Bitung",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Bitung".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Sulawesi Bagian Utara".uppercase(),
                                 "Bitung",
-                                "BAPFP-X/KBC.180404/$year",
-                                "DP111100$year"
+                                "BAPFP-X/KBC.180404/",
+                                "DP111100"
                             )
                             insertKantorDB(userDao,
                                 "Bontang",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Bontang".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Timur".uppercase(),
                                 "Bontang",
-                                "BAPFP-X/KBC.1603/$year",
-                                "DP100600$year"
+                                "BAPFP-X/KBC.1603/",
+                                "DP100600"
                             )
                             insertKantorDB(userDao,
                                 "Gresik",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Gresik".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Jawa Timur I".uppercase(),
                                 "Gresik",
-                                "BAPFP-X/KBC.110408/$year",
-                                "DP070300$year"
+                                "BAPFP-X/KBC.110408/",
+                                "DP070300"
                             )
                             insertKantorDB(userDao,
                                 "Kotabaru",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Kotabaru".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Kotabaru",
-                                "BAPFP-X/KBC.150504/$year",
-                                "DP100200$year"
+                                "BAPFP-X/KBC.150504/",
+                                "DP100200"
                             )
                             insertKantorDB(userDao,
                                 "Pangkalan Bun",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Pangkalan Bun".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Pangkalan Bun",
-                                "BAPFP-X/KBC.1503/$year",
-                                "DP090800$year"
+                                "BAPFP-X/KBC.1503/",
+                                "DP090800"
                             )
                             insertKantorDB(userDao,
                                 "Pantoloan",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Pantoloan".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Sulawesi Bagian Utara".uppercase(),
                                 "Pasangkayu",
-                                "BAPFP-X/KBC.180104/$year",
-                                "DP110800$year"
+                                "BAPFP-X/KBC.180104/",
+                                "DP110800"
                             )
                             insertKantorDB(userDao,
                                 "Samarinda",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean B Samarinda".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Timur".uppercase(),
                                 "Samarinda",
-                                "BAPFP-X/KBC.1602/$year",
-                                "DP100500$year"
+                                "BAPFP-X/KBC.1602/",
+                                "DP100500"
                             )
                             insertKantorDB(userDao,
                                 "Sampit",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean C Sampit".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Kalimantan Bagian Selatan".uppercase(),
                                 "Sampit, Kotawaringin Timur",
-                                "BAPFP-X/KBC.1502/$year",
-                                "DP090700$year"
+                                "BAPFP-X/KBC.1502/",
+                                "DP090700"
                             )
                             insertKantorDB(userDao,
                                 "Tanjung Emas",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean Tanjung Emas".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Jawa Tengah Dan DI Yogyakarta".uppercase(),
                                 "Semarang",
-                                "BAPFP-X/KBC.100106/$year",
-                                "DP060100$year"
+                                "BAPFP-X/KBC.100106/",
+                                "DP060100"
                             )
                             insertKantorDB(userDao,
                                 "Tanjung Perak",
                                 "Kantor Pengawasan Dan Pelayanan Bea Dan Cukai Tipe Madya Pabean Tanjung Perak".uppercase(),
                                 "Kantor Wilayah Direktorat Jenderal Bea Dan Cukai Jawa Timur I".uppercase(),
                                 "Surabaya",
-                                "BAPFP-X/KBC.110102/$year",
-                                "DP070100$year"
+                                "BAPFP-X/KBC.110102/",
+                                "DP070100"
                             )
                         }
                     }
