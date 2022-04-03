@@ -97,6 +97,7 @@ class TabFragment(private val title: String) : Fragment() {
     private var soundingTotal = 0.0
     private var counterSounding = 1
     private var fabOverSounding = true
+    private var mapInitializer = true
 
     private var baseFontRegular  = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
     private var regularFont = Font(Font.FontFamily.HELVETICA, 11f, Font.NORMAL, BaseColor.BLACK)
@@ -421,6 +422,18 @@ class TabFragment(private val title: String) : Fragment() {
                     svFinalList.visibility = View.GONE
                     tvNoFinalDataAvailable.visibility = View.GONE
 
+                    if (mapInitializer) {
+                        spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                        spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                        ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                        ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                        ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                        ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                        ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                        ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                        mapInitializer = false
+                    }
+
                     Handler(Looper.getMainLooper()).postDelayed({
                         lifecycleScope.launch {
                             userDao.fetchAllSounding().collect {
@@ -522,8 +535,8 @@ class TabFragment(private val title: String) : Fragment() {
                             produk.text?.clear()
                             bentuk.text?.clear()
                             namaSarkut.text?.clear()
-                            awal1.setSelection(0)
-                            akhir1.setSelection(0)
+                            waktuBarcon.text?.clear()
+                            tanggalBa.text?.clear()
                             lifecycleScope.launch {
                                 userDao.fetchAllUser().collect { itUser ->
                                     if (itUser.isNotEmpty()) {
@@ -569,6 +582,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     spAkhirDbFinalMap.remove(it)
                                 }
                             }
+                            counterSounding = 1
                             dialogInterface.dismiss()
                         }
                         builder.setNegativeButton("No") { dialogInterface, _ ->
@@ -711,6 +725,8 @@ class TabFragment(private val title: String) : Fragment() {
                                     hasilList[z] = ivHasilMap[it].toString()
                                     z++
                                 }
+                                z = 0
+                                counterSounding = 1
                                 for (i in listSounding.indices) {
                                     if (listSounding[i] != "Empty In; 0" && listSounding[i] != "Empty Out; 0") {
                                         lifecycleScope.launch {
@@ -859,8 +875,8 @@ class TabFragment(private val title: String) : Fragment() {
                                         produk.text?.clear()
                                         bentuk.text?.clear()
                                         namaSarkut.text?.clear()
-                                        awal1.setSelection(0)
-                                        akhir1.setSelection(0)
+                                        waktuBarcon.text?.clear()
+                                        tanggalBa.text?.clear()
                                         lifecycleScope.launch {
                                             userDao.fetchAllUser().collect { itUser ->
                                                 if (itUser.isNotEmpty()) {
@@ -913,16 +929,8 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
-                    addClickListener(binding2, btnAddSounding, userDao)
-                    spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
-                    spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
-                    ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
                     hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
-                    ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
-                    ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
-                    ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
-                    ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
-                    ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                    addClickListener(binding2, btnAddSounding, userDao)
                 }
             }
             else -> {
@@ -1165,10 +1173,10 @@ class TabFragment(private val title: String) : Fragment() {
                                     val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
                                     val outPath = requireContext().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
                                     Log.d("loc", outPath)
-//                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
+                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                     doc.open()
                                     doc.setMargins(0f, 0f, 40f, 40f)
-                                    headerFinalReport(doc)
+                                    headerFinalReport(doc, writer)
 //                                    bodyFinalReport(doc, it)
                                     doc.close()
 
@@ -1203,7 +1211,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-    private fun headerFinalReport(doc: Document) {
+    private fun headerFinalReport(doc: Document, writer: PdfWriter) {
         doc.add(Paragraph("\n\n", fontArialRegular))
         val table1 = PdfPTable(1)
         table1.setWidths(floatArrayOf(1f))
@@ -1410,6 +1418,7 @@ class TabFragment(private val title: String) : Fragment() {
                 ivTvMap.remove(iv)
                 ivSpAwalMap.remove(iv)
                 ivSpAkhirMap.remove(iv)
+                ivHasilMap.remove(iv)
                 ivTvMap.keys.forEach {
                     ivTvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
                     i++

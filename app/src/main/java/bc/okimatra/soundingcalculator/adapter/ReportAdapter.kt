@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
 import bc.okimatra.soundingcalculator.databinding.ItemsRowReportBinding
 import bc.okimatra.soundingcalculator.datasetup.ReportEntity
+import bc.okimatra.soundingcalculator.endSpaceRemover
 
 class ReportAdapter(private val items: ArrayList<ReportEntity>,
                     private val deleteListener:(id:Int)->Unit,
@@ -29,9 +30,14 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
         for (i in noTangkiUnik.indices) {
             if (i!=0) {
                 noSemuaTangki += ", ${noTangkiUnik[i].uppercase()}"
-            } else {
+            }
+            else {
                 noSemuaTangki = noTangkiUnik[i]
             }
+        }
+        noSemuaTangki = endSpaceRemover(noSemuaTangki)
+        if (noSemuaTangki.subSequence(noSemuaTangki.length-1,noSemuaTangki.length) == ",") {
+            noSemuaTangki = noSemuaTangki.subSequence(0, noSemuaTangki.length-1).toString()
         }
 
         if (item.nomor_ba.length < 30) {
@@ -40,9 +46,9 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
             holder.tvNoBa.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba.subSequence(0, 18),item.nomor_ba.subSequence(item.nomor_ba.length-8, item.nomor_ba.length))
         }
         holder.tvWaktu.text = item.tanggal_ba.replace("-"," ")
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_perhitungan.replace(".",",")))
-        holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi, item.produk, item.bentuk, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki))))
-        holder.tvPerusahaan.text = item.perusahaan_sounding[0]
+        holder.tvHasil.text = item.hasil_perhitungan.replace(".",",")
+        holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi, item.produk, item.bentuk))
+        holder.tvPerusahaan.text = String.format(context.getString(R.string.deskripsi, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.perusahaan_sounding[0]))
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
 
