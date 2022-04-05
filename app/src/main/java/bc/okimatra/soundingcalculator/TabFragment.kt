@@ -1179,7 +1179,8 @@ class TabFragment(private val title: String) : Fragment() {
 
                                     val file = File(outPath)
                                     file.listFiles()
-                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
+                                    val path: Uri = FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
+                                        BuildConfig.APPLICATION_ID + ".provider", file)
                                     try {
                                         val intent = Intent(Intent.ACTION_VIEW)
                                         intent.setDataAndType(path, "application/pdf")
@@ -1188,7 +1189,6 @@ class TabFragment(private val title: String) : Fragment() {
                                     } catch (e: ActivityNotFoundException) {
                                         Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
                                     }
-
 
                                 } else {
                                     Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
@@ -1213,7 +1213,7 @@ class TabFragment(private val title: String) : Fragment() {
         val table1 = PdfPTable(1)
         table1.setWidths(floatArrayOf(1f))
         table1.isLockedWidth = true
-        table1.totalWidth = PageSize.A4.width-80f
+        table1.totalWidth = PageSize.A4.width-50f
 
         val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
         header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKA\n", fontArialRegular))
@@ -1225,8 +1225,8 @@ class TabFragment(private val title: String) : Fragment() {
         tittleCell.verticalAlignment = Element.ALIGN_CENTER
         tittleCell.paddingBottom = 10f
         tittleCell.paddingTop = 10f
-        tittleCell.paddingLeft = 10f
-        tittleCell.paddingRight = 10f
+        tittleCell.paddingLeft = 6f
+        tittleCell.paddingRight = 6f
         table1.addCell(tittleCell)
         doc.add(table1)
     }
@@ -1564,7 +1564,9 @@ class TabFragment(private val title: String) : Fragment() {
 
                                     val file = File(outPath)
                                     file.listFiles()
-                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),BuildConfig.APPLICATION_ID + ".provider", file)
+                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
+                                        BuildConfig.APPLICATION_ID + ".provider", file)
+//                                        BuildConfig.LIBRARY_PACKAGE_NAME + ".provider", file)
                                     try {
                                         val intent = Intent(Intent.ACTION_VIEW)
                                         intent.setDataAndType(path, "application/pdf")
