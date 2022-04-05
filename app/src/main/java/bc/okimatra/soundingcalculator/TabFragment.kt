@@ -1216,7 +1216,7 @@ class TabFragment(private val title: String) : Fragment() {
         table1.totalWidth = PageSize.A4.width-50f
 
         val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
-        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKA\n", fontArialRegular))
+        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKAI\n", fontArialRegular))
         header.add(Paragraph("${it.kanwil_pegawai_final}\n", fontArialRegular))
         header.add(Paragraph("${it.kantor_pegawai_final}\n", fontArialRegular))
         header.alignment = Element.ALIGN_LEFT
@@ -1227,6 +1227,7 @@ class TabFragment(private val title: String) : Fragment() {
         tittleCell.paddingTop = 10f
         tittleCell.paddingLeft = 6f
         tittleCell.paddingRight = 6f
+//        tittleCell.setBorder(Rectangle.BOTTOM | Rectangle.RIGHT)
         table1.addCell(tittleCell)
         doc.add(table1)
     }
