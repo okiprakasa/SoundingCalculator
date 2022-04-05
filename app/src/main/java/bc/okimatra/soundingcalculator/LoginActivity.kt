@@ -9,12 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import bc.okimatra.soundingcalculator.databinding.LoginPageBinding
 import bc.okimatra.soundingcalculator.datasetup.KantorEntity
-import bc.okimatra.soundingcalculator.datasetup.UserApp
 import bc.okimatra.soundingcalculator.datasetup.PegawaiEntity
+import bc.okimatra.soundingcalculator.datasetup.UserApp
 import bc.okimatra.soundingcalculator.datasetup.UserDao
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -185,6 +186,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             }
+
 
             btnStart.setOnClickListener {
                 val nama = endSpaceRemover(inputNama.text.toString())
