@@ -41,7 +41,6 @@ data class ReportEntity(
     val judulDataTabel: ArrayList<String> = arrayListOf(""),
     val hasil: ArrayList<String> = arrayListOf(""),
     val hasil_perhitungan: String = "",
-    val nomor_dokumen: String = "",
     val produk: String = "",
     val bentuk: String = "",
     val nama_sarkut: String = "",
@@ -49,5 +48,7 @@ data class ReportEntity(
     val tanggal_ba: String = "",
     val lokasi_ba: String = "",
     val jumlah_contoh: String = "",
-    val waktu_aju: String = ""
+    val waktu_aju: String = "",
+    val kantor_pegawai_final: String = "",
+    val kanwil_pegawai_final: String = ""
         )

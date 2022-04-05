@@ -335,6 +335,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                 userDao.fetchUserByName(petugasSounding).collect {
                                                     try {
                                                         val nip = it.nip
+                                                        val kantorPegawai = it.kantor_pegawai
+                                                        val kanwilPegawai = it.kanwil_pegawai
                                                         lifecycleScope.launch {
                                                             userDao.insertSounding(SoundingEntity(
                                                                 tinggi_cairan = tinggiCairanAngka,
@@ -366,7 +368,9 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 judulKalibrasi1 = judulKalibrasi1,
                                                                 judulKalibrasi2 = judulKalibrasi2,
                                                                 judulFraksi = judulFraksi,
-                                                                judulDataTabel = dataTabel
+                                                                judulDataTabel = dataTabel,
+                                                                kantor_pegawai = kantorPegawai,
+                                                                kanwil_pegawai = kanwilPegawai
                                                             ))
                                                             Toast.makeText(requireContext(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                                                             _binding1?.tinggiCairan?.text?.clear()
@@ -407,8 +411,6 @@ class TabFragment(private val title: String) : Fragment() {
                                 noBa.hint = String.format(getString(R.string.number_0,it[0].format_ba_pegawai, currentyear))
                                 lokasiBa.setText(it[0].lokasi_ba_pegawai)
                                 lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), it[0].lokasi_ba_pegawai)
-                                noDokumen.setText(String.format(getString(R.string.number_0,it[0].format_3d_pegawai, currentyear)))
-                                noDokumen.hint = String.format(getString(R.string.number_0,it[0].format_3d_pegawai, currentyear))
                             }
                         }
                     }
@@ -544,8 +546,6 @@ class TabFragment(private val title: String) : Fragment() {
                                         noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_pegawai, currentyear))
                                         lokasiBa.setText(itUser[0].lokasi_ba_pegawai)
                                         lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser[0].lokasi_ba_pegawai)
-                                        noDokumen.setText(String.format(getString(R.string.number_0,itUser[0].format_3d_pegawai, currentyear)))
-                                        noDokumen.hint = String.format(getString(R.string.number_0,itUser[0].format_3d_pegawai, currentyear))
                                     }
                                 }
                             }
@@ -647,7 +647,6 @@ class TabFragment(private val title: String) : Fragment() {
                         val noBaValue = endSpaceRemover(noBa.text.toString())
                         val tanggalBaValue = tanggalBa.text.toString()
                         val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString())
-                        val noDokumenValue = endSpaceRemover(noDokumen.text.toString().uppercase())
                         val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir: ","").replace(".",",")
                         when {
                             produkValue.isEmpty() -> {
@@ -676,12 +675,6 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                             lokasiBaValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Lokasi BA Masih Kosong", Toast.LENGTH_SHORT).show()
-                            }
-                            noDokumenValue.isEmpty() -> {
-                                Toast.makeText(requireContext(), "Nomor Form 3D Masih Kosong", Toast.LENGTH_SHORT).show()
-                            }
-                            noDokumenValue.length < 24 -> {
-                                Toast.makeText(requireContext(), "Nomor Form 3D Belum Lengkap", Toast.LENGTH_SHORT).show()
                             }
                             else -> {
                                 val listSounding = ArrayList<String>()
@@ -720,6 +713,8 @@ class TabFragment(private val title: String) : Fragment() {
                                 val judulFraksiList = MutableList(listSounding.size) {""}
                                 val judulDataTabelList = MutableList(listSounding.size) {""}
                                 val hasilList = MutableList((listSounding.size)/2) {""}
+                                var kantorPegawai = ""
+                                var kanwilPegawai = ""
                                 var z = 0
                                 ivHasilMap.keys.forEach {
                                     hasilList[z] = ivHasilMap[it].toString()
@@ -778,6 +773,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                     judulKalibrasi2List[i] = it.judulKalibrasi2
                                                     judulFraksiList[i] = it.judulFraksi
                                                     judulDataTabelList[i] = it.judulDataTabel
+                                                    kantorPegawai = it.kantor_pegawai
+                                                    kanwilPegawai = it.kanwil_pegawai
                                                 } catch (e: Exception) {
                                                     Log.d("okimatra", e.message.toString())
                                                 }
@@ -847,7 +844,6 @@ class TabFragment(private val title: String) : Fragment() {
                                             alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
                                             lokasi_sounding = lokasiSoundingList as ArrayList<String>,
                                             waktu = waktuList as ArrayList<String>,
-                                            nomor_dokumen = noDokumenValue,
                                             produk = produkValue,
                                             bentuk = bentukValue,
                                             waktu_date = Date().time,
@@ -862,9 +858,12 @@ class TabFragment(private val title: String) : Fragment() {
                                             waktu_aju = waktuAjuValue,
                                             hasil = hasilList as ArrayList<String>,
                                             hasil_perhitungan = hasilPerhitunganValue,
-                                            nomor_ba = noBaValue
+                                            nomor_ba = noBaValue,
+                                            kantor_pegawai_final = kantorPegawai,
+                                            kanwil_pegawai_final = kanwilPegawai
                                         ))
-
+                                        kantorPegawai = ""
+                                        kanwilPegawai = ""
                                         fabOverSounding = true
                                         soundingContainer.visibility = View.GONE
                                         btnAddSounding.visibility = View.GONE
@@ -884,8 +883,6 @@ class TabFragment(private val title: String) : Fragment() {
                                                     noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_pegawai, currentyear))
                                                     lokasiBa.setText(itUser[0].lokasi_ba_pegawai)
                                                     lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser[0].lokasi_ba_pegawai)
-                                                    noDokumen.setText(String.format(getString(R.string.number_0,itUser[0].format_3d_pegawai, currentyear)))
-                                                    noDokumen.hint = String.format(getString(R.string.number_0,itUser[0].format_3d_pegawai, currentyear))
                                                 }
                                             }
                                         }
@@ -1176,7 +1173,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
                                     doc.open()
                                     doc.setMargins(0f, 0f, 40f, 40f)
-                                    headerFinalReport(doc, writer)
+                                    headerFinalReport(doc, writer, it)
 //                                    bodyFinalReport(doc, it)
                                     doc.close()
 
@@ -1211,7 +1208,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-    private fun headerFinalReport(doc: Document, writer: PdfWriter) {
+    private fun headerFinalReport(doc: Document, writer: PdfWriter, it: ReportEntity) {
         doc.add(Paragraph("\n\n", fontArialRegular))
         val table1 = PdfPTable(1)
         table1.setWidths(floatArrayOf(1f))
@@ -1219,7 +1216,9 @@ class TabFragment(private val title: String) : Fragment() {
         table1.totalWidth = PageSize.A4.width-80f
 
         val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
-        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKAI", fontArialRegular))
+        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKA\n", fontArialRegular))
+        header.add(Paragraph("${it.kanwil_pegawai_final}\n", fontArialRegular))
+        header.add(Paragraph("${it.kantor_pegawai_final}\n", fontArialRegular))
         header.alignment = Element.ALIGN_LEFT
         val tittleCell = PdfPCell(header)
         tittleCell.horizontalAlignment = Element.ALIGN_LEFT
@@ -3084,6 +3083,8 @@ class TabFragment(private val title: String) : Fragment() {
                                 userDao.fetchUserByName(petugasSounding).collect {
                                     try {
                                         val nip = it.nip
+                                        val kantorPegawai = it.kantor_pegawai
+                                        val kanwilPegawai = it.kanwil_pegawai
                                         lifecycleScope.launch {
                                             userDao.updateSounding(SoundingEntity(id,
                                                 tinggi_cairan = tinggiCairanAngka,
@@ -3115,7 +3116,9 @@ class TabFragment(private val title: String) : Fragment() {
                                                 judulKalibrasi1 = judulKalibrasi1,
                                                 judulKalibrasi2 = judulKalibrasi2,
                                                 judulFraksi = judulFraksi,
-                                                judulDataTabel = dataTabel
+                                                judulDataTabel = dataTabel,
+                                                kantor_pegawai = kantorPegawai,
+                                                kanwil_pegawai = kanwilPegawai
                                             ))
                                             Toast.makeText(requireContext(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
                                             updateDialog.dismiss()

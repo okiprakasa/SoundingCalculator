@@ -38,5 +38,7 @@ data class SoundingEntity(
     val judulKalibrasi1: String = "",
     val judulKalibrasi2: String = "",
     val judulFraksi: String = "",
-    val judulDataTabel: String = ""
+    val judulDataTabel: String = "",
+    val kantor_pegawai: String = "",
+    val kanwil_pegawai: String = ""
         )
