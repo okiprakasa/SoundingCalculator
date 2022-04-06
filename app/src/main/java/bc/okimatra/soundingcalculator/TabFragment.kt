@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
@@ -34,8 +35,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import bc.okimatra.soundingcalculator.adapter.*
 import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
-import com.itextpdf.text.*
-import com.itextpdf.text.pdf.*
+import com.itextpdf.io.font.FontProgramFactory
+import com.itextpdf.io.font.PdfEncodings
+import com.itextpdf.io.font.constants.StandardFonts
+import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.kernel.colors.DeviceRgb
+import com.itextpdf.kernel.font.PdfFontFactory
+import com.itextpdf.kernel.geom.PageSize
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfWriter
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.borders.Border
+import com.itextpdf.layout.element.*
+import com.itextpdf.layout.properties.HorizontalAlignment
+import com.itextpdf.layout.properties.TextAlignment
+import com.itextpdf.layout.properties.VerticalAlignment
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -47,12 +62,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToLong
 
 
 class TabFragment(private val title: String) : Fragment() {
+
     private var _binding1: FragmentOneBinding? = null
     private val binding1 get() = _binding1!!
     private var _binding2: FragmentTwoBinding? = null
@@ -99,16 +114,16 @@ class TabFragment(private val title: String) : Fragment() {
     private var fabOverSounding = true
     private var mapInitializer = true
 
-    private var baseFontRegular  = BaseFont.createFont("res/font/nunito.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var regularFont = Font(Font.FontFamily.HELVETICA, 11f, Font.NORMAL, BaseColor.BLACK)
-    private var appFontTiny = Font(baseFontRegular, 2f)
-    private var appFontMiddle = Font(baseFontRegular, 8f)
-    private var appFontSemiBig = Font(Font.FontFamily.HELVETICA, 13f, Font.BOLD, BaseColor.BLACK)
-    private var baseFontBig = BaseFont.createFont("res/font/nexa.otf", "UTF-8", BaseFont.EMBEDDED)
-    private var appFontBig= Font(baseFontBig, 16f, Font.BOLD)
+    private val baseNunito = FontProgramFactory.createFont("res/font/nunito.ttf")
+    private val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+    private val baseNexa = FontProgramFactory.createFont("res/font/nexa.otf")
+    private val fontNunito = PdfFontFactory.createFont(baseNunito, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED)
+    private val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+    private val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+    private val fontNexa = PdfFontFactory.createFont(baseNexa, PdfEncodings.WINANSI)
 
-    private var baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
-    private var fontArialRegular = Font(baseFontArial, 11f, Font.NORMAL, BaseColor.BLACK)
+//    private var baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
+//    private var fontArialRegular = Font(baseFontArial, 11f, Font.NORMAL, BaseColor.BLACK)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
@@ -1165,13 +1180,19 @@ class TabFragment(private val title: String) : Fragment() {
                         ).withListener(object : MultiplePermissionsListener {
                             override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                                 if (report.areAllPermissionsGranted()) {
-                                    val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
+                                    val sdf = SimpleDateFormat(" ddMMyy hhmm", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
-                                    val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                    val outPath = requireContext().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
-                                    Log.d("loc", outPath)
-                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
-                                    doc.open()
+//                                    val outPath = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki[0] + currentDate + ".pdf"  //location where the pdf will store
+                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki[0] + currentDate + ".pdf"  //Location where the pdf will be stored
+                                    if (File(outPath).exists()) {
+                                        File(outPath).delete()
+                                    }
+                                    Log.d("PDF Location", outPath)
+                                    val writer = PdfWriter(FileOutputStream(outPath))
+//                                    val rectangle3x5 = Rectangle(216f, 360f)
+//                                    val pagesize3x5 = PageSize(rectangle3x5)
+                                    val pdfDoc = PdfDocument(writer)
+                                    val doc = Document(pdfDoc, PageSize.A4)
                                     doc.setMargins(0f, 0f, 40f, 40f)
                                     headerFinalReport(doc, writer, it)
 //                                    bodyFinalReport(doc, it)
@@ -1209,89 +1230,30 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
     private fun headerFinalReport(doc: Document, writer: PdfWriter, it: ReportEntity) {
-        doc.add(Paragraph("\n\n", fontArialRegular))
-        val table1 = PdfPTable(1)
-        table1.setWidths(floatArrayOf(1f))
-        table1.isLockedWidth = true
-        table1.totalWidth = PageSize.A4.width-50f
-
-        val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
-        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKA\n", fontArialRegular))
-        header.add(Paragraph("${it.kanwil_pegawai_final}\n", fontArialRegular))
-        header.add(Paragraph("${it.kantor_pegawai_final}\n", fontArialRegular))
-        header.alignment = Element.ALIGN_LEFT
-        val tittleCell = PdfPCell(header)
-        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
-        tittleCell.verticalAlignment = Element.ALIGN_CENTER
-        tittleCell.paddingBottom = 10f
-        tittleCell.paddingTop = 10f
-        tittleCell.paddingLeft = 6f
-        tittleCell.paddingRight = 6f
-        table1.addCell(tittleCell)
-        doc.add(table1)
-    }
-    private fun headerRawReport(doc: Document, writer: PdfWriter) {
-        val tableBotPadding = 10f
-        val tableHorizontalPadding = 20f
-        val tableTopPadding = 20f
-
-        val headerTable = PdfPTable(2)
-        headerTable.setWidths(floatArrayOf(1f, 3.5f))
-        headerTable.isLockedWidth = true
-        headerTable.totalWidth = PageSize.A4.width
-
-        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
-        val bitDwLogoBC = logoBC as BitmapDrawable
-        val bmpLogoBC = bitDwLogoBC.bitmap
-        val streamLogoBC = ByteArrayOutputStream()
-        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
-        val imageLogoBC = Image.getInstance(streamLogoBC.toByteArray())
-        val scalerLogoBC: Float = (doc.pageSize.width - doc.leftMargin() - doc.rightMargin()) / imageLogoBC.width * 10
-        imageLogoBC.scalePercent(scalerLogoBC)
-
-        val cellLogoBC = PdfPCell(Image.getInstance(imageLogoBC))
-        cellLogoBC.border = Rectangle.NO_BORDER
-        cellLogoBC.horizontalAlignment = Rectangle.ALIGN_RIGHT
-        cellLogoBC.verticalAlignment = Rectangle.ALIGN_CENTER
-        cellLogoBC.paddingTop = tableTopPadding
-        cellLogoBC.paddingBottom = tableBotPadding
-        cellLogoBC.paddingRight = tableHorizontalPadding
-        headerTable.addCell(cellLogoBC)
-
-        val para = Paragraph("LAPORAN HITUNG BARANG CURAH BEA CUKAI", appFontBig)
-        para.alignment = Element.ALIGN_MIDDLE
-        val tittleCell = PdfPCell(para)
-        tittleCell.border = Rectangle.NO_BORDER
-        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
-        tittleCell.verticalAlignment = Element.ALIGN_MIDDLE
-        tittleCell.paddingTop = tableTopPadding-3f
-        tittleCell.paddingBottom = tableBotPadding
-        tittleCell.paddingRight = tableHorizontalPadding
-        headerTable.addCell(tittleCell)
-
-        doc.add(headerTable)
-
-        val colorPrimary = BaseColor(0, 0, 0)
-        val canvas: PdfContentByte = writer.directContent
-        canvas.setColorStroke(colorPrimary)
-        canvas.moveTo(0.0, 755.0)
-        // Drawing the line
-        canvas.lineTo(PageSize.A4.width.toDouble(), 755.0)
-        canvas.setLineWidth(1.5f)
-        canvas.closePathStroke()
-    }
-
-    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
-        if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
-            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
-            _binding2?.rvSoundingList?.adapter = soundingAdapter
-            _binding2?.svSoundingList?.visibility = View.VISIBLE
-            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
-        } else {
-            _binding2?.svSoundingList?.visibility = View.GONE
-            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
-        }
+        val title= Text("The Strange Case of Dr. Jekyll and Mr. Hyde").setFont(fontArial)
+        val author = Text("Robert Louis Stevenson").setFont(fontHelvetica)
+        val p: Paragraph = Paragraph().add(title).add(" by ").add(author)
+        doc.add(p)
+//        doc.add(Paragraph("\n\n", fontArialRegular))
+//        val table1 = PdfPTable(1)
+//        table1.setWidths(floatArrayOf(1f))
+//        table1.isLockedWidth = true
+//        table1.totalWidth = PageSize.A4.width-50f
+//
+//        val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
+//        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKAI\n", fontArialRegular))
+//        header.add(Paragraph("${it.kanwil_pegawai_final}\n", fontArialRegular))
+//        header.add(Paragraph("${it.kantor_pegawai_final}\n", fontArialRegular))
+//        header.alignment = Element.ALIGN_LEFT
+//        val tittleCell = PdfPCell(header)
+//        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
+//        tittleCell.verticalAlignment = Element.ALIGN_CENTER
+//        tittleCell.paddingBottom = 10f
+//        tittleCell.paddingTop = 10f
+//        tittleCell.paddingLeft = 6f
+//        tittleCell.paddingRight = 6f
+//        table1.addCell(tittleCell)
+//        doc.add(table1)
     }
 
     private fun addClickListener(binding: FragmentTwoBinding, btn: Button, userDao: UserDao) {
@@ -1539,6 +1501,18 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
+    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
+        if (soundingList.isNotEmpty()) {
+            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
+            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
+            _binding2?.rvSoundingList?.adapter = soundingAdapter
+            _binding2?.svSoundingList?.visibility = View.VISIBLE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
+        } else {
+            _binding2?.svSoundingList?.visibility = View.GONE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
+        }
+    }
     private fun pdfSounding(id: Int, userDao: UserDao) {
         lifecycleScope.launch {
             userDao.fetchSoundingById(id).collect {
@@ -1550,21 +1524,25 @@ class TabFragment(private val title: String) : Fragment() {
                         ).withListener(object : MultiplePermissionsListener {
                             override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                                 if (report.areAllPermissionsGranted()) {
-                                    val sdf = SimpleDateFormat(" ddMMyy hhmmss", Locale.getDefault())
+                                    val sdf = SimpleDateFormat(" ddMMyy", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
-                                    val doc = Document(PageSize.A4, 0f, 0f, 0f, 0f)
-                                    val outPath = requireContext().getExternalFilesDir(null).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //location where the pdf will store
+//                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
+                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //Location where the pdf will be stored
+                                    val file = File(outPath) //location where the pdf will store
+                                    if (file.exists()) {
+                                        file.delete()
+                                    }
                                     Log.d("loc", outPath)
-                                    val writer = PdfWriter.getInstance(doc, FileOutputStream(outPath))
-                                    doc.open()
-                                    doc.setMargins(0f, 0f, 40f, 40f)
-                                    headerRawReport(doc, writer)
+                                    val writer = PdfWriter(FileOutputStream(outPath))
+//                                    val writer = PdfWriter(file)
+                                    val pdfDoc = PdfDocument(writer)
+                                    val doc = Document(pdfDoc)
+//                                    doc.setMargins(0f, 0f, 40f, 40f)
+                                    headerRawReport(pdfDoc, doc)
                                     bodyRawReport(doc, it)
                                     doc.close()
-
-                                    val file = File(outPath)
                                     file.listFiles()
-                                    val path: Uri =FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
+                                    val path: Uri = FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
                                         BuildConfig.APPLICATION_ID + ".provider", file)
 //                                        BuildConfig.LIBRARY_PACKAGE_NAME + ".provider", file)
                                     try {
@@ -1590,20 +1568,62 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }).check()
                 } catch (e: Exception) {
-                    Log.d("okimatra", "" + e.message)
+                    Log.d("1571", "" + e.message)
                 }
             }
         }
     }
+    private fun headerRawReport(pdfDoc: PdfDocument, doc: Document) {
+        val tableBotPadding = 10f
+        val tableHorizontalPadding = 20f
+        val tableTopPadding = 20f
+
+        val headerTable = Table(floatArrayOf(10f, 35f))
+        headerTable.setWidth(PageSize.A4.width)
+
+        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
+        val bitDwLogoBC = logoBC as BitmapDrawable
+        val bmpLogoBC = bitDwLogoBC.bitmap
+        val streamLogoBC = ByteArrayOutputStream()
+        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
+        val imageLogoBCData = ImageDataFactory.create(streamLogoBC.toByteArray())
+        val imageLogoBC = Image(imageLogoBCData)
+        val scalerLogoBC: Float = (PageSize.A4.width - doc.leftMargin - doc.rightMargin) / imageLogoBCData.width * 10f
+        imageLogoBC.scale(scalerLogoBC, scalerLogoBC)
+
+        val cellLogoBC = Cell().add(imageLogoBC)
+        cellLogoBC.setBorder(Border.NO_BORDER)
+        cellLogoBC.setHorizontalAlignment(HorizontalAlignment.RIGHT)
+        cellLogoBC.setVerticalAlignment(VerticalAlignment.MIDDLE)
+        cellLogoBC.setPaddingTop(tableTopPadding)
+        cellLogoBC.setPaddingBottom(tableBotPadding)
+        cellLogoBC.setPaddingRight(tableHorizontalPadding)
+        headerTable.addCell(cellLogoBC)
+
+        val para = Paragraph().add("LAPORAN HITUNG BARANG CURAH BEA CUKAI").setFont(fontNexa).setFontSize(16f).setTextAlignment(TextAlignment.CENTER)
+        val tittleCell = Cell().add(para)
+        tittleCell.setBorder(Border.NO_BORDER)
+        tittleCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
+        tittleCell.setVerticalAlignment(VerticalAlignment.MIDDLE)
+        tittleCell.setPaddingTop(tableTopPadding-3f)
+        tittleCell.setPaddingBottom(tableBotPadding)
+        tittleCell.setPaddingRight(tableHorizontalPadding)
+        headerTable.addCell(tittleCell)
+
+        doc.add(headerTable)
+
+//        val magentaColor = DeviceCmyk(0f, 1f, 0f, 0f)
+        val colorPrimary = DeviceRgb(0, 0, 0)
+        val canvas = PdfCanvas(pdfDoc.addNewPage())
+        canvas.setStrokeColor(colorPrimary)
+        canvas.moveTo(0.0, 755.0)
+        // Drawing the Line
+        canvas.lineTo(PageSize.A4.width.toDouble(), 755.0)
+        canvas.setLineWidth(1.5f)
+        canvas.closePathStroke()
+    }
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
-//        idTable.widthPercentage = 100f
-//        idTable.tableEvent = BorderEvent()
-//        idTable.deleteBodyRows()
-//        val pID = Paragraph()
-//        pID.add(idTable)
-//        pID.indentationLeft = horizontalPadding
-//        doc.add(pID)
-        doc.add(Paragraph("\n\n\n\n\n", appFontTiny))
+        doc.add(Paragraph().add("\n\n\n\n\n").setFont(fontNunito).setFontSize(2f))
         val metodeFraksi = it.volume_fraksi > 0
         writeDataTitle("Data Umum", doc)
         val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding")
@@ -1667,42 +1687,32 @@ class TabFragment(private val title: String) : Fragment() {
             "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
         )
         writeDatawithSemicolomn(calcData, calcValue, doc)
-        doc.add(Paragraph("\n", appFontMiddle))
-
-//        val ttdValue = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n")
-//        writeAuthentication(ttdValue, doc)
-//        val nama = Chunk(it.pegawai_sounding, regularFont)
-//        nama.setUnderline(0.5f, -2f)
-//        val para = Paragraph(nama)
-//        para.indentationLeft = 380f
-//        doc.add(para)
+        doc.add(Paragraph().add("\n").setFont(fontNunito).setFontSize(8f))
 
         val ttdPenggunaJasa = listOf("Mengetahui,", "Eksportir", "\n\n\n")
         val ttdPegawai = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n\n")
         writeAuthenticationwithCustomer(ttdPenggunaJasa, ttdPegawai, doc)
 
-        val table = PdfPTable(2)
-        table.setWidths(floatArrayOf(1f, 1f))
-        table.isLockedWidth = true
-        table.totalWidth = PageSize.A4.width
-        val namaPJ = Chunk(it.pengguna_jasa_sounding, regularFont)
+        val table = Table(floatArrayOf(50f, 50f))
+        table.setWidth(PageSize.A4.width)
+        val namaPJ = Paragraph().add(it.pengguna_jasa_sounding).setFont(fontHelvetica).setFontSize(11f)
         namaPJ.setUnderline(0.5f, -2f)
-        val pjCell = PdfPCell(Phrase(namaPJ))
-        pjCell.border = Rectangle.NO_BORDER
-        pjCell.horizontalAlignment = Element.ALIGN_LEFT
-        pjCell.verticalAlignment = Element.ALIGN_TOP
-        pjCell.paddingLeft = 57f
+        val pjCell = Cell().add(namaPJ)
+        pjCell.setBorder(Border.NO_BORDER)
+        pjCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
+        pjCell.setVerticalAlignment(VerticalAlignment.TOP)
+        pjCell.setPaddingLeft(57f)
         table.addCell(pjCell)
-        val namaPeg = Chunk(it.pegawai_sounding, regularFont)
+        val namaPeg = Paragraph().add(it.pegawai_sounding).setFont(fontHelvetica).setFontSize(11f)
         namaPeg.setUnderline(0.5f, -2f)
-        val pegCell = PdfPCell(Phrase(namaPeg))
-        pegCell.border = Rectangle.NO_BORDER
-        pegCell.horizontalAlignment = Element.ALIGN_LEFT
-        pegCell.verticalAlignment = Element.ALIGN_TOP
-        pegCell.paddingLeft = 72f
+        val pegCell = Cell().add(namaPeg)
+        pegCell.setBorder(Border.NO_BORDER)
+        pegCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
+        pegCell.setVerticalAlignment(VerticalAlignment.TOP)
+        pegCell.setPaddingLeft(72f)
         table.addCell(pegCell)
         doc.add(table)
-        table.deleteBodyRows()
+//        table.deleteBodyRows()
 
         val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
                 " " + it.nip_pegawai.subSequence(8,14).toString() +
@@ -1714,78 +1724,74 @@ class TabFragment(private val title: String) : Fragment() {
     }
     private fun writeDataTitle(text: String, doc: Document) {
         val padding = 3f
-        val judul= Chunk(text, appFontSemiBig)
+        val judul= Text(text).setFont(fontHelvetica).setFontSize(13f).setBold()
         judul.setUnderline(0.5f, -2f)
         val paraJudul = Paragraph(judul)
-        paraJudul.indentationLeft = 19*padding-1f
+        paraJudul.setMarginLeft(19*padding-1f)
         doc.add(paraJudul)
-        doc.add(Paragraph("\n", appFontTiny))
+        doc.add(Paragraph().add(Text("\n").setFont(fontNunito).setFontSize(2f)))
     }
     private fun writeDatawithSemicolomn(listJudul: List<String>, listNilai: List<String>, doc: Document) {
         val padding = 3f
-        val table = PdfPTable(3)
-        table.setWidths(floatArrayOf(1.7f, 0.05f, 3.5f))
-        table.isLockedWidth = true
-        table.totalWidth = PageSize.A4.width
+        val table = Table(floatArrayOf(1.7f, 0.05f, 3.5f))
+        table.setWidth(PageSize.A4.width)
         for (i in listJudul.indices) {
-            val idCell = PdfPCell(Phrase(listJudul[i], regularFont))
-            idCell.border = Rectangle.NO_BORDER
-            idCell.horizontalAlignment = Element.ALIGN_LEFT
-            idCell.verticalAlignment = Element.ALIGN_TOP
-            idCell.paddingTop = padding
-            idCell.paddingBottom = padding
-            idCell.paddingLeft = 19*padding
+            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontHelvetica).setFontSize(11f)))
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(padding)
+                .setPaddingBottom(padding)
+                .setPaddingLeft(19*padding)
             table.addCell(idCell)
 
-            val separatorCell = PdfPCell(Phrase(":", regularFont))
-            separatorCell.border = Rectangle.NO_BORDER
-            separatorCell.horizontalAlignment = Element.ALIGN_CENTER
-            separatorCell.verticalAlignment = Element.ALIGN_TOP
-            separatorCell.paddingTop = padding
-            separatorCell.paddingBottom = padding
+            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontHelvetica).setFontSize(11f)))
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(padding)
+                .setPaddingBottom(padding)
             table.addCell(separatorCell)
 
-            val valueCell = PdfPCell(Phrase(listNilai[i], regularFont))
-            valueCell.border = Rectangle.NO_BORDER
-            valueCell.horizontalAlignment = Element.ALIGN_LEFT
-            valueCell.verticalAlignment = Element.ALIGN_TOP
-            valueCell.paddingTop = padding
-            valueCell.paddingBottom = padding
-            valueCell.paddingRight = 18*padding
+            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontHelvetica).setFontSize(11f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(padding)
+                .setPaddingBottom(padding)
+                .setPaddingLeft(18*padding)
             table.addCell(valueCell)
         }
         doc.add(table)
-        table.deleteBodyRows()
-        doc.add(Paragraph("\n", appFontMiddle))
+//        table.deleteBodyRows()
+        doc.add(Paragraph().add(Text("\n").setFont(fontNunito).setFontSize(8f)))
     }
     private fun writeAuthenticationwithCustomer(listPenggunaJasa: List<String>, listPegawai: List<String>, doc: Document) {
-        val table = PdfPTable(2)
-        table.setWidths(floatArrayOf(1f, 1f))
-        table.isLockedWidth = true
-        table.totalWidth = PageSize.A4.width
+        val table = Table(floatArrayOf(1f, 1f))
+        table.setWidth(PageSize.A4.width)
         for (i in listPegawai.indices) {
-            val pjCell = PdfPCell(Phrase(listPenggunaJasa[i], regularFont))
-            pjCell.border = Rectangle.NO_BORDER
-            pjCell.horizontalAlignment = Element.ALIGN_LEFT
-            pjCell.verticalAlignment = Element.ALIGN_TOP
-            pjCell.paddingLeft = 57f
+            val pjCell = Cell().add(Paragraph().add(Text(listPenggunaJasa[i]).setFont(fontHelvetica).setFontSize(11f)))
+            pjCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(57f)
             table.addCell(pjCell)
 
-            val pegCell = PdfPCell(Phrase(listPegawai[i], regularFont))
-            pegCell.border = Rectangle.NO_BORDER
-            pegCell.horizontalAlignment = Element.ALIGN_LEFT
-            pegCell.verticalAlignment = Element.ALIGN_TOP
-            pegCell.paddingLeft = 72f
+            val pegCell = Cell().add(Paragraph().add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f)))
+            pegCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(72f)
             table.addCell(pegCell)
         }
         doc.add(table)
-        table.deleteBodyRows()
+//        table.deleteBodyRows()
     }
     @Suppress("unused")
     private fun writeAuthentication(listPegawai: List<String>, doc: Document) {
         for (i in listPegawai.indices) {
-            val para = Paragraph(listPegawai[i], regularFont)
-            para.indentationLeft = 380f
+            val para = Paragraph().add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f))
+            para.setMarginLeft(380f)
             doc.add(para)
         }
     }
