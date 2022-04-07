@@ -58,11 +58,13 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
     implementation 'androidx.cardview:cardview:1.0.0'
 
-    //Pdf and Print Dependency
-//    implementation 'com.itextpdf:itextg:5.5.10'
-    implementation 'com.itextpdf:itext7-core:7.2.1'
+    //QrCode, Pdf Print Dependency
+    //implementation 'com.itextpdf:itextg:5.5.10'
+    //noinspection GradleDependency
+    implementation 'com.itextpdf:itext7-core:7.1.17'
     implementation 'com.karumi:dexter:6.2.3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.zxing:core:3.4.0'
 
     implementation 'androidx.activity:activity-ktx:1.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'

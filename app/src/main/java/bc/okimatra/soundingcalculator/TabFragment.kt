@@ -35,6 +35,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import bc.okimatra.soundingcalculator.adapter.*
 import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
+import com.google.zxing.BarcodeFormat
+//import com.google.zxing.EncodeHintType
+import com.google.zxing.qrcode.QRCodeWriter
 import com.itextpdf.io.font.FontProgramFactory
 import com.itextpdf.io.font.PdfEncodings
 import com.itextpdf.io.font.constants.StandardFonts
@@ -48,9 +51,12 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.element.*
-import com.itextpdf.layout.properties.HorizontalAlignment
-import com.itextpdf.layout.properties.TextAlignment
-import com.itextpdf.layout.properties.VerticalAlignment
+//import com.itextpdf.layout.properties.HorizontalAlignment
+//import com.itextpdf.layout.properties.TextAlignment
+//import com.itextpdf.layout.properties.VerticalAlignment
+import com.itextpdf.layout.property.HorizontalAlignment
+import com.itextpdf.layout.property.TextAlignment
+import com.itextpdf.layout.property.VerticalAlignment
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -113,17 +119,6 @@ class TabFragment(private val title: String) : Fragment() {
     private var counterSounding = 1
     private var fabOverSounding = true
     private var mapInitializer = true
-
-    private val baseNunito = FontProgramFactory.createFont("res/font/nunito.ttf")
-    private val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-    private val baseNexa = FontProgramFactory.createFont("res/font/nexa.otf")
-    private val fontNunito = PdfFontFactory.createFont(baseNunito, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED)
-    private val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-    private val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-    private val fontNexa = PdfFontFactory.createFont(baseNexa, PdfEncodings.WINANSI)
-
-//    private var baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
-//    private var fontArialRegular = Font(baseFontArial, 11f, Font.NORMAL, BaseColor.BLACK)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
@@ -1180,10 +1175,24 @@ class TabFragment(private val title: String) : Fragment() {
                         ).withListener(object : MultiplePermissionsListener {
                             override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                                 if (report.areAllPermissionsGranted()) {
-                                    val sdf = SimpleDateFormat(" ddMMyy hhmm", Locale.getDefault())
+                                    val sdf = SimpleDateFormat(" ddMMyy HHmmss", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
-//                                    val outPath = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki[0] + currentDate + ".pdf"  //location where the pdf will store
-                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki[0] + currentDate + ".pdf"  //Location where the pdf will be stored
+//                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
+                                    val noTangkiUnik = it.no_tangki.distinctBy { it1 -> it1.uppercase() }
+                                    var noSemuaTangki = String()
+                                    for (i in noTangkiUnik.indices) {
+                                        if (i!=0) {
+                                            noSemuaTangki += ", ${noTangkiUnik[i].uppercase()}"
+                                        }
+                                        else {
+                                            noSemuaTangki = noTangkiUnik[i]
+                                        }
+                                    }
+                                    noSemuaTangki = endSpaceRemover(noSemuaTangki)
+                                    if (noSemuaTangki.subSequence(noSemuaTangki.length-1,noSemuaTangki.length) == ",") {
+                                        noSemuaTangki = noSemuaTangki.subSequence(0, noSemuaTangki.length-1).toString()
+                                    }
+                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + noSemuaTangki + " Printed on" + currentDate + ".pdf"  //Location where the pdf will be stored
                                     if (File(outPath).exists()) {
                                         File(outPath).delete()
                                     }
@@ -1230,6 +1239,15 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
     private fun headerFinalReport(doc: Document, writer: PdfWriter, it: ReportEntity) {
+//        val baseNunito = FontProgramFactory.createFont("res/font/nunito.ttf")
+//        val baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
+//        val fontArialRegular = Font(baseFontArial, 11f, Font.NORMAL, BaseColor.BLACK)
+//        val baseNexa = FontProgramFactory.createFont("res/font/nexa.otf")
+//        val fontNunito = PdfFontFactory.createFont(baseNunito, PdfEncodings.WINANSI)
+//        val fontNexa = PdfFontFactory.createFont(baseNexa, PdfEncodings.WINANSI)
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
         val title= Text("The Strange Case of Dr. Jekyll and Mr. Hyde").setFont(fontArial)
         val author = Text("Robert Louis Stevenson").setFont(fontHelvetica)
         val p: Paragraph = Paragraph().add(title).add(" by ").add(author)
@@ -1524,20 +1542,20 @@ class TabFragment(private val title: String) : Fragment() {
                         ).withListener(object : MultiplePermissionsListener {
                             override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                                 if (report.areAllPermissionsGranted()) {
-                                    val sdf = SimpleDateFormat(" ddMMyy", Locale.getDefault())
+                                    val sdf = SimpleDateFormat(" ddMMyy HHmmss", Locale.getDefault())
                                     val currentDate = sdf.format(Calendar.getInstance().time)
 //                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
-                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki + currentDate + ".pdf"  //Location where the pdf will be stored
+                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki + " Printed on" + currentDate + ".pdf"  //Location where the pdf will be stored
                                     val file = File(outPath) //location where the pdf will store
                                     if (file.exists()) {
                                         file.delete()
                                     }
                                     Log.d("loc", outPath)
-                                    val writer = PdfWriter(FileOutputStream(outPath))
 //                                    val writer = PdfWriter(file)
+                                    val writer = PdfWriter(FileOutputStream(outPath))
                                     val pdfDoc = PdfDocument(writer)
                                     val doc = Document(pdfDoc)
-//                                    doc.setMargins(0f, 0f, 40f, 40f)
+                                    doc.setMargins(0f, 0f, 0f, 0f)
                                     headerRawReport(pdfDoc, doc)
                                     bodyRawReport(doc, it)
                                     doc.close()
@@ -1574,11 +1592,11 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
     private fun headerRawReport(pdfDoc: PdfDocument, doc: Document) {
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
         val tableBotPadding = 10f
-        val tableHorizontalPadding = 20f
         val tableTopPadding = 20f
 
-        val headerTable = Table(floatArrayOf(10f, 35f))
+        val headerTable = Table(floatArrayOf(PageSize.A4.width/5f, 4f*PageSize.A4.width/5f))
         headerTable.setWidth(PageSize.A4.width)
 
         val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
@@ -1588,42 +1606,56 @@ class TabFragment(private val title: String) : Fragment() {
         bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
         val imageLogoBCData = ImageDataFactory.create(streamLogoBC.toByteArray())
         val imageLogoBC = Image(imageLogoBCData)
-        val scalerLogoBC: Float = (PageSize.A4.width - doc.leftMargin - doc.rightMargin) / imageLogoBCData.width * 10f
-        imageLogoBC.scale(scalerLogoBC, scalerLogoBC)
+//        val scalerLogoBC: Float = (PageSize.A4.width/4.5f - doc.leftMargin - doc.rightMargin) / imageLogoBCData.width
+//        Log.d("Scale", "Scale: ${scalerLogoBC}, Width1: ${imageLogoBCData.width}")
+        imageLogoBC.scale(0.45f, 0.45f)
 
         val cellLogoBC = Cell().add(imageLogoBC)
         cellLogoBC.setBorder(Border.NO_BORDER)
-        cellLogoBC.setHorizontalAlignment(HorizontalAlignment.RIGHT)
+        cellLogoBC.setHorizontalAlignment(HorizontalAlignment.CENTER)
         cellLogoBC.setVerticalAlignment(VerticalAlignment.MIDDLE)
         cellLogoBC.setPaddingTop(tableTopPadding)
         cellLogoBC.setPaddingBottom(tableBotPadding)
-        cellLogoBC.setPaddingRight(tableHorizontalPadding)
+        cellLogoBC.setPaddingLeft(3.5f*tableBotPadding)
         headerTable.addCell(cellLogoBC)
 
-        val para = Paragraph().add("LAPORAN HITUNG BARANG CURAH BEA CUKAI").setFont(fontNexa).setFontSize(16f).setTextAlignment(TextAlignment.CENTER)
+        val para = Paragraph().add("LAPORAN HITUNG BARANG CURAH BEA CUKAI")
+            .setFont(fontHelvetica)
+            .setFontSize(16f)
+            .setBold()
+            .setTextAlignment(TextAlignment.LEFT)
+            .setPaddingLeft(20f)
         val tittleCell = Cell().add(para)
         tittleCell.setBorder(Border.NO_BORDER)
-        tittleCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
+        tittleCell.setHorizontalAlignment(HorizontalAlignment.CENTER)
         tittleCell.setVerticalAlignment(VerticalAlignment.MIDDLE)
         tittleCell.setPaddingTop(tableTopPadding-3f)
         tittleCell.setPaddingBottom(tableBotPadding)
-        tittleCell.setPaddingRight(tableHorizontalPadding)
         headerTable.addCell(tittleCell)
 
         doc.add(headerTable)
 
 //        val magentaColor = DeviceCmyk(0f, 1f, 0f, 0f)
         val colorPrimary = DeviceRgb(0, 0, 0)
-        val canvas = PdfCanvas(pdfDoc.addNewPage())
+        val canvas = PdfCanvas(pdfDoc.firstPage)
         canvas.setStrokeColor(colorPrimary)
-        canvas.moveTo(0.0, 755.0)
+        canvas.moveTo(0.0, 745.0)
         // Drawing the Line
-        canvas.lineTo(PageSize.A4.width.toDouble(), 755.0)
+        canvas.lineTo(PageSize.A4.width.toDouble(), 745.0)
         canvas.setLineWidth(1.5f)
         canvas.closePathStroke()
     }
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
-        doc.add(Paragraph().add("\n\n\n\n\n").setFont(fontNunito).setFontSize(2f))
+        val bmpQrCode = getQrCodeBitmap(it)
+        val streamQrCode = ByteArrayOutputStream()
+        bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
+        val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
+        val imgQrCode = Image(imgQrCodeData)
+        imgQrCode.setFixedPosition(320f, 300f)
+        doc.add(imgQrCode)
+
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        doc.add(Paragraph().add("\n\n").setFixedLeading(10f))
         val metodeFraksi = it.volume_fraksi > 0
         writeDataTitle("Data Umum", doc)
         val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding")
@@ -1632,11 +1664,10 @@ class TabFragment(private val title: String) : Fragment() {
             it.alamat_perusahaan_sounding,
             it.no_tangki,
             (it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," "),
-//            it.waktu.subSequence(0,it.waktu.indexOf(":")-3).toString().replace("-"," "),
-//            it.waktu.subSequence(it.waktu.indexOf(":")-2, it.waktu.length).toString(),
             it.lokasi_sounding,
         )
         writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
 
         writeDataTitle("Data Lapangan", doc)
         val judulLapangan = listOf("Tinggi Cairan", "Suhu Cairan")
@@ -1645,6 +1676,7 @@ class TabFragment(private val title: String) : Fragment() {
             "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
         )
         writeDatawithSemicolomn(judulLapangan, nilaiLapangan, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
 
         writeDataTitle("Data Tangki", doc)
         val judulTangki = listOf("Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki")
@@ -1654,6 +1686,7 @@ class TabFragment(private val title: String) : Fragment() {
             zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")
         )
         writeDatawithSemicolomn(judulTangki, nilaiTangki, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
 
         writeDataTitle("Data Tabel", doc)
         val judulTabel: List<String>
@@ -1666,7 +1699,7 @@ class TabFragment(private val title: String) : Fragment() {
                 "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
             )
         } else {
-            judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Produk")
+            judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Cairan")
             nilaiTabel = listOf(
                 "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
                 "${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L",
@@ -1675,6 +1708,7 @@ class TabFragment(private val title: String) : Fragment() {
             )
         }
         writeDatawithSemicolomn(judulTabel, nilaiTabel, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
 
         val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
         writeDataTitle("Hasil Perhitungan $metode", doc)
@@ -1687,13 +1721,13 @@ class TabFragment(private val title: String) : Fragment() {
             "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
         )
         writeDatawithSemicolomn(calcData, calcValue, doc)
-        doc.add(Paragraph().add("\n").setFont(fontNunito).setFontSize(8f))
+        doc.add(Paragraph().add("\n").setFixedLeading(8f))
 
         val ttdPenggunaJasa = listOf("Mengetahui,", "Eksportir", "\n\n\n")
         val ttdPegawai = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n\n")
         writeAuthenticationwithCustomer(ttdPenggunaJasa, ttdPegawai, doc)
 
-        val table = Table(floatArrayOf(50f, 50f))
+        val table = Table(floatArrayOf(PageSize.A4.width/2f, PageSize.A4.width/2f))
         table.setWidth(PageSize.A4.width)
         val namaPJ = Paragraph().add(it.pengguna_jasa_sounding).setFont(fontHelvetica).setFontSize(11f)
         namaPJ.setUnderline(0.5f, -2f)
@@ -1701,7 +1735,7 @@ class TabFragment(private val title: String) : Fragment() {
         pjCell.setBorder(Border.NO_BORDER)
         pjCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
         pjCell.setVerticalAlignment(VerticalAlignment.TOP)
-        pjCell.setPaddingLeft(57f)
+        pjCell.setPaddingLeft(38f)
         table.addCell(pjCell)
         val namaPeg = Paragraph().add(it.pegawai_sounding).setFont(fontHelvetica).setFontSize(11f)
         namaPeg.setUnderline(0.5f, -2f)
@@ -1709,7 +1743,7 @@ class TabFragment(private val title: String) : Fragment() {
         pegCell.setBorder(Border.NO_BORDER)
         pegCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
         pegCell.setVerticalAlignment(VerticalAlignment.TOP)
-        pegCell.setPaddingLeft(72f)
+        pegCell.setPaddingLeft(51f)
         table.addCell(pegCell)
         doc.add(table)
 //        table.deleteBodyRows()
@@ -1722,21 +1756,80 @@ class TabFragment(private val title: String) : Fragment() {
         val jabatan = listOf(it.jabatan_pengguna_jasa)
         writeAuthenticationwithCustomer(jabatan, nip, doc)
     }
+    private fun getQrCodeBitmap(it: SoundingEntity): Bitmap {
+        val size = 250 //pixels
+        val metodeFraksi = it.volume_fraksi > 0
+        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
+        val qrCodeContent = if (metodeFraksi) {
+            "${it.perusahaan_sounding}\n" +
+                    "${it.alamat_perusahaan_sounding}\n" +
+                    "Nomor Tangki ${it.no_tangki}\n" +
+                    "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
+                    "${it.lokasi_sounding}\n" +
+                    "Tinggi Cairan: ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Suhu Cairan: ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n\n" +
+                    "Suhu Kalibrasi Tangki: ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
+                    "Tinggi Meja: ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
+                    "Koefisien Muai Tangki: ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n" +
+                    "Hasil Perhitungan $metode" +
+                    "${it.judulKalibrasi1}: ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "${it.judulFraksi}: ${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Massa Jenis Cairan: ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
+                    "Tinggi Terkoreksi: ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m" +
+                    "Volume App: ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L" +
+                    "Volume Obs: ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L" +
+                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL" +
+                    "Hasil Akhir Muatan: ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT" +
+                    "${it.pegawai_sounding}, ${it.nip_pegawai}"
+        } else {
+            "${it.perusahaan_sounding}\n" +
+                    "${it.alamat_perusahaan_sounding}\n" +
+                    "Nomor Tangki ${it.no_tangki}\n" +
+                    "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
+                    "${it.lokasi_sounding}\n" +
+                    "Tinggi Cairan: ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Suhu Cairan: ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n\n" +
+                    "Suhu Kalibrasi Tangki: ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
+                    "Tinggi Meja: ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
+                    "Koefisien Muai Tangki: ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n" +
+                    "Hasil Perhitungan $metode" +
+                    "${it.judulKalibrasi1}: ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Tabel Kalibrasi (${it.judulDataTabel}): ${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L" +
+                    "${it.judulKalibrasi2}: ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L" +
+                    "Massa Jenis Cairan: ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
+                    "Tinggi Terkoreksi: ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m" +
+                    "Volume App: ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L" +
+                    "Volume Obs: ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L" +
+                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL" +
+                    "Hasil Akhir Muatan: ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT" +
+                    "${it.pegawai_sounding}, ${it.nip_pegawai}"
+        }
+//        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // Make the QR code buffer border narrower
+        val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
+        return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
+            for (x in 0 until size) {
+                for (y in 0 until size) {
+                    it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
+                }
+            }
+        }
+    }
     private fun writeDataTitle(text: String, doc: Document) {
-        val padding = 3f
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val padding = 2f
         val judul= Text(text).setFont(fontHelvetica).setFontSize(13f).setBold()
         judul.setUnderline(0.5f, -2f)
-        val paraJudul = Paragraph(judul)
+        val paraJudul = Paragraph(judul).setMultipliedLeading(1.15f)
         paraJudul.setMarginLeft(19*padding-1f)
         doc.add(paraJudul)
-        doc.add(Paragraph().add(Text("\n").setFont(fontNunito).setFontSize(2f)))
     }
     private fun writeDatawithSemicolomn(listJudul: List<String>, listNilai: List<String>, doc: Document) {
-        val padding = 3f
-        val table = Table(floatArrayOf(1.7f, 0.05f, 3.5f))
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val padding = 2f
+        val table = Table(floatArrayOf(1.65f*PageSize.A4.width/5.18f, 0.03f*PageSize.A4.width/5.18f, 3.5f*PageSize.A4.width/5.18f))
         table.setWidth(PageSize.A4.width)
         for (i in listJudul.indices) {
-            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontHelvetica).setFontSize(11f)))
+            val idCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listJudul[i]).setFont(fontHelvetica).setFontSize(11f)))
             idCell.setBorder(Border.NO_BORDER)
                 .setHorizontalAlignment(HorizontalAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.TOP)
@@ -1745,7 +1838,7 @@ class TabFragment(private val title: String) : Fragment() {
                 .setPaddingLeft(19*padding)
             table.addCell(idCell)
 
-            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontHelvetica).setFontSize(11f)))
+            val separatorCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(":").setFont(fontHelvetica).setFontSize(11f)))
             separatorCell.setBorder(Border.NO_BORDER)
                 .setHorizontalAlignment(HorizontalAlignment.CENTER)
                 .setVerticalAlignment(VerticalAlignment.TOP)
@@ -1753,35 +1846,35 @@ class TabFragment(private val title: String) : Fragment() {
                 .setPaddingBottom(padding)
             table.addCell(separatorCell)
 
-            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontHelvetica).setFontSize(11f)))
+            val valueCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listNilai[i]).setFont(fontHelvetica).setFontSize(11f)))
             valueCell.setBorder(Border.NO_BORDER)
                 .setHorizontalAlignment(HorizontalAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.TOP)
                 .setPaddingTop(padding)
                 .setPaddingBottom(padding)
-                .setPaddingLeft(18*padding)
+                .setPaddingLeft(4*padding)
+                .setPaddingRight(4*padding)
             table.addCell(valueCell)
         }
         doc.add(table)
-//        table.deleteBodyRows()
-        doc.add(Paragraph().add(Text("\n").setFont(fontNunito).setFontSize(8f)))
     }
     private fun writeAuthenticationwithCustomer(listPenggunaJasa: List<String>, listPegawai: List<String>, doc: Document) {
-        val table = Table(floatArrayOf(1f, 1f))
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val table = Table(floatArrayOf(PageSize.A4.width/2f, PageSize.A4.width/2f))
         table.setWidth(PageSize.A4.width)
         for (i in listPegawai.indices) {
-            val pjCell = Cell().add(Paragraph().add(Text(listPenggunaJasa[i]).setFont(fontHelvetica).setFontSize(11f)))
+            val pjCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listPenggunaJasa[i]).setFont(fontHelvetica).setFontSize(11f)))
             pjCell.setBorder(Border.NO_BORDER)
                 .setHorizontalAlignment(HorizontalAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingLeft(57f)
+                .setPaddingLeft(38f)
             table.addCell(pjCell)
 
-            val pegCell = Cell().add(Paragraph().add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f)))
+            val pegCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f)))
             pegCell.setBorder(Border.NO_BORDER)
                 .setHorizontalAlignment(HorizontalAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingLeft(72f)
+                .setPaddingLeft(51f)
             table.addCell(pegCell)
         }
         doc.add(table)
@@ -1789,6 +1882,7 @@ class TabFragment(private val title: String) : Fragment() {
     }
     @Suppress("unused")
     private fun writeAuthentication(listPegawai: List<String>, doc: Document) {
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
         for (i in listPegawai.indices) {
             val para = Paragraph().add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f))
             para.setMarginLeft(380f)
