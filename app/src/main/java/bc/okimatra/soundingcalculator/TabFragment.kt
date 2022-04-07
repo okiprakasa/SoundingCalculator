@@ -1,5 +1,9 @@
 package bc.okimatra.soundingcalculator
 
+//import com.itextpdf.layout.properties.HorizontalAlignment
+//import com.itextpdf.layout.properties.TextAlignment
+//import com.itextpdf.layout.properties.VerticalAlignment
+
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -36,7 +40,6 @@ import bc.okimatra.soundingcalculator.adapter.*
 import bc.okimatra.soundingcalculator.databinding.*
 import bc.okimatra.soundingcalculator.datasetup.*
 import com.google.zxing.BarcodeFormat
-//import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.itextpdf.io.font.FontProgramFactory
 import com.itextpdf.io.font.PdfEncodings
@@ -51,12 +54,7 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.element.*
-//import com.itextpdf.layout.properties.HorizontalAlignment
-//import com.itextpdf.layout.properties.TextAlignment
-//import com.itextpdf.layout.properties.VerticalAlignment
-import com.itextpdf.layout.property.HorizontalAlignment
-import com.itextpdf.layout.property.TextAlignment
-import com.itextpdf.layout.property.VerticalAlignment
+import com.itextpdf.layout.property.*
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -292,7 +290,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     try {
                                         lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
                                     } catch (e: Exception) {
-                                        Log.d("okimatra", "" + e.message)
+                                        Log.d("okimatra1", "" + e.message)
                                     }
                                 }
                             }
@@ -398,12 +396,12 @@ class TabFragment(private val title: String) : Fragment() {
                                                             backFunction()
                                                         }
                                                     } catch (e: Exception) {
-                                                        Log.d("okimatra", "" + e.message)
+                                                        Log.d("okimatra2", "" + e.message)
                                                     }
                                                 }
                                             }
                                         } catch (e: Exception) {
-                                            Log.d("okimatra", "" + e.message)
+                                            Log.d("okimatra3", "" + e.message)
                                         }
                                     }
                                 }
@@ -449,7 +447,7 @@ class TabFragment(private val title: String) : Fragment() {
                     Handler(Looper.getMainLooper()).postDelayed({
                         lifecycleScope.launch {
                             userDao.fetchAllSounding().collect {
-                                Log.d("okimatra", "$it")
+                                Log.d("okimatra4", "$it")
                                 val list = ArrayList(it)
                                 setupListOfDataIntoRecyclerViewSounding(list,userDao)
                             }
@@ -469,7 +467,7 @@ class TabFragment(private val title: String) : Fragment() {
                         Handler(Looper.getMainLooper()).postDelayed({
                             lifecycleScope.launch {
                                 userDao.fetchAllSounding().collect {
-                                    Log.d("okimatra", "$it")
+                                    Log.d("okimatra5", "$it")
                                     val list = ArrayList(it)
                                     setupListOfDataIntoRecyclerViewSounding(list,userDao)
                                 }
@@ -692,7 +690,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
                                     listSounding += arrayListOf(ivSpAkhirMap[it]!!.selectedItem.toString()) //ID from ivSpAwal = ivSpAkhir
                                 }
-                                Log.d("okimatra", listSounding.toString())
+                                Log.d("okimatra6", listSounding.toString())
                                 val tinggiCairanList = MutableList(listSounding.size) {0.0}
                                 val suhuCairanList = MutableList(listSounding.size) {0.0}
                                 val suhuKalibrasiTangkiList = MutableList(listSounding.size) {0.0}
@@ -786,7 +784,7 @@ class TabFragment(private val title: String) : Fragment() {
                                                     kantorPegawai = it.kantor_pegawai
                                                     kanwilPegawai = it.kanwil_pegawai
                                                 } catch (e: Exception) {
-                                                    Log.d("okimatra", e.message.toString())
+                                                    Log.d("okimatra7", e.message.toString())
                                                 }
                                             }
                                         }
@@ -826,7 +824,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                 }
                                 Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
-                                    Log.d("okimatra", tinggiCairanList.toString())
+                                    Log.d("okimatra8", tinggiCairanList.toString())
                                     lifecycleScope.launch {
                                         userDao.insertReport(ReportEntity(
                                             tinggi_cairan = tinggiCairanList as ArrayList<Double>,
@@ -1198,13 +1196,10 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                     Log.d("PDF Location", outPath)
                                     val writer = PdfWriter(FileOutputStream(outPath))
-//                                    val rectangle3x5 = Rectangle(216f, 360f)
-//                                    val pagesize3x5 = PageSize(rectangle3x5)
                                     val pdfDoc = PdfDocument(writer)
                                     val doc = Document(pdfDoc, PageSize.A4)
-                                    doc.setMargins(0f, 0f, 40f, 40f)
-                                    headerFinalReport(doc, writer, it)
-//                                    bodyFinalReport(doc, it)
+                                    doc.setMargins(0f, 0f, 20f, 20f)
+                                    headerFinalReport(doc, it)
                                     doc.close()
 
                                     val file = File(outPath)
@@ -1233,45 +1228,10 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }).check()
                 } catch (e: Exception) {
-                    Log.d("okimatra", "" + e.message)
+                    Log.d("okimatra9", "" + e.message)
                 }
             }
         }
-    }
-    private fun headerFinalReport(doc: Document, writer: PdfWriter, it: ReportEntity) {
-//        val baseNunito = FontProgramFactory.createFont("res/font/nunito.ttf")
-//        val baseFontArial = BaseFont.createFont("res/font/arial.ttf", "UTF-8", BaseFont.EMBEDDED)
-//        val fontArialRegular = Font(baseFontArial, 11f, Font.NORMAL, BaseColor.BLACK)
-//        val baseNexa = FontProgramFactory.createFont("res/font/nexa.otf")
-//        val fontNunito = PdfFontFactory.createFont(baseNunito, PdfEncodings.WINANSI)
-//        val fontNexa = PdfFontFactory.createFont(baseNexa, PdfEncodings.WINANSI)
-        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val title= Text("The Strange Case of Dr. Jekyll and Mr. Hyde").setFont(fontArial)
-        val author = Text("Robert Louis Stevenson").setFont(fontHelvetica)
-        val p: Paragraph = Paragraph().add(title).add(" by ").add(author)
-        doc.add(p)
-//        doc.add(Paragraph("\n\n", fontArialRegular))
-//        val table1 = PdfPTable(1)
-//        table1.setWidths(floatArrayOf(1f))
-//        table1.isLockedWidth = true
-//        table1.totalWidth = PageSize.A4.width-50f
-//
-//        val header = Paragraph("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\n", fontArialRegular)
-//        header.add(Paragraph("DIREKTORAT JENDERAL BEA DAN CUKAI\n", fontArialRegular))
-//        header.add(Paragraph("${it.kanwil_pegawai_final}\n", fontArialRegular))
-//        header.add(Paragraph("${it.kantor_pegawai_final}\n", fontArialRegular))
-//        header.alignment = Element.ALIGN_LEFT
-//        val tittleCell = PdfPCell(header)
-//        tittleCell.horizontalAlignment = Element.ALIGN_LEFT
-//        tittleCell.verticalAlignment = Element.ALIGN_CENTER
-//        tittleCell.paddingBottom = 10f
-//        tittleCell.paddingTop = 10f
-//        tittleCell.paddingLeft = 6f
-//        tittleCell.paddingRight = 6f
-//        table1.addCell(tittleCell)
-//        doc.add(table1)
     }
 
     private fun addClickListener(binding: FragmentTwoBinding, btn: Button, userDao: UserDao) {
@@ -1430,7 +1390,7 @@ class TabFragment(private val title: String) : Fragment() {
                             try {
                                 populateDropdownSoundingwithEmpty(ArrayList(it), spAkhir, true)
                             } catch (e: Exception) {
-                                Log.d("okimatra", e.message.toString())
+                                Log.d("okimatra10", e.message.toString())
                             }
                         }
                     }
@@ -1456,7 +1416,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                     hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
                                 } catch (e: Exception) {
-                                    Log.d("okimatra", e.message.toString())
+                                    Log.d("okimatra11", e.message.toString())
                                 }
                             }
                         }
@@ -1500,7 +1460,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                     hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
                                 } catch (e: Exception) {
-                                    Log.d("okimatra", e.message.toString())
+                                    Log.d("okimatra12", e.message.toString())
                                 }
                             }
                         }
@@ -1554,7 +1514,7 @@ class TabFragment(private val title: String) : Fragment() {
 //                                    val writer = PdfWriter(file)
                                     val writer = PdfWriter(FileOutputStream(outPath))
                                     val pdfDoc = PdfDocument(writer)
-                                    val doc = Document(pdfDoc)
+                                    val doc = Document(pdfDoc, PageSize.A4)
                                     doc.setMargins(0f, 0f, 0f, 0f)
                                     headerRawReport(pdfDoc, doc)
                                     bodyRawReport(doc, it)
@@ -1642,6 +1602,101 @@ class TabFragment(private val title: String) : Fragment() {
         canvas.lineTo(PageSize.A4.width.toDouble(), 745.0)
         canvas.setLineWidth(1.5f)
         canvas.closePathStroke()
+    }
+    private fun headerFinalReport(doc: Document, it: ReportEntity) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val header = Text("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\nDIREKTORAT JENDERAL BEA DAN CUKAI\n${it.kanwil_pegawai_final}\n${it.kantor_pegawai_final}\n\n")
+            .setFont(fontArial).setFontSize(10f)
+        val headerPara = Paragraph().add(header).setMultipliedLeading(1.2f).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(10f).setPaddingTop(10f)
+        val title = Text("BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
+                "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length - 1)}\n\n")
+            .setFont(fontArial).setFontSize(10f)
+        val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER)
+        val cellTop = Cell().add(headerPara).add(titlePara)
+
+        val para1 = Paragraph().add(Text("1. Telah dilakukan pemeriksaan fisik sebelum pengajuan PEB atas barang ekspor pada:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para1)
+        writeDataListwithSemicolomn(listOf("a.", "b."), listOf("Lokasi","Nama Sarana Pengangkut"), listOf(it.lokasi_sounding[0], it.nama_sarkut), cellTop)
+
+        val para2 = Paragraph().add(Text("2. Eksportir:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para2)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("NPWP", "Nama", "Alamat"), listOf(it.npwp_perusahaan_sounding[0], it.perusahaan_sounding[0], it.alamat_perusahaan_sounding[0]), cellTop)
+
+        val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para3)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+            listOf(
+                it.no_tangki[0],
+                "${zeroRemover(it.suhu_kalibrasi_tangki[0].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+            cellTop)
+
+        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
+        val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4).add(para4a)
+        writeDataListwithSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+            listOf(
+                it.waktu[0].subSequence(it.waktu[0].indexOf(",") + 2, it.waktu[0].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[0].subSequence(it.waktu[0].indexOf(":")-3, it.waktu[0].length)}",
+                "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+            cellTop)
+
+        val table = Table(UnitValue.createPercentArray(1)).setMarginTop(20f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
+        doc.add(table)
+    }
+    private fun writeDataListwithSemicolomn(list: List<String>, listJudul: List<String>, listNilai: List<String>, cell: Cell) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val padding = 3f
+        val tablelist = Table(floatArrayOf(0.2f/7.25f, 2f/7.25f, 0.05f/7.25f, 5f/7.25f))
+            .setBorder(Border.NO_BORDER)
+        tablelist.width = cell.width
+        for (i in list.indices) {
+            val idPoint = Cell().add(Paragraph().add(Text(list[i]).setFont(fontArial).setFontSize(10f)))
+            idPoint.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(7.3f*padding)
+            tablelist.addCell(idPoint)
+
+            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+            tablelist.addCell(idCell)
+
+            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(padding)
+                .setPaddingTop(-padding)
+            tablelist.addCell(separatorCell)
+
+            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(3*padding)
+                .setPaddingRight(5*padding)
+            tablelist.addCell(valueCell)
+        }
+        cell.add(tablelist)
+        cell.add(Paragraph().add("\n").setFixedLeading(5f))
     }
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
         val bmpQrCode = getQrCodeBitmap(it)
@@ -1909,9 +1964,9 @@ class TabFragment(private val title: String) : Fragment() {
         binding1.apply {
             val checkResult: Boolean = try {
                 tinggiCairan.text.toString().toDouble() > 0.0 &&
-                        tinggiMeja.text.toString().toDouble() > 0.0 &&
-                        suhuCairan.text.toString().toDouble() > 0.0 &&
-                        suhuTetap.text.toString().toDouble() > 0.0 &&
+                        tinggiMeja.text.toString().toDouble() >= 0.0 &&
+                        suhuCairan.text.toString().toDouble() >= 0.0 &&
+                        suhuTetap.text.toString().toDouble() >= 0.0 &&
                         muai.text.toString().toDouble() > 0.0 &&
                         densityCairan.text.toString().toDouble() > 0.0
             } catch (e: Exception) {
@@ -2410,7 +2465,7 @@ class TabFragment(private val title: String) : Fragment() {
                             val spinnerPosition = adapter.getPosition(it.kota_pegawai)
                             binding.updateKantor.setSelection(spinnerPosition)
                         } catch (e: Exception) {
-                            Log.e("okimatra", "" + e.message)
+                            Log.e("okimatra13", "" + e.message)
                         }
                     }
                 }
@@ -2423,7 +2478,7 @@ class TabFragment(private val title: String) : Fragment() {
                     binding.updateNama.setText(it.nama_pegawai)
                     binding.updateNip.setText(it.nip)
                 } catch (e: Exception) {
-                    Log.e("okimatra", "" + e.message)
+                    Log.e("okimatra14", "" + e.message)
                 }
             }
         }
@@ -2559,7 +2614,7 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     }
                 } catch (e: Exception) {
-                    Log.d("okimatra", "" + e.message)
+                    Log.d("okimatra15", "" + e.message)
                 }
             }
         }
@@ -2596,7 +2651,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     binding.updatePerusahaan.setSelection(spinnerPosition)
                                 }
                             } catch (e: Exception) {
-                                Log.e("okimatra", "" + e.message)
+                                Log.e("okimatra16", "" + e.message)
                             }
                         }
                     }
@@ -2607,7 +2662,7 @@ class TabFragment(private val title: String) : Fragment() {
                                 binding.updateNama.setText(it.nama_pengguna_jasa)
                                 binding.updateJabatan.setText(it.jabatan)
                             } catch (e: Exception) {
-                                Log.d("okimatra", "" + e.message)
+                                Log.d("okimatra17", "" + e.message)
                             }
                         }
                     }
@@ -2647,7 +2702,7 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }
                     } catch (e: Exception) {
-                        Log.d("okimatra", "" + e.message)
+                        Log.d("okimatra18", "" + e.message)
                     }
                 }
             }
@@ -2732,7 +2787,7 @@ class TabFragment(private val title: String) : Fragment() {
                     binding.updateNpwp.setText(it.npwp)
                     binding.etUpdateAlamatId.setText(it.alamat)
                 } catch (e: Exception) {
-                    Log.e("okimatra", "" + e.message)
+                    Log.e("okimatra19", "" + e.message)
                 }
             }
         }
@@ -2982,7 +3037,7 @@ class TabFragment(private val title: String) : Fragment() {
                             try {
                                 lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
                             } catch (e: Exception) {
-                                Log.d("okimatra", "" + e.message)
+                                Log.d("okimatra20", "" + e.message)
                             }
                         }
                     }
@@ -2994,7 +3049,7 @@ class TabFragment(private val title: String) : Fragment() {
                             try {
                                 lokasiSounding.setText(String.format(getString(R.string.lokasi_edited),it.perusahaan_pengguna_jasa))
                             } catch (e: Exception) {
-                                Log.d("okimatra", "" + e.message)
+                                Log.d("okimatra21", "" + e.message)
                             }
                         }
                     }
@@ -3063,7 +3118,7 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                         }
                     } catch (e: Exception) {
-                        Log.e("okimatra", "" + e.message)
+                        Log.e("okimatra22", "" + e.message)
                     }
                 }
             }
@@ -3224,12 +3279,12 @@ class TabFragment(private val title: String) : Fragment() {
                                             updateDialog.dismiss()
                                         }
                                     }  catch (e: Exception) {
-                                        Log.d("okimatra", "" + e.message)
+                                        Log.d("okimatra23", "" + e.message)
                                     }
                                 }
                             }
                         } catch (e: Exception) {
-                            Log.d("okimatra", "" + e.message)
+                            Log.d("okimatra24", "" + e.message)
                         }
                     }
                 }
