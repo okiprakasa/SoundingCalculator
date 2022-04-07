@@ -1606,8 +1606,6 @@ class TabFragment(private val title: String) : Fragment() {
         bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
         val imageLogoBCData = ImageDataFactory.create(streamLogoBC.toByteArray())
         val imageLogoBC = Image(imageLogoBCData)
-//        val scalerLogoBC: Float = (PageSize.A4.width/4.5f - doc.leftMargin - doc.rightMargin) / imageLogoBCData.width
-//        Log.d("Scale", "Scale: ${scalerLogoBC}, Width1: ${imageLogoBCData.width}")
         imageLogoBC.scale(0.45f, 0.45f)
 
         val cellLogoBC = Cell().add(imageLogoBC)
@@ -1651,7 +1649,8 @@ class TabFragment(private val title: String) : Fragment() {
         bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
         val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
         val imgQrCode = Image(imgQrCodeData)
-        imgQrCode.setFixedPosition(337f, 330f)
+        imgQrCode.scale(0.275f, 0.275f)
+        imgQrCode.setFixedPosition(340f, 340f)
         doc.add(imgQrCode)
 
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
@@ -1757,7 +1756,7 @@ class TabFragment(private val title: String) : Fragment() {
         writeAuthenticationwithCustomer(jabatan, nip, doc)
     }
     private fun getQrCodeBitmap(it: SoundingEntity): Bitmap {
-        val size = 200 //pixels
+        val size = 512 //pixels
         val metodeFraksi = it.volume_fraksi > 0
         val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
         val qrCodeContent = if (metodeFraksi) {
@@ -1804,7 +1803,6 @@ class TabFragment(private val title: String) : Fragment() {
                     "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
                     "${it.pegawai_sounding}, ${it.nip_pegawai}"
         }
-//        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // Make the QR code buffer border narrower
         val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
         return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
             for (x in 0 until size) {
