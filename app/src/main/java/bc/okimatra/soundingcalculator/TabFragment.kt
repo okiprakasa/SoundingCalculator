@@ -1651,7 +1651,7 @@ class TabFragment(private val title: String) : Fragment() {
         bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
         val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
         val imgQrCode = Image(imgQrCodeData)
-        imgQrCode.setFixedPosition(320f, 300f)
+        imgQrCode.setFixedPosition(337f, 330f)
         doc.add(imgQrCode)
 
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
@@ -1757,51 +1757,51 @@ class TabFragment(private val title: String) : Fragment() {
         writeAuthenticationwithCustomer(jabatan, nip, doc)
     }
     private fun getQrCodeBitmap(it: SoundingEntity): Bitmap {
-        val size = 250 //pixels
+        val size = 200 //pixels
         val metodeFraksi = it.volume_fraksi > 0
         val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
         val qrCodeContent = if (metodeFraksi) {
             "${it.perusahaan_sounding}\n" +
                     "${it.alamat_perusahaan_sounding}\n" +
-                    "Nomor Tangki ${it.no_tangki}\n" +
+                    "Tangki ${it.no_tangki}\n" +
                     "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
-                    "${it.lokasi_sounding}\n" +
-                    "Tinggi Cairan: ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
-                    "Suhu Cairan: ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n\n" +
-                    "Suhu Kalibrasi Tangki: ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
-                    "Tinggi Meja: ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
-                    "Koefisien Muai Tangki: ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n" +
-                    "Hasil Perhitungan $metode" +
-                    "${it.judulKalibrasi1}: ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
-                    "${it.judulFraksi}: ${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
-                    "Massa Jenis Cairan: ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
-                    "Tinggi Terkoreksi: ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m" +
-                    "Volume App: ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L" +
-                    "Volume Obs: ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L" +
-                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL" +
-                    "Hasil Akhir Muatan: ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT" +
+                    "${it.lokasi_sounding}\n\n" +
+                    "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
+                    "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
+                    "Tinggi Meja ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
+                    "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
+                    "Hasil Perhitungan $metode\n" +
+                    "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "${it.judulFraksi} ${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
+                    "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
+                    "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
                     "${it.pegawai_sounding}, ${it.nip_pegawai}"
         } else {
             "${it.perusahaan_sounding}\n" +
                     "${it.alamat_perusahaan_sounding}\n" +
-                    "Nomor Tangki ${it.no_tangki}\n" +
+                    "Tangki ${it.no_tangki}\n" +
                     "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
                     "${it.lokasi_sounding}\n" +
-                    "Tinggi Cairan: ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
-                    "Suhu Cairan: ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n\n" +
-                    "Suhu Kalibrasi Tangki: ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
+                    "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
+                    "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
                     "Tinggi Meja: ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
-                    "Koefisien Muai Tangki: ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n" +
-                    "Hasil Perhitungan $metode" +
-                    "${it.judulKalibrasi1}: ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
+                    "Hasil Perhitungan $metode\n" +
+                    "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
                     "Tabel Kalibrasi (${it.judulDataTabel}): ${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L" +
-                    "${it.judulKalibrasi2}: ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L" +
-                    "Massa Jenis Cairan: ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
-                    "Tinggi Terkoreksi: ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m" +
-                    "Volume App: ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L" +
-                    "Volume Obs: ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L" +
-                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL" +
-                    "Hasil Akhir Muatan: ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT" +
+                    "${it.judulKalibrasi2} ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L" +
+                    "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
+                    "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Volume ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
+                    "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
                     "${it.pegawai_sounding}, ${it.nip_pegawai}"
         }
 //        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // Make the QR code buffer border narrower
