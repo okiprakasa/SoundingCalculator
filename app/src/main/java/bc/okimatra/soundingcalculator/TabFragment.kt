@@ -1200,7 +1200,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     val doc = Document(pdfDoc, PageSize.A4)
                                     doc.setMargins(0f, 0f, 20f, 20f)
                                     page1FinalReport(doc, it)
-                                    if (it.hasil_sounding.size/2 > 1) {
+                                    if (it.hasil.size > 1) {
                                         pageExtraFinalReport(doc, it)
                                     }
                                     doc.close()
@@ -1609,89 +1609,188 @@ class TabFragment(private val title: String) : Fragment() {
     private fun pageExtraFinalReport(doc: Document, it: ReportEntity) {
         val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
         val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
-                "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
-            .setFont(fontArial).setFontSize(10f)
-        val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER)
-        val cellTop = Cell(1,2).add(titlePara)
-
-        val para3 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para3)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
-            listOf(
-                it.no_tangki[0],
-                "${zeroRemover(it.suhu_kalibrasi_tangki[0].toBigDecimal().toPlainString()).replace(".",",")} °C",
-                "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
-            cellTop)
-
+        val maxIndex = (it.hasil_sounding.size-3)/4
         val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
-        val para4 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4).add(para4a)
-        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-            listOf(
-                it.waktu[0].subSequence(it.waktu[0].indexOf(",") + 2, it.waktu[0].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[0].subSequence(it.waktu[0].indexOf(":")-3, it.waktu[0].length)}",
-                "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-            cellTop)
+        for (i in 0..maxIndex) {
+            doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
+            val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
+                    "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
+                .setFont(fontArial).setFontSize(10f)
+            val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
+            val cellTop = Cell(1,2).add(titlePara)
+            Log.d("testing0", maxIndex.toString() + ((0+1)*4+2).toString() + it.hasil_sounding.size.toString())
 
-        val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4b)
-        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-            listOf(
-                it.waktu[1].subSequence(it.waktu[1].indexOf(",") + 2, it.waktu[1].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[1].subSequence(it.waktu[1].indexOf(":")-3, it.waktu[1].length)}",
-                "${zeroRemover(it.suhu_cairan[1].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                "${zeroRemover((it.tinggi_cairan[1]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                "${zeroRemover(it.density_cairan[1].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[1].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[1].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-            cellTop)
 
-        val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text("         :    ${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4c)
+            if (it.hasil_sounding.size >= (i+1)*4+2) {
+                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                cellTop.add(para1)
+                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+                    listOf(
+                        it.no_tangki[i*4+2],
+                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                        "${zeroRemover(it.tinggi_meja[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+                    cellTop)
+                val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2).add(para2a)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(",") + 2, it.waktu[i*4+2].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(":")-3, it.waktu[i*4+2].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
 
-        val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(100f)
-        cellTop.add(paraMengetahui)
+                val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2b)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(",") + 2, it.waktu[i*4+3].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(":")-3, it.waktu[i*4+3].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
 
-        val paraLeft = Paragraph()
-            .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("${it.tanggal_ba.replace("-"," ")}\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val cellLeft = Cell().add(paraLeft)
-        writeReportwithSemicolomn(listOf("Nama","Jabatan"), listOf(it.pengguna_jasa_sounding[0], it.jabatan_pengguna_jasa[0]), cellLeft)
+                val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2c)
 
-        val paraRight = Paragraph()
-            .add(Text("\n\n\n\n\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val cellRight = Cell().add(paraRight)
-        val nipSpace = it.nip_pegawai[0].subSequence(0,8).toString() +
-                " " + it.nip_pegawai[0].subSequence(8,14).toString() +
-                " " + it.nip_pegawai[0].subSequence(14,15).toString() +
-                " " + it.nip_pegawai[0].subSequence(15,it.nip_pegawai[0].length).toString()
-        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace), cellRight)
+                val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                cellTop.add(para3)
+                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+                    listOf(
+                        it.no_tangki[i*4+4],
+                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                        "${zeroRemover(it.tinggi_meja[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+                    cellTop)
 
-        val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
-        table.addCell(cellLeft).addCell(cellRight)
-        doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
-        doc.add(table)
+                val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para4).add(para4a)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+4].subSequence(it.waktu[i*4+4].indexOf(",") + 2, it.waktu[i*4+4].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+4].subSequence(it.waktu[i*4+4].indexOf(":")-3, it.waktu[i*4+4].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+4]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para4b)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+5].subSequence(it.waktu[i*4+5].indexOf(",") + 2, it.waktu[i*4+5].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+5].subSequence(it.waktu[i*4+5].indexOf(":")-3, it.waktu[i*4+5].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+5]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+2].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para4c)
+//                for (j in i*4+2..(i*4+1) step 2) {}
+            }
+            else {
+                Log.d("testing", i.toString())
+                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                cellTop.add(para1)
+                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+                    listOf(
+                        it.no_tangki[i*4+2],
+                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                        "${zeroRemover(it.tinggi_meja[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+                    cellTop)
+                val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2).add(para2a)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(",") + 2, it.waktu[i*4+2].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(":")-3, it.waktu[i*4+2].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2b)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(",") + 2, it.waktu[i*4+3].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(":")-3, it.waktu[i*4+3].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2c)
+            }
+
+            val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(287f)
+            cellTop.add(paraMengetahui)
+
+            val cellLeft = Cell()
+
+            val paraRight = Paragraph()
+                .add(Text("\n\n\n\n").setFont(fontArial).setFontSize(10f))
+                .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
+                .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+            val cellRight = Cell().add(paraRight)
+            val nipSpace = it.nip_pegawai[i*4+2].subSequence(0,8).toString() +
+                    " " + it.nip_pegawai[i*4+2].subSequence(8,14).toString() +
+                    " " + it.nip_pegawai[i*4+2].subSequence(14,15).toString() +
+                    " " + it.nip_pegawai[i*4+2].subSequence(15,it.nip_pegawai[0].length).toString()
+            writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[i*4+2], nipSpace), cellRight)
+
+            val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
+            table.addCell(cellLeft).addCell(cellRight)
+            doc.add(table)
+        }
     }
     private fun page1FinalReport(doc: Document, it: ReportEntity) {
         val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
@@ -1759,7 +1858,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
             .add(soundingItalic)
-            .add(Text("         :    ${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("         :    ${zeroRemover(it.hasil[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
         cellTop.add(para4c)
 
@@ -1778,7 +1877,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         val paraLeft = Paragraph()
             .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("${it.tanggal_ba.replace("-"," ")}\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",")+2, it.tanggal_ba.length)}\n").setFont(fontArial).setFontSize(10f))
             .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
             .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
