@@ -10,10 +10,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="273dp"
+            android:layout_height="235dp"
             android:background="@drawable/blue_bg2">
 
             <ImageView
@@ -81,9 +80,9 @@
                 android:inputType="textCapWords"
                 android:maxLines="1"
                 android:paddingStart="17dp"
-                android:paddingTop="15dp"
+                android:paddingTop="10dp"
                 android:paddingEnd="0dp"
-                android:paddingBottom="15dp"
+                android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="13sp" />
 
@@ -109,9 +108,57 @@
                 android:maxLength="18"
                 android:maxLines="1"
                 android:paddingStart="17dp"
-                android:paddingTop="15dp"
+                android:paddingTop="10dp"
                 android:paddingEnd="0dp"
-                android:paddingBottom="15dp"
+                android:paddingBottom="10dp"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="13sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="53dp"
+            android:layout_marginTop="12.7dp"
+            android:layout_marginRight="53dp"
+            android:background="@drawable/rounded_input">
+
+            <Spinner
+                android:id="@+id/golongan_pegawai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_input"
+                android:hint="@string/hint_kantor_pegawai"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:spinnerMode="dropdown" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="53dp"
+            android:layout_marginTop="18.7dp"
+            android:layout_marginRight="53dp"
+            android:background="@drawable/rounded_input">
+
+            <!-- INPUT -->
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/input_jabatan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/poppins_light"
+                android:hint="@string/jabatan"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:paddingStart="17dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="13sp" />
 

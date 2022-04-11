@@ -3,7 +3,7 @@
     <string name="data_lapangan">Data Lapangan</string>
     <string name="data_sounding">Data Sounding %s</string>
     <string name="data_umum">Data Umum</string>
-    <string name="data_dokumen">Data Dokumen</string>
+    <string name="data_dokumen">Data BA-PFP</string>
     <string name="lapor_hasil">Pelaporan Hasil</string>
     <string name="hasil_perhitungan">Hasil Perhitungan (MT)</string>
     <string name="hasil_pembulatan">Hasil Pembulatan (MT)</string>
@@ -72,6 +72,7 @@
     <string name="pengguna_jasa">Pengguna Jasa</string>
     <string name="jabatan">Jabatan</string>
     <string name="hint_jabatan">Cth: Direktur Utama</string>
+    <string name="hint_jabatan_pegawai">Cth: Pelaksana Pemeriksa</string>
     <string name="hint_pengguna_jasa">Cth: Bagus Suhardja</string>
     <string name="data_tabel_edited">Data Tabel (%s m)</string>
     <string name="tabel_kalibrasi_edited">Tabel Kalibrasi (%s0 m)</string>
@@ -97,7 +98,8 @@
     <string name="company">Perusahaan</string>
     <string name="kantor">Kantor</string>
     <string name="sounding_system">Sounding System</string>
-    <string name="nama_nip">Masukkan Nama dan NIP Anda</string>
+    <string name="nama_nip">Masukkan Data Diri Anda</string>
+    <string name="golongan">Golongan</string>
     <string name="nama">Nama</string>
     <string name="nip">NIP</string>
     <string name="masuk">SIMPAN USER</string>

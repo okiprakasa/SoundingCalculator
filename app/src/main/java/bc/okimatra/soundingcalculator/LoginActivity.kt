@@ -1,9 +1,11 @@
 package bc.okimatra.soundingcalculator
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -199,10 +201,13 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
+            populateDropdownGolongan(golonganPegawai, this@LoginActivity)
 
             btnStart.setOnClickListener {
-                val nama = endSpaceRemover(inputNama.text.toString())
+                val nama = endSpaceRemover(inputNama.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                 val nip = inputNip.text.toString()
+                val gol = golonganPegawai.selectedItem.toString()
+                val jabatan = endSpaceRemover(inputJabatan.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                 when {
                     nama.isEmpty() -> {
                         Toast.makeText(this@LoginActivity, "Mohon masukkan Nama Anda", Toast.LENGTH_SHORT).show()
@@ -237,12 +242,19 @@ class LoginActivity : AppCompatActivity() {
                     nip.substring(14,15).toInt() !in 1..2 -> {
                         Toast.makeText(this@LoginActivity, "Mohon Periksa Kode Terkait Jenis Kelamin Anda", Toast.LENGTH_SHORT).show()
                     }
+                    jabatan.isEmpty() -> {
+                        Toast.makeText(this@LoginActivity, "Mohon masukkan Jabatan Anda", Toast.LENGTH_SHORT).show()
+                    }
                     else -> {
                         lifecycleScope.launch {
                             userDao.fetchUserOfficeByKota(kantorPegawai.selectedItem.toString()).collect {
                                 lifecycleScope.launch {
-                                    userDao.insertUser(PegawaiEntity(nama_pegawai = nama,
+                                    userDao.insertUser(PegawaiEntity(
+                                        nama_pegawai = nama,
                                         nip = nip,
+                                        gol = gol,
+                                        pangkat = golonganToPangkat(gol),
+                                        jabatan_pegawai = jabatan,
                                         kota_pegawai = it.kota,
                                         kantor_pegawai = it.kantor,
                                         kanwil_pegawai = it.kanwil,
@@ -286,23 +298,33 @@ fun endSpaceRemover(text:String): String {
     }
     return newtext
 }
-@Suppress("unused")
-fun nipcheck(str: String): Boolean {
-    val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
-    val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
-    val year = sdfyear.format(Calendar.getInstance().time)
-    val date = sdfdate.format(Calendar.getInstance().time)
-    return if (str.length == 18) {
-        ((str.substring(0,4).toInt() in year.toInt()-90..year.toInt()-13) &&
-                (str.substring(4,6).toInt() in 1..12) &&
-                (str.substring(6,8).toInt() in 1..31) &&
-                (str.substring(8,12).toInt() in str.substring(0,4).toInt()+13..year.toInt()) &&
-                (str.substring(8,12).toInt() - str.substring(0,4).toInt() <= 70) &&
-                (str.substring(12,14).toInt() in 1..12) &&
-                (str.substring(8,14).toInt() <= date.toInt()) &&
-                (str.substring(14,15).toInt() in 1..2)
-        )
-    } else {
-        false
+fun populateDropdownGolongan(spinner: Spinner, context: Context) {
+    val items = arrayListOf("I/a", "I/b","I/c","I/d","II/a","II/b","II/c","II/d","III/a","III/b","III/c","III/d","IV/a","IV/b","IV/c","IV/d","IV/e")
+    val adapter = ArrayAdapter(
+        context,
+        R.layout.dropdown_layout,
+        items
+    )
+    spinner.adapter = adapter
+}
+fun golonganToPangkat(gol: String): String {
+    return when (gol) {
+        "I/a" -> { "Juru Muda" }
+        "I/b" -> { "Juru Muda Tingkat I" }
+        "I/c" -> { "Juru" }
+        "I/d" -> { "Juru Tingkat I" }
+        "II/a" -> { "Pengatur Muda Tingkat I" }
+        "II/b" -> { "Pengatur" }
+        "II/c" -> { "Pengatur Tingkat I" }
+        "II/d" -> { "Pengatur Muda" }
+        "III/a" -> { "Penata Muda" }
+        "III/b" -> { "Penata Muda Tingkat I" }
+        "III/c" -> { "Penata" }
+        "III/d" -> { "Penata Tingkat I" }
+        "IV/a" -> { "Pembina" }
+        "IV/b" -> { "Pembina Tingkat I" }
+        "IV/c" -> { "Pembina Utama Muda" }
+        "IV/d" -> { "Pembina Utama Madya" }
+        else -> { "Pembina Utama" }
     }
 }

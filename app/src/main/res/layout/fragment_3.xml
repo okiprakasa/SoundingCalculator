@@ -317,6 +317,72 @@
                     tools:ignore="Autofill"/>
             </LinearLayout>
 
+            <!--Golongan-->
+            <LinearLayout
+                android:id="@+id/gol_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/judul_gol"
+                    android:textColor="@color/black"
+                    android:layout_width="0dp"
+                    android:layout_weight="2.2"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/golongan"
+                    android:fontFamily="@font/helvetica"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:backgroundTint="@color/appTheme"
+                    android:id="@+id/gol"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="-13dp"/>
+            </LinearLayout>
+
+            <!--Jabatan-->
+            <LinearLayout
+                android:id="@+id/jabatan_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/judul_jabatan"
+                    android:textColor="@color/black"
+                    android:layout_width="0dp"
+                    android:gravity="center_vertical"
+                    android:layout_weight="2.2"
+                    android:fontFamily="@font/helvetica"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/jabatan"
+                    android:textSize="12sp"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:backgroundTint="@color/appTheme"
+                    android:id="@+id/jabatan"
+                    android:layout_width="0dp"
+                    android:layout_weight="9"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:textSize="12sp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="5dp"
+                    android:hint="@string/hint_jabatan_pegawai"
+                    android:autofillHints="name"
+                    android:inputType="textCapWords"
+                    android:scrollbars="vertical"/>
+            </LinearLayout>
+
             <!--Kantor-->
             <LinearLayout
                 android:id="@+id/kantor_layout"
@@ -387,7 +453,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </ScrollView>
-
 
     <ScrollView
         android:id="@+id/svUserList"
