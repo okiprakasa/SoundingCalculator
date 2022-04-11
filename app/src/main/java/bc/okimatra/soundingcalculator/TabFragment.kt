@@ -2901,7 +2901,7 @@ class TabFragment(private val title: String) : Fragment() {
         val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
         val imgQrCode = Image(imgQrCodeData)
         imgQrCode.scale(0.15f, 0.15f)
-        imgQrCode.setFixedPosition(344f, 200f)
+        imgQrCode.setFixedPosition(346f, 200f)
         doc.add(imgQrCode)
 
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
@@ -3078,10 +3078,8 @@ class TabFragment(private val title: String) : Fragment() {
         val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
         val qrCodeContent = if (metodeFraksi) {
             "${it.perusahaan_sounding}\n" +
-                    "${it.alamat_perusahaan_sounding}\n" +
                     "Tangki ${it.no_tangki}\n" +
                     "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
-                    "${it.lokasi_sounding}\n\n" +
                     "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
                     "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
                     "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
@@ -3093,16 +3091,13 @@ class TabFragment(private val title: String) : Fragment() {
                     "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
                     "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
                     "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
-                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
                     "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
                     "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
                     "${it.pegawai_sounding}, ${it.nip_pegawai}"
         } else {
             "${it.perusahaan_sounding}\n" +
-                    "${it.alamat_perusahaan_sounding}\n" +
                     "Tangki ${it.no_tangki}\n" +
                     "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
-                    "${it.lokasi_sounding}\n" +
                     "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
                     "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
                     "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
@@ -3115,7 +3110,6 @@ class TabFragment(private val title: String) : Fragment() {
                     "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
                     "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
                     "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
-                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
                     "Volume ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
                     "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
                     "${it.pegawai_sounding}, ${it.nip_pegawai}"
