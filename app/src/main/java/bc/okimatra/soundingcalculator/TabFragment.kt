@@ -2901,7 +2901,7 @@ class TabFragment(private val title: String) : Fragment() {
         val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
         val imgQrCode = Image(imgQrCodeData)
         imgQrCode.scale(0.15f, 0.15f)
-        imgQrCode.setFixedPosition(346f, 200f)
+        imgQrCode.setFixedPosition(346f, 210f)
         doc.add(imgQrCode)
 
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
@@ -3105,8 +3105,8 @@ class TabFragment(private val title: String) : Fragment() {
                     "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
                     "Hasil Perhitungan $metode\n" +
                     "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
-                    "Tabel Kalibrasi (${it.judulDataTabel}): ${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L" +
-                    "${it.judulKalibrasi2} ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L" +
+                    "Tabel Kalibrasi (${it.judulDataTabel}): ${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "${it.judulKalibrasi2} ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
                     "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
                     "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
                     "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
