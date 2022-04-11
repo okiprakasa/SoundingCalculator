@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textAlignment="center"
                 android:paddingTop="5dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:paddingBottom="5dp"
                 android:fontFamily="@font/nunito"
                 android:background="@drawable/switch_on"
@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:textAlignment="center"
                 android:paddingTop="5dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/appTheme"
                 android:fontFamily="@font/nunito"
@@ -117,7 +117,7 @@
                                 android:fontFamily="@font/nunito"
                                 android:gravity="center_horizontal"
                                 android:text="@string/data_umum"
-                                android:textSize="19sp" />
+                                android:textSize="17sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -127,7 +127,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/produk"
-                                android:textSize="14sp"/>
+                                android:textSize="13sp"/>
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
                                     android:paddingBottom="10dp"
                                     android:scrollbars="vertical"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp"
+                                    android:textSize="12sp"
                                     tools:ignore="TooManyViews" />
 
                             </RelativeLayout>
@@ -165,7 +165,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/bentuk"
-                                android:textSize="14sp"/>
+                                android:textSize="13sp"/>
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
                                     android:paddingBottom="10dp"
                                     android:scrollbars="vertical"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
 
                             </RelativeLayout>
 
@@ -203,7 +203,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/sarana_pengangkut"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -227,7 +227,7 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                             <TextView
@@ -238,7 +238,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/jumlah_barcon"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -263,7 +263,7 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                             <TextView
@@ -274,7 +274,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/waktu_barcon"
-                                android:textSize="14sp"/>
+                                android:textSize="13sp"/>
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -300,7 +300,7 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                         </LinearLayout>
@@ -332,7 +332,7 @@
                                 android:fontFamily="@font/nunito"
                                 android:gravity="center_horizontal"
                                 android:text="@string/data_dokumen"
-                                android:textSize="19sp" />
+                                android:textSize="17sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -342,7 +342,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/no_ba"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -364,7 +364,7 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                             <TextView
@@ -375,7 +375,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/tanggal_ba"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -402,7 +402,7 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                             <TextView
@@ -413,7 +413,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/lokasi_ba"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -436,7 +436,7 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="13sp" />
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                         </LinearLayout>
@@ -483,7 +483,7 @@
                                     android:fontFamily="@font/nunito"
                                     android:gravity="center_horizontal"
                                     android:text="@string/data_sounding"
-                                    android:textSize="19sp" />
+                                    android:textSize="17sp" />
 
                                 <ImageView
                                     android:id="@+id/addOrClose1"
@@ -504,7 +504,7 @@
                                 android:layout_marginTop="20dp"
                                 android:fontFamily="@font/helvetica"
                                 android:text="@string/awal"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:id="@+id/soundingRL"
@@ -531,7 +531,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/akhir"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -559,7 +559,7 @@
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
                                 android:text="@string/hasil"
-                                android:textSize="14sp" />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -593,7 +593,7 @@
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
                             android:text="@string/hasil"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             android:visibility="visible"/>
 
@@ -615,7 +615,7 @@
                     android:gravity="center"
                     android:text="@string/tambah_sounding"
                     android:textColor="@color/appTheme"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <Button
@@ -633,7 +633,7 @@
                     android:gravity="center"
                     android:text="@string/simpan_data"
                     android:textColor="#ffffff"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView

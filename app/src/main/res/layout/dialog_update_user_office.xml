@@ -16,7 +16,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/helvetica"
-        android:textSize="14sp"/>
+        android:textSize="13sp"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/kota"
@@ -29,7 +29,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:autofillHints="name"
         android:inputType="textCapWords"
         android:scrollbars="vertical"/>
@@ -43,7 +43,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/lokasi_ba"
@@ -57,7 +57,7 @@
         android:inputType="textCapWords"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -70,7 +70,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/kantor"
@@ -84,7 +84,7 @@
         android:inputType="textMultiLine|textCapCharacters"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -97,7 +97,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/kanwil"
@@ -111,7 +111,7 @@
         android:inputType="textMultiLine|textCapCharacters"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -124,7 +124,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="13sp"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/format_ba_sounding"
@@ -137,7 +137,7 @@
         android:inputType="text"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -150,7 +150,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="13sp"/>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/format_ba_sampling"
@@ -163,7 +163,7 @@
         android:inputType="text"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -194,7 +194,7 @@
             android:text="@string/fraksi"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <TextView
@@ -208,7 +208,7 @@
             android:text="@string/interpolasi"
             android:textAlignment="center"
             android:textColor="@color/appTheme"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -221,7 +221,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -236,7 +236,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -250,7 +250,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -265,7 +265,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -279,7 +279,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -294,7 +294,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -308,7 +308,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -322,7 +322,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -336,7 +336,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -350,7 +350,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         android:maxLines="1"
         android:inputType="textCapCharacters"
@@ -365,7 +365,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/nama_pegawai"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <Spinner
@@ -378,7 +378,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -391,7 +391,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/pengguna_jasa"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <Spinner
@@ -404,7 +404,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -417,7 +417,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -430,7 +430,7 @@
         android:layout_marginTop="-10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -444,7 +444,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -462,7 +462,7 @@
         android:focusableInTouchMode="false"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>

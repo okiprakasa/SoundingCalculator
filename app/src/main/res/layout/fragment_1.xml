@@ -65,7 +65,7 @@
                         android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_lapangan"
-                        android:textSize="19sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/tinggi_cairan"
-                        android:textSize="14sp"/>
+                        android:textSize="13sp"/>
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -112,7 +112,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/suhu_cairan"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -137,7 +137,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -168,7 +168,7 @@
                         android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_tangki"
-                        android:textSize="19sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -178,7 +178,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/suhu_tetap"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -203,7 +203,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -215,7 +215,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/tinggi_meja"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -240,7 +240,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -252,7 +252,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/faktor_muai"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -277,7 +277,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -325,7 +325,7 @@
                             android:text="@string/fraksi"
                             android:textAlignment="center"
                             android:textColor="@color/white"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -339,7 +339,7 @@
                             android:text="@string/interpolasi"
                             android:textAlignment="center"
                             android:textColor="@color/appTheme"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -352,7 +352,7 @@
                         android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_tabel"
-                        android:textSize="19sp" />
+                        android:textSize="17sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -368,7 +368,7 @@
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
                             android:text="@string/tabel_kalibrasi"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -394,7 +394,7 @@
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="10dp"
                                 android:textCursorDrawable="@drawable/cursor_color"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
 
                         </RelativeLayout>
 
@@ -407,7 +407,7 @@
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
                             android:text="@string/tabel_fraksi"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
 
                         <RelativeLayout
                             android:id="@+id/fraksi"
@@ -434,7 +434,7 @@
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="10dp"
                                 android:textCursorDrawable="@drawable/cursor_color"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
 
                         </RelativeLayout>
 
@@ -447,7 +447,7 @@
                             android:fontFamily="@font/helvetica"
                             android:gravity="center_horizontal"
                             android:text="@string/tabel_kalibrasi2"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:visibility="gone"/>
 
                         <RelativeLayout
@@ -476,7 +476,7 @@
                                 android:paddingEnd="10dp"
                                 android:paddingBottom="10dp"
                                 android:textCursorDrawable="@drawable/cursor_color"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
 
                         </RelativeLayout>
 
@@ -490,7 +490,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/density_cairan"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -515,7 +515,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -546,7 +546,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/tinggi_terkoreksi"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -558,7 +558,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/volume_app"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -570,7 +570,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/volume_obs"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -582,7 +582,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/volume"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:visibility="gone"/>
 
@@ -644,7 +644,7 @@
                         android:fontFamily="@font/nunito"
                         android:gravity="center_horizontal"
                         android:text="@string/data_administrasi"
-                        android:textSize="19sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -654,7 +654,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/no_tangki"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -678,7 +678,7 @@
                             android:inputType="textCapCharacters"
                             android:maxLines="1"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -690,7 +690,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/nama_pegawai"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -718,7 +718,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/pengguna_jasa"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -745,7 +745,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/lokasi_sounding"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -767,7 +767,7 @@
                             android:paddingEnd="5dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -779,7 +779,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/waktu"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -805,7 +805,7 @@
                             android:paddingEnd="5dp"
                             android:paddingBottom="10dp"
                             android:textCursorDrawable="@drawable/cursor_color"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -828,7 +828,7 @@
                 android:gravity="center"
                 android:text="@string/next"
                 android:textColor="#ffffff"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <Button
@@ -844,7 +844,7 @@
                 android:fontFamily="@font/nunito"
                 android:gravity="center"
                 android:text="@string/back"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:visibility="gone"
                 tools:ignore="TooManyViews" />
@@ -866,7 +866,7 @@
                 android:gravity="center"
                 android:text="@string/simpan_data"
                 android:textColor="#ffffff"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:visibility="gone"/>
 

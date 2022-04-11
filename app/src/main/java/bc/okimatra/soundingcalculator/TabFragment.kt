@@ -956,6 +956,8 @@ class TabFragment(private val title: String) : Fragment() {
                         namaLayout.visibility = View.GONE
                         pegawaiLayout.visibility = View.GONE
                         kantorLayout.visibility = View.GONE
+                        golLayout.visibility = View.GONE
+                        jabatanLayout.visibility = View.GONE
                         svUserList.visibility = View.GONE
                         kotaLayout.visibility = View.VISIBLE
                         lokasiBaLayout.visibility = View.VISIBLE
@@ -988,6 +990,8 @@ class TabFragment(private val title: String) : Fragment() {
                                     namaLayout.visibility = View.VISIBLE
                                     pegawaiLayout.visibility = View.VISIBLE
                                     kantorLayout.visibility = View.VISIBLE
+                                    golLayout.visibility = View.VISIBLE
+                                    jabatanLayout.visibility = View.VISIBLE
                                     svUserList.visibility = View.VISIBLE
                                     kotaLayout.visibility = View.GONE
                                     lokasiBaLayout.visibility = View.GONE
@@ -1978,6 +1982,12 @@ class TabFragment(private val title: String) : Fragment() {
                     R.layout.dropdown_layout,
                     items
                 )
+                val golItems = arrayListOf("I/a", "I/b","I/c","I/d","II/a","II/b","II/c","II/d","III/a","III/b","III/c","III/d","IV/a","IV/b","IV/c","IV/d","IV/e")
+                val golAdapter = ArrayAdapter(
+                    requireContext(),
+                    R.layout.dropdown_layout,
+                    golItems
+                )
                 lifecycleScope.launch {
                     userDao.fetchUserById(id).collect {
                         try {
@@ -1986,7 +1996,7 @@ class TabFragment(private val title: String) : Fragment() {
                             binding.updateJabatan.setText(it.jabatan_pegawai)
                             val kantorSpinnerPosition = adapter.getPosition(it.kota_pegawai)
                             binding.updateKantor.setSelection(kantorSpinnerPosition)
-                            val golonganSpinnerPosition = adapter.getPosition(it.gol)
+                            val golonganSpinnerPosition = golAdapter.getPosition(it.gol)
                             binding.updateGolongan.setSelection(golonganSpinnerPosition)
                         } catch (e: Exception) {
                             Log.e("okimatra13", "" + e.message)

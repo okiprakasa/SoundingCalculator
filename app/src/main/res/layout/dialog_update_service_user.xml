@@ -17,7 +17,7 @@
         android:text="@string/update_record"
         android:textColor="@android:color/black"
         android:fontFamily="@font/nunito"
-        android:textSize="17sp"
+        android:textSize="15sp"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="35dp"
         android:layout_marginTop="15dp"
@@ -34,7 +34,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/nama"
         android:fontFamily="@font/helvetica"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:layout_marginStart="7dp"
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_pengguna_jasa"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:autofillHints="name"
         android:inputType="textMultiLine|textPersonName"
         android:scrollbars="vertical"/>
@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/jabatan"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +82,7 @@
         android:hint="@string/hint_jabatan"
         android:fontFamily="@font/poppins_light"
         android:layout_marginEnd="5dp"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/perusahaan"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 
     <Spinner
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,7 +113,7 @@
         android:hint="@string/hint_perusahaan"
         android:fontFamily="@font/poppins_light"
         android:layout_marginEnd="5dp"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -127,7 +127,7 @@
         android:gravity="center"
         android:padding="15dp"
         android:fontFamily="@font/nunito"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:text="@string/update"
         android:textColor="@color/appTheme"
         android:textStyle="bold" />
@@ -138,7 +138,7 @@
         android:id="@+id/tvCancel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:gravity="center"
         android:fontFamily="@font/nunito"
         android:padding="15dp"

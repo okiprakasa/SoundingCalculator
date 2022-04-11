@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
             var checker = 0
             lifecycleScope.launch {
                 userDao.countAllUserOffice().collect { it1 ->
-                    if (it1!=12) {
+                    if (it1<12) {
                         if (checker == 0) {
                             checker = 1
                             insertKantorDB(userDao,

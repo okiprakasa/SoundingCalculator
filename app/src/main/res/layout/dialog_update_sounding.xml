@@ -16,7 +16,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/helvetica"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/tinggi_cairan"
@@ -29,7 +29,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:autofillHints="name"
         android:inputType="numberDecimal"
         android:scrollbars="vertical"/>
@@ -43,7 +43,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/suhu_cairan"
@@ -57,7 +57,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -70,7 +70,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/suhu_tetap"
@@ -84,7 +84,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -97,7 +97,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/tinggi_meja"
@@ -111,7 +111,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -124,7 +124,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/faktor_muai"
@@ -137,7 +137,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
 
@@ -168,7 +168,7 @@
             android:text="@string/fraksi"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <TextView
@@ -182,7 +182,7 @@
             android:text="@string/interpolasi"
             android:textAlignment="center"
             android:textColor="@color/appTheme"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -195,7 +195,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -210,7 +210,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -224,7 +224,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -239,7 +239,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -253,7 +253,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -268,7 +268,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -282,7 +282,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -296,7 +296,7 @@
         android:inputType="numberDecimal"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -310,7 +310,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -324,7 +324,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         android:maxLines="1"
         android:inputType="textCapCharacters"
@@ -339,7 +339,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/nama_pegawai"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <Spinner
@@ -352,7 +352,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -365,7 +365,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/pengguna_jasa"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <Spinner
@@ -378,7 +378,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -391,7 +391,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -404,7 +404,7 @@
         android:layout_marginTop="-10dp"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -418,7 +418,7 @@
         android:fontFamily="@font/helvetica"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -436,7 +436,7 @@
         android:focusableInTouchMode="false"
         android:backgroundTint="@color/appTheme"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"
         android:visibility="gone"/>
@@ -458,7 +458,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/helvetica"
             android:text="@string/tinggi_terkoreksi"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@android:color/black"
             android:visibility="gone"/>
 
@@ -470,7 +470,7 @@
             android:layout_marginTop="0dp"
             android:fontFamily="@font/helvetica"
             android:text="@string/volume_app"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@android:color/black"
             android:visibility="gone"/>
 
@@ -481,7 +481,7 @@
             android:layout_marginBottom="-5dp"
             android:fontFamily="@font/helvetica"
             android:text="@string/volume_obs"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@android:color/black"
             android:visibility="gone"/>
 
@@ -493,7 +493,7 @@
             android:layout_marginBottom="-5dp"
             android:fontFamily="@font/helvetica"
             android:text="@string/volume"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@android:color/black"
             android:visibility="gone"/>
 
@@ -503,7 +503,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/helvetica"
             android:text="@string/hasil"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@android:color/black"/>
 
         <ImageView
@@ -542,7 +542,7 @@
             android:gravity="start"
             android:padding="10dp"
             android:textColor="@color/appTheme"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -555,7 +555,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:textColor="@color/appTheme"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="visible"/>
 
@@ -569,7 +569,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:textColor="@color/appTheme"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"/>
 
@@ -582,7 +582,7 @@
             android:layout_height="match_parent"
             android:gravity="end"
             android:fontFamily="@font/nunito"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textColor="@color/appTheme"
             android:textStyle="bold"
             android:visibility="gone"/>
@@ -593,7 +593,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:padding="10dp"
             android:gravity="center"
             android:fontFamily="@font/nunito"
@@ -607,7 +607,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:padding="10dp"
             android:gravity="center"
             android:fontFamily="@font/nunito"
@@ -621,7 +621,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:padding="10dp"
             android:gravity="center"
             android:fontFamily="@font/nunito"

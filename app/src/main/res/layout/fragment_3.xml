@@ -423,7 +423,7 @@
         android:fontFamily="@font/poppins_light"
         android:background="@drawable/rounded_button"
         android:textColor="#ffffff"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:layout_marginTop="10dp"
         android:text="@string/tambah_data"/>
 
@@ -434,7 +434,7 @@
         android:fontFamily="@font/poppins_light"
         android:background="@drawable/rounded_button"
         android:textColor="#ffffff"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:layout_marginTop="10dp"
         android:text="@string/tambah_data"
         android:visibility="gone"/>

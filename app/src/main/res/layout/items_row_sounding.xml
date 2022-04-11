@@ -46,7 +46,7 @@
                     android:fontFamily="@font/nunito"
                     android:text="@string/no_tangki"
                     android:textColor="@color/white"
-                    android:textSize="14sp"/>
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:layout_weight="1"
@@ -71,7 +71,7 @@
                     android:fontFamily="@font/nunito"
                     android:text="@string/akhir"
                     android:textColor="@color/appTheme"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
@@ -86,7 +86,7 @@
                 android:paddingEnd="10dp"
                 android:text="@string/waktu"
                 android:textColor="@color/black"
-                android:textSize="12.5sp" />
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/tv_jam_sounding"
@@ -98,7 +98,7 @@
                 android:fontFamily="@font/helvetica_light"
                 android:text="@string/waktu"
                 android:textColor="@color/black"
-                android:textSize="12.5sp"/>
+                android:textSize="11sp"/>
 
             <TextView
                 android:id="@+id/tv_nama_perusahaan"
@@ -110,7 +110,7 @@
                 android:fontFamily="@font/helvetica"
                 android:textColor="@color/black"
                 android:text="@string/perusahaan"
-                android:textSize="13sp"/>
+                android:textSize="11sp"/>
         </LinearLayout>
 
         <LinearLayout
