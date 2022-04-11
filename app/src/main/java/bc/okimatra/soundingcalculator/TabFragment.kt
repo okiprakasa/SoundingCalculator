@@ -1,9 +1,5 @@
 package bc.okimatra.soundingcalculator
 
-//import com.itextpdf.layout.properties.HorizontalAlignment
-//import com.itextpdf.layout.properties.TextAlignment
-//import com.itextpdf.layout.properties.VerticalAlignment
-
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -1162,81 +1158,6 @@ class TabFragment(private val title: String) : Fragment() {
         _binding3 = null
     }
 
-    private fun pdfReportSounding(id: Int, userDao: UserDao) {
-        lifecycleScope.launch {
-            userDao.fetchReportById(id).collect {
-                try {
-                    Dexter.withContext(requireContext())
-                        .withPermissions(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ).withListener(object : MultiplePermissionsListener {
-                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                                if (report.areAllPermissionsGranted()) {
-                                    val sdf = SimpleDateFormat(" ddMMyy HHmmss", Locale.getDefault())
-                                    val currentDate = sdf.format(Calendar.getInstance().time)
-//                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
-                                    val noTangkiUnik = it.no_tangki.distinctBy { it1 -> it1.uppercase() }
-                                    var noSemuaTangki = String()
-                                    for (i in noTangkiUnik.indices) {
-                                        if (i!=0) {
-                                            noSemuaTangki += ", ${noTangkiUnik[i].uppercase()}"
-                                        }
-                                        else {
-                                            noSemuaTangki = noTangkiUnik[i]
-                                        }
-                                    }
-                                    noSemuaTangki = endSpaceRemover(noSemuaTangki)
-                                    if (noSemuaTangki.subSequence(noSemuaTangki.length-1,noSemuaTangki.length) == ",") {
-                                        noSemuaTangki = noSemuaTangki.subSequence(0, noSemuaTangki.length-1).toString()
-                                    }
-                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + noSemuaTangki + " Printed on" + currentDate + ".pdf"  //Location where the pdf will be stored
-                                    if (File(outPath).exists()) {
-                                        File(outPath).delete()
-                                    }
-                                    Log.d("PDF Location", outPath)
-                                    val writer = PdfWriter(FileOutputStream(outPath))
-                                    val pdfDoc = PdfDocument(writer)
-                                    val doc = Document(pdfDoc, PageSize.A4)
-                                    doc.setMargins(0f, 0f, 20f, 20f)
-                                    page1FinalReport(doc, it)
-                                    if (it.hasil.size > 1) {
-                                        pageExtraFinalReport(doc, it)
-                                    }
-                                    doc.close()
-
-                                    val file = File(outPath)
-                                    file.listFiles()
-                                    val path: Uri = FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
-                                        BuildConfig.APPLICATION_ID + ".provider", file)
-                                    try {
-                                        val intent = Intent(Intent.ACTION_VIEW)
-                                        intent.setDataAndType(path, "application/pdf")
-                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        startActivity(intent)
-                                    } catch (e: ActivityNotFoundException) {
-                                        Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
-                                    }
-
-                                } else {
-                                    Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-
-                            override fun onPermissionRationaleShouldBeShown(
-                                permissions: List<PermissionRequest>,
-                                token: PermissionToken
-                            ) {
-                                token.continuePermissionRequest()
-                            }
-                        }).check()
-                } catch (e: Exception) {
-                    Log.d("okimatra9", "" + e.message)
-                }
-            }
-        }
-    }
-
     private fun addClickListener(binding: FragmentTwoBinding, btn: Button, userDao: UserDao) {
         val radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, requireContext().resources.displayMetrics)
         val elevation = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, requireContext().resources.displayMetrics)
@@ -1479,795 +1400,6 @@ class TabFragment(private val title: String) : Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
-        if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
-            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
-            _binding2?.rvSoundingList?.adapter = soundingAdapter
-            _binding2?.svSoundingList?.visibility = View.VISIBLE
-            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
-        } else {
-            _binding2?.svSoundingList?.visibility = View.GONE
-            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
-        }
-    }
-    private fun pdfSounding(id: Int, userDao: UserDao) {
-        lifecycleScope.launch {
-            userDao.fetchSoundingById(id).collect {
-                try {
-                    Dexter.withContext(requireContext())
-                        .withPermissions(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ).withListener(object : MultiplePermissionsListener {
-                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                                if (report.areAllPermissionsGranted()) {
-                                    val sdf = SimpleDateFormat(" ddMMyy HHmmss", Locale.getDefault())
-                                    val currentDate = sdf.format(Calendar.getInstance().time)
-//                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
-                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki + " Printed on" + currentDate + ".pdf"  //Location where the pdf will be stored
-                                    val file = File(outPath) //location where the pdf will store
-                                    if (file.exists()) {
-                                        file.delete()
-                                    }
-                                    Log.d("loc", outPath)
-//                                    val writer = PdfWriter(file)
-                                    val writer = PdfWriter(FileOutputStream(outPath))
-                                    val pdfDoc = PdfDocument(writer)
-                                    val doc = Document(pdfDoc, PageSize.A4)
-                                    doc.setMargins(0f, 0f, 0f, 0f)
-                                    headerRawReport(pdfDoc, doc)
-                                    bodyRawReport(doc, it)
-                                    doc.close()
-                                    file.listFiles()
-                                    val path: Uri = FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
-                                        BuildConfig.APPLICATION_ID + ".provider", file)
-//                                        BuildConfig.LIBRARY_PACKAGE_NAME + ".provider", file)
-                                    try {
-                                        val intent = Intent(Intent.ACTION_VIEW)
-                                        intent.setDataAndType(path, "application/pdf")
-                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        startActivity(intent)
-                                    } catch (e: ActivityNotFoundException) {
-                                        Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
-                                    }
-
-
-                                } else {
-                                    Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-
-                            override fun onPermissionRationaleShouldBeShown(
-                                permissions: List<PermissionRequest>,
-                                token: PermissionToken
-                            ) {
-                                token.continuePermissionRequest()
-                            }
-                        }).check()
-                } catch (e: Exception) {
-                    Log.d("1571", "" + e.message)
-                }
-            }
-        }
-    }
-    private fun headerRawReport(pdfDoc: PdfDocument, doc: Document) {
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        val tableBotPadding = 10f
-        val tableTopPadding = 20f
-
-        val headerTable = Table(floatArrayOf(PageSize.A4.width/5f, 4f*PageSize.A4.width/5f))
-        headerTable.setWidth(PageSize.A4.width)
-
-        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
-        val bitDwLogoBC = logoBC as BitmapDrawable
-        val bmpLogoBC = bitDwLogoBC.bitmap
-        val streamLogoBC = ByteArrayOutputStream()
-        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
-        val imageLogoBCData = ImageDataFactory.create(streamLogoBC.toByteArray())
-        val imageLogoBC = Image(imageLogoBCData)
-        imageLogoBC.scale(0.45f, 0.45f)
-
-        val cellLogoBC = Cell().add(imageLogoBC)
-        cellLogoBC.setBorder(Border.NO_BORDER)
-        cellLogoBC.setHorizontalAlignment(HorizontalAlignment.CENTER)
-        cellLogoBC.setVerticalAlignment(VerticalAlignment.MIDDLE)
-        cellLogoBC.setPaddingTop(tableTopPadding)
-        cellLogoBC.setPaddingBottom(tableBotPadding)
-        cellLogoBC.setPaddingLeft(3.5f*tableBotPadding)
-        headerTable.addCell(cellLogoBC)
-
-        val para = Paragraph().add("LAPORAN HITUNG BARANG CURAH BEA CUKAI")
-            .setFont(fontHelvetica)
-            .setFontSize(16f)
-            .setBold()
-            .setTextAlignment(TextAlignment.LEFT)
-            .setPaddingLeft(20f)
-        val tittleCell = Cell().add(para)
-        tittleCell.setBorder(Border.NO_BORDER)
-        tittleCell.setHorizontalAlignment(HorizontalAlignment.CENTER)
-        tittleCell.setVerticalAlignment(VerticalAlignment.MIDDLE)
-        tittleCell.setPaddingTop(tableTopPadding-3f)
-        tittleCell.setPaddingBottom(tableBotPadding)
-        headerTable.addCell(tittleCell)
-
-        doc.add(headerTable)
-
-//        val magentaColor = DeviceCmyk(0f, 1f, 0f, 0f)
-        val colorPrimary = DeviceRgb(0, 0, 0)
-        val canvas = PdfCanvas(pdfDoc.firstPage)
-        canvas.setStrokeColor(colorPrimary)
-        canvas.moveTo(0.0, 745.0)
-        // Drawing the Line
-        canvas.lineTo(PageSize.A4.width.toDouble(), 745.0)
-        canvas.setLineWidth(1.5f)
-        canvas.closePathStroke()
-    }
-    private fun pageExtraFinalReport(doc: Document, it: ReportEntity) {
-        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val maxIndex = (it.hasil_sounding.size-3)/4
-        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
-        for (i in 0..maxIndex) {
-            doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
-            val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
-                    "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
-                .setFont(fontArial).setFontSize(10f)
-            val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
-            val cellTop = Cell(1,2).add(titlePara)
-            Log.d("testing0", maxIndex.toString() + ((0+1)*4+2).toString() + it.hasil_sounding.size.toString())
-
-
-            if (it.hasil_sounding.size >= (i+1)*4+2) {
-                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-                cellTop.add(para1)
-                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
-                    listOf(
-                        it.no_tangki[i*4+2],
-                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} °C",
-                        "${zeroRemover(it.tinggi_meja[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} mm"),
-                    cellTop)
-                val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-                val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para2).add(para2a)
-                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-                    listOf(
-                        it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(",") + 2, it.waktu[i*4+2].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(":")-3, it.waktu[i*4+2].length)}",
-                        "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                        "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                        "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-                    cellTop)
-
-                val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para2b)
-                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-                    listOf(
-                        it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(",") + 2, it.waktu[i*4+3].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(":")-3, it.waktu[i*4+3].length)}",
-                        "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                        "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                        "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-                    cellTop)
-
-                val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para2c)
-
-                val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-                cellTop.add(para3)
-                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
-                    listOf(
-                        it.no_tangki[i*4+4],
-                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} °C",
-                        "${zeroRemover(it.tinggi_meja[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} mm"),
-                    cellTop)
-
-                val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-                val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para4).add(para4a)
-                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-                    listOf(
-                        it.waktu[i*4+4].subSequence(it.waktu[i*4+4].indexOf(",") + 2, it.waktu[i*4+4].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+4].subSequence(it.waktu[i*4+4].indexOf(":")-3, it.waktu[i*4+4].length)}",
-                        "${zeroRemover(it.suhu_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                        "${zeroRemover((it.tinggi_cairan[i*4+4]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                        "${zeroRemover(it.density_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-                    cellTop)
-
-                val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para4b)
-                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-                    listOf(
-                        it.waktu[i*4+5].subSequence(it.waktu[i*4+5].indexOf(",") + 2, it.waktu[i*4+5].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+5].subSequence(it.waktu[i*4+5].indexOf(":")-3, it.waktu[i*4+5].length)}",
-                        "${zeroRemover(it.suhu_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                        "${zeroRemover((it.tinggi_cairan[i*4+5]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                        "${zeroRemover(it.density_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-                    cellTop)
-
-                val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+2].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para4c)
-//                for (j in i*4+2..(i*4+1) step 2) {}
-            }
-            else {
-                Log.d("testing", i.toString())
-                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-                cellTop.add(para1)
-                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
-                    listOf(
-                        it.no_tangki[i*4+2],
-                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} °C",
-                        "${zeroRemover(it.tinggi_meja[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} mm"),
-                    cellTop)
-                val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-                val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para2).add(para2a)
-                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-                    listOf(
-                        it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(",") + 2, it.waktu[i*4+2].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(":")-3, it.waktu[i*4+2].length)}",
-                        "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                        "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                        "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-                    cellTop)
-
-                val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para2b)
-                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-                    listOf(
-                        it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(",") + 2, it.waktu[i*4+3].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(":")-3, it.waktu[i*4+3].length)}",
-                        "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                        "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                        "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-                    cellTop)
-
-                val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
-                    .add(soundingItalic)
-                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
-                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-                cellTop.add(para2c)
-            }
-
-            val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(287f)
-            cellTop.add(paraMengetahui)
-
-            val cellLeft = Cell()
-
-            val paraRight = Paragraph()
-                .add(Text("\n\n\n\n").setFont(fontArial).setFontSize(10f))
-                .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
-                .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-            val cellRight = Cell().add(paraRight)
-            val nipSpace = it.nip_pegawai[i*4+2].subSequence(0,8).toString() +
-                    " " + it.nip_pegawai[i*4+2].subSequence(8,14).toString() +
-                    " " + it.nip_pegawai[i*4+2].subSequence(14,15).toString() +
-                    " " + it.nip_pegawai[i*4+2].subSequence(15,it.nip_pegawai[0].length).toString()
-            writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[i*4+2], nipSpace), cellRight)
-
-            val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
-            table.addCell(cellLeft).addCell(cellRight)
-            doc.add(table)
-        }
-    }
-    private fun page1FinalReport(doc: Document, it: ReportEntity) {
-        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val header = Text("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\nDIREKTORAT JENDERAL BEA DAN CUKAI\n${it.kanwil_pegawai_final}\n${it.kantor_pegawai_final}\n\n")
-            .setFont(fontArial).setFontSize(10f)
-        val headerPara = Paragraph().add(header).setMultipliedLeading(1.2f).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(10f).setPaddingTop(10f)
-        val title = Text("BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
-                "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
-            .setFont(fontArial).setFontSize(10f)
-        val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER)
-        val cellTop = Cell(1,2).add(headerPara).add(titlePara)
-
-        val para1 = Paragraph().add(Text("1. Telah dilakukan pemeriksaan fisik sebelum pengajuan PEB atas barang ekspor pada:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para1)
-        writeDataListwithSemicolomn(listOf("a.", "b."), listOf("Lokasi","Nama Sarana Pengangkut"), listOf(it.lokasi_sounding[0], it.nama_sarkut), cellTop)
-
-        val para2 = Paragraph().add(Text("2. Eksportir:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para2)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("NPWP", "Nama", "Alamat"), listOf(it.npwp_perusahaan_sounding[0], it.perusahaan_sounding[0], it.alamat_perusahaan_sounding[0]), cellTop)
-
-        val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para3)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
-            listOf(
-                it.no_tangki[0],
-                "${zeroRemover(it.suhu_kalibrasi_tangki[0].toBigDecimal().toPlainString()).replace(".",",")} °C",
-                "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
-            cellTop)
-
-        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
-        val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4).add(para4a)
-        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-            listOf(
-                it.waktu[0].subSequence(it.waktu[0].indexOf(",") + 2, it.waktu[0].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[0].subSequence(it.waktu[0].indexOf(":")-3, it.waktu[0].length)}",
-                "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-            cellTop)
-
-        val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4b)
-        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-            listOf(
-                it.waktu[1].subSequence(it.waktu[1].indexOf(",") + 2, it.waktu[1].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[1].subSequence(it.waktu[1].indexOf(":")-3, it.waktu[1].length)}",
-                "${zeroRemover(it.suhu_cairan[1].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                "${zeroRemover((it.tinggi_cairan[1]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                "${zeroRemover(it.density_cairan[1].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[1].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[1].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-            cellTop)
-
-        val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text("         :    ${zeroRemover(it.hasil[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4c)
-
-        val para5 = Paragraph().add(Text("5. Keterangan:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para5)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan, ""), cellTop)
-        cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
-        writeDataList2withSemicolomn(listOf("1)", "2)"), listOf("Waktu dan Pukul                      ", "Jumlah Contoh Barang"),
-            listOf(
-                (it.waktu_aju.subSequence(it.waktu_aju.indexOf(",")+2, it.waktu_aju.indexOf(":")-3).toString()+" Pukul${it.waktu_aju.subSequence(it.waktu_aju.indexOf(":")-3, it.waktu_aju.length)}").replace("-"," "),
-                it.jumlah_contoh),
-            cellTop)
-
-        val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f)
-        cellTop.add(paraMengetahui)
-
-        val paraLeft = Paragraph()
-            .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",")+2, it.tanggal_ba.length)}\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val cellLeft = Cell().add(paraLeft)
-        writeReportwithSemicolomn(listOf("Nama","Jabatan"), listOf(it.pengguna_jasa_sounding[0], it.jabatan_pengguna_jasa[0]), cellLeft)
-
-        val paraRight = Paragraph()
-            .add(Text("\n\n\n\n\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val cellRight = Cell().add(paraRight)
-        val nipSpace = it.nip_pegawai[0].subSequence(0,8).toString() +
-                " " + it.nip_pegawai[0].subSequence(8,14).toString() +
-                " " + it.nip_pegawai[0].subSequence(14,15).toString() +
-                " " + it.nip_pegawai[0].subSequence(15,it.nip_pegawai[0].length).toString()
-        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace), cellRight)
-
-        val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
-        table.addCell(cellLeft).addCell(cellRight)
-        doc.add(table)
-    }
-    private fun writeReportwithSemicolomn(listJudul: List<String>, listNilai: List<String>, cell: Cell) {
-        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val padding = 3f
-        val tablelist = Table(floatArrayOf(2f, 0.05f, 5f))
-        tablelist.width = cell.width
-        for (i in listJudul.indices) {
-            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
-            idCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-                .setPaddingLeft(10f)
-            tablelist.addCell(idCell)
-
-            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
-            separatorCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingLeft(2*padding)
-                .setPaddingTop(-padding)
-            tablelist.addCell(separatorCell)
-
-            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
-            valueCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-                .setPaddingLeft(3*padding)
-                .setPaddingRight(5*padding)
-            tablelist.addCell(valueCell)
-        }
-        cell.add(tablelist)
-    }
-    private fun writeDataListwithSemicolomn(list: List<String>, listJudul: List<String>, listNilai: List<String>, cell: Cell) {
-        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val padding = 3f
-        val tablelist = Table(floatArrayOf(0.2f, 2f, 0.05f, 5f))
-        tablelist.width = cell.width
-        for (i in list.indices) {
-            val idPoint = Cell().add(Paragraph().add(Text(list[i]).setFont(fontArial).setFontSize(10f)))
-            idPoint.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-                .setPaddingLeft(7.3f*padding)
-            tablelist.addCell(idPoint)
-
-            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
-            idCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-            tablelist.addCell(idCell)
-
-            val separatorCell = Cell()
-            if (listJudul[i] != "Contoh Barang Diambil/Diajukan") {
-                separatorCell.add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
-            } else {
-                separatorCell.add(Paragraph().add(Text("").setFont(fontArial).setFontSize(10f)))
-            }
-            separatorCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingLeft(2*padding)
-                .setPaddingTop(-padding)
-            tablelist.addCell(separatorCell)
-
-            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
-            valueCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-                .setPaddingLeft(3*padding)
-                .setPaddingRight(5*padding)
-            tablelist.addCell(valueCell)
-        }
-        cell.add(tablelist)
-        cell.add(Paragraph().add("\n").setFixedLeading(5f))
-    }
-    private fun writeDataList2withSemicolomn(list: List<String>, listJudul: List<String>, listNilai: List<String>, cell: Cell) {
-        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
-        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val padding = 3f
-        val tablelist = Table(floatArrayOf(0.2f, 2f, 0.05f, 5f))
-        tablelist.width = cell.width
-        for (i in list.indices) {
-            val idPoint = Cell().add(Paragraph().add(Text(list[i]).setFont(fontArial).setFontSize(10f)))
-            idPoint.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-                .setPaddingLeft(11.3f*padding)
-            tablelist.addCell(idPoint)
-
-            val idCell = Cell()
-            if (listJudul[i] != "Density Cairan") {
-                idCell.add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
-            } else {
-                idCell.add(Paragraph().add(Text("Density").setItalic().setFont(fontArial).setFontSize(10f)).add(Text("Cairan").setFont(fontArial).setFontSize(10f)))
-            }
-            idCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-            tablelist.addCell(idCell)
-
-            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
-            separatorCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-            tablelist.addCell(separatorCell)
-
-            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
-            valueCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(-padding)
-                .setPaddingLeft(3*padding)
-                .setPaddingRight(5*padding)
-            tablelist.addCell(valueCell)
-        }
-        cell.add(tablelist)
-        cell.add(Paragraph().add("\n").setFixedLeading(5f))
-    }
-    private fun bodyRawReport(doc: Document, it: SoundingEntity) {
-        val bmpQrCode = getQrCodeBitmap(it)
-        val streamQrCode = ByteArrayOutputStream()
-        bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
-        val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
-        val imgQrCode = Image(imgQrCodeData)
-        imgQrCode.scale(0.275f, 0.275f)
-        imgQrCode.setFixedPosition(340f, 340f)
-        doc.add(imgQrCode)
-
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        doc.add(Paragraph().add("\n\n").setFixedLeading(10f))
-        val metodeFraksi = it.volume_fraksi > 0
-        writeDataTitle("Data Umum", doc)
-        val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding")
-        val nilaiUmum = listOf(
-            it.perusahaan_sounding,
-            it.alamat_perusahaan_sounding,
-            it.no_tangki,
-            (it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," "),
-            it.lokasi_sounding,
-        )
-        writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
-        doc.add(Paragraph().add("\n").setFixedLeading(5f))
-
-        writeDataTitle("Data Lapangan", doc)
-        val judulLapangan = listOf("Tinggi Cairan", "Suhu Cairan")
-        val nilaiLapangan = listOf(
-            "${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-            "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
-        )
-        writeDatawithSemicolomn(judulLapangan, nilaiLapangan, doc)
-        doc.add(Paragraph().add("\n").setFixedLeading(5f))
-
-        writeDataTitle("Data Tangki", doc)
-        val judulTangki = listOf("Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki")
-        val nilaiTangki = listOf(
-            "${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C",
-            "${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm",
-            zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")
-        )
-        writeDatawithSemicolomn(judulTangki, nilaiTangki, doc)
-        doc.add(Paragraph().add("\n").setFixedLeading(5f))
-
-        writeDataTitle("Data Tabel", doc)
-        val judulTabel: List<String>
-        val nilaiTabel: List<String>
-        if (metodeFraksi) {
-            judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Cairan")
-            nilaiTabel = listOf(
-                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
-                "${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
-            )
-        } else {
-            judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Cairan")
-            nilaiTabel = listOf(
-                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
-                "${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L",
-                "${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
-            )
-        }
-        writeDatawithSemicolomn(judulTabel, nilaiTabel, doc)
-        doc.add(Paragraph().add("\n").setFixedLeading(5f))
-
-        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
-        writeDataTitle("Hasil Perhitungan $metode", doc)
-        val calcData = listOf("Tinggi Terkoreksi", "Volume App", "Volume Obs", "Volume", "Hasil Akhir Muatan")
-        val calcValue = listOf(
-            "${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m",
-            "${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L",
-            "${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L",
-            "${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL",
-            "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
-        )
-        writeDatawithSemicolomn(calcData, calcValue, doc)
-        doc.add(Paragraph().add("\n").setFixedLeading(8f))
-
-        val ttdPenggunaJasa = listOf("Mengetahui,", "Eksportir", "\n\n\n")
-        val ttdPegawai = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n\n")
-        writeAuthenticationwithCustomer(ttdPenggunaJasa, ttdPegawai, doc)
-
-        val table = Table(floatArrayOf(PageSize.A4.width/2f, PageSize.A4.width/2f))
-        table.setWidth(PageSize.A4.width)
-        val namaPJ = Paragraph().add(it.pengguna_jasa_sounding).setFont(fontHelvetica).setFontSize(11f)
-        namaPJ.setUnderline(0.5f, -2f)
-        val pjCell = Cell().add(namaPJ)
-        pjCell.setBorder(Border.NO_BORDER)
-        pjCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
-        pjCell.setVerticalAlignment(VerticalAlignment.TOP)
-        pjCell.setPaddingLeft(38f)
-        table.addCell(pjCell)
-        val namaPeg = Paragraph().add(it.pegawai_sounding).setFont(fontHelvetica).setFontSize(11f)
-        namaPeg.setUnderline(0.5f, -2f)
-        val pegCell = Cell().add(namaPeg)
-        pegCell.setBorder(Border.NO_BORDER)
-        pegCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
-        pegCell.setVerticalAlignment(VerticalAlignment.TOP)
-        pegCell.setPaddingLeft(51f)
-        table.addCell(pegCell)
-        doc.add(table)
-//        table.deleteBodyRows()
-
-        val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
-                " " + it.nip_pegawai.subSequence(8,14).toString() +
-                " " + it.nip_pegawai.subSequence(14,15).toString() +
-                " " + it.nip_pegawai.subSequence(15,it.nip_pegawai.length).toString()
-        val nip = listOf(nipSpace)
-        val jabatan = listOf(it.jabatan_pengguna_jasa)
-        writeAuthenticationwithCustomer(jabatan, nip, doc)
-    }
-    private fun getQrCodeBitmap(it: SoundingEntity): Bitmap {
-        val size = 512 //pixels
-        val metodeFraksi = it.volume_fraksi > 0
-        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
-        val qrCodeContent = if (metodeFraksi) {
-            "${it.perusahaan_sounding}\n" +
-                    "${it.alamat_perusahaan_sounding}\n" +
-                    "Tangki ${it.no_tangki}\n" +
-                    "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
-                    "${it.lokasi_sounding}\n\n" +
-                    "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
-                    "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
-                    "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
-                    "Tinggi Meja ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
-                    "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
-                    "Hasil Perhitungan $metode\n" +
-                    "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
-                    "${it.judulFraksi} ${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
-                    "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
-                    "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
-                    "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
-                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
-                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
-                    "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
-                    "${it.pegawai_sounding}, ${it.nip_pegawai}"
-        } else {
-            "${it.perusahaan_sounding}\n" +
-                    "${it.alamat_perusahaan_sounding}\n" +
-                    "Tangki ${it.no_tangki}\n" +
-                    "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
-                    "${it.lokasi_sounding}\n" +
-                    "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
-                    "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
-                    "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
-                    "Tinggi Meja: ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
-                    "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
-                    "Hasil Perhitungan $metode\n" +
-                    "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
-                    "Tabel Kalibrasi (${it.judulDataTabel}): ${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L" +
-                    "${it.judulKalibrasi2} ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L" +
-                    "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
-                    "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
-                    "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
-                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
-                    "Volume ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
-                    "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
-                    "${it.pegawai_sounding}, ${it.nip_pegawai}"
-        }
-        val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
-        return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
-            for (x in 0 until size) {
-                for (y in 0 until size) {
-                    it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
-                }
-            }
-        }
-    }
-    private fun writeDataTitle(text: String, doc: Document) {
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        val padding = 2f
-        val judul= Text(text).setFont(fontHelvetica).setFontSize(13f).setBold()
-        judul.setUnderline(0.5f, -2f)
-        val paraJudul = Paragraph(judul).setMultipliedLeading(1.15f)
-        paraJudul.setMarginLeft(19*padding-1f)
-        doc.add(paraJudul)
-    }
-    private fun writeDatawithSemicolomn(listJudul: List<String>, listNilai: List<String>, doc: Document) {
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        val padding = 2f
-        val table = Table(floatArrayOf(1.65f*PageSize.A4.width/5.18f, 0.03f*PageSize.A4.width/5.18f, 3.5f*PageSize.A4.width/5.18f))
-        table.setWidth(PageSize.A4.width)
-        for (i in listJudul.indices) {
-            val idCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listJudul[i]).setFont(fontHelvetica).setFontSize(11f)))
-            idCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(padding)
-                .setPaddingBottom(padding)
-                .setPaddingLeft(19*padding)
-            table.addCell(idCell)
-
-            val separatorCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(":").setFont(fontHelvetica).setFontSize(11f)))
-            separatorCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(padding)
-                .setPaddingBottom(padding)
-            table.addCell(separatorCell)
-
-            val valueCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listNilai[i]).setFont(fontHelvetica).setFontSize(11f)))
-            valueCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingTop(padding)
-                .setPaddingBottom(padding)
-                .setPaddingLeft(4*padding)
-                .setPaddingRight(4*padding)
-            table.addCell(valueCell)
-        }
-        doc.add(table)
-    }
-    private fun writeAuthenticationwithCustomer(listPenggunaJasa: List<String>, listPegawai: List<String>, doc: Document) {
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        val table = Table(floatArrayOf(PageSize.A4.width/2f, PageSize.A4.width/2f))
-        table.setWidth(PageSize.A4.width)
-        for (i in listPegawai.indices) {
-            val pjCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listPenggunaJasa[i]).setFont(fontHelvetica).setFontSize(11f)))
-            pjCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingLeft(38f)
-            table.addCell(pjCell)
-
-            val pegCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f)))
-            pegCell.setBorder(Border.NO_BORDER)
-                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                .setVerticalAlignment(VerticalAlignment.TOP)
-                .setPaddingLeft(51f)
-            table.addCell(pegCell)
-        }
-        doc.add(table)
-//        table.deleteBodyRows()
-    }
-    @Suppress("unused")
-    private fun writeAuthentication(listPegawai: List<String>, doc: Document) {
-        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
-        for (i in listPegawai.indices) {
-            val para = Paragraph().add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f))
-            para.setMarginLeft(380f)
-            doc.add(para)
         }
     }
 
@@ -3266,6 +2398,18 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
+    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
+        if (soundingList.isNotEmpty()) {
+            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
+            _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
+            _binding2?.rvSoundingList?.adapter = soundingAdapter
+            _binding2?.svSoundingList?.visibility = View.VISIBLE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.GONE
+        } else {
+            _binding2?.svSoundingList?.visibility = View.GONE
+            _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
+        }
+    }
     private fun updateRecordDialogSounding(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
@@ -3638,6 +2782,354 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
+    private fun pdfSounding(id: Int, userDao: UserDao) {
+        lifecycleScope.launch {
+            userDao.fetchSoundingById(id).collect {
+                try {
+                    Dexter.withContext(requireContext())
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                if (report.areAllPermissionsGranted()) {
+                                    val sdf = SimpleDateFormat(" ddMMyy HHmmss", Locale.getDefault())
+                                    val currentDate = sdf.format(Calendar.getInstance().time)
+//                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
+                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + it.no_tangki + " Printed on" + currentDate + ".pdf"  //Location where the pdf will be stored
+                                    val file = File(outPath) //location where the pdf will store
+                                    if (file.exists()) {
+                                        file.delete()
+                                    }
+                                    Log.d("loc", outPath)
+//                                    val writer = PdfWriter(file)
+                                    val writer = PdfWriter(FileOutputStream(outPath))
+                                    val pdfDoc = PdfDocument(writer)
+                                    val doc = Document(pdfDoc, PageSize.A4)
+                                    doc.setMargins(0f, 0f, 0f, 0f)
+                                    headerRawReport(pdfDoc, doc)
+                                    bodyRawReport(doc, it)
+                                    doc.close()
+                                    file.listFiles()
+                                    val path: Uri = FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
+                                        BuildConfig.APPLICATION_ID + ".provider", file)
+//                                        BuildConfig.LIBRARY_PACKAGE_NAME + ".provider", file)
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW)
+                                        intent.setDataAndType(path, "application/pdf")
+                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
+                                    }
+
+
+                                } else {
+                                    Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: List<PermissionRequest>,
+                                token: PermissionToken
+                            ) {
+                                token.continuePermissionRequest()
+                            }
+                        }).check()
+                } catch (e: Exception) {
+                    Log.d("1571", "" + e.message)
+                }
+            }
+        }
+    }
+    private fun headerRawReport(pdfDoc: PdfDocument, doc: Document) {
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val tableBotPadding = 10f
+        val tableTopPadding = 20f
+
+        val headerTable = Table(floatArrayOf(PageSize.A4.width/5f, 4f*PageSize.A4.width/5f))
+        headerTable.setWidth(PageSize.A4.width)
+
+        val logoBC = ResourcesCompat.getDrawable(resources, R.drawable.logo_bc, null)
+        val bitDwLogoBC = logoBC as BitmapDrawable
+        val bmpLogoBC = bitDwLogoBC.bitmap
+        val streamLogoBC = ByteArrayOutputStream()
+        bmpLogoBC.compress(Bitmap.CompressFormat.PNG, 100, streamLogoBC)
+        val imageLogoBCData = ImageDataFactory.create(streamLogoBC.toByteArray())
+        val imageLogoBC = Image(imageLogoBCData)
+        imageLogoBC.scale(0.45f, 0.45f)
+
+        val cellLogoBC = Cell().add(imageLogoBC)
+        cellLogoBC.setBorder(Border.NO_BORDER)
+        cellLogoBC.setHorizontalAlignment(HorizontalAlignment.CENTER)
+        cellLogoBC.setVerticalAlignment(VerticalAlignment.MIDDLE)
+        cellLogoBC.setPaddingTop(tableTopPadding)
+        cellLogoBC.setPaddingBottom(tableBotPadding)
+        cellLogoBC.setPaddingLeft(3.5f*tableBotPadding)
+        headerTable.addCell(cellLogoBC)
+
+        val para = Paragraph().add("LAPORAN HITUNG BARANG CURAH BEA CUKAI")
+            .setFont(fontHelvetica)
+            .setFontSize(16f)
+            .setBold()
+            .setTextAlignment(TextAlignment.LEFT)
+            .setPaddingLeft(20f)
+        val tittleCell = Cell().add(para)
+        tittleCell.setBorder(Border.NO_BORDER)
+        tittleCell.setHorizontalAlignment(HorizontalAlignment.CENTER)
+        tittleCell.setVerticalAlignment(VerticalAlignment.MIDDLE)
+        tittleCell.setPaddingTop(tableTopPadding-3f)
+        tittleCell.setPaddingBottom(tableBotPadding)
+        headerTable.addCell(tittleCell)
+
+        doc.add(headerTable)
+
+//        val magentaColor = DeviceCmyk(0f, 1f, 0f, 0f)
+        val colorPrimary = DeviceRgb(0, 0, 0)
+        val canvas = PdfCanvas(pdfDoc.firstPage)
+        canvas.setStrokeColor(colorPrimary)
+        canvas.moveTo(0.0, 745.0)
+        // Drawing the Line
+        canvas.lineTo(PageSize.A4.width.toDouble(), 745.0)
+        canvas.setLineWidth(1.5f)
+        canvas.closePathStroke()
+    }
+    private fun bodyRawReport(doc: Document, it: SoundingEntity) {
+        val bmpQrCode = getQrCodeBitmap(it)
+        val streamQrCode = ByteArrayOutputStream()
+        bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
+        val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
+        val imgQrCode = Image(imgQrCodeData)
+        imgQrCode.scale(0.15f, 0.15f)
+        imgQrCode.setFixedPosition(344f, 200f)
+        doc.add(imgQrCode)
+
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        doc.add(Paragraph().add("\n\n").setFixedLeading(10f))
+        val metodeFraksi = it.volume_fraksi > 0
+        writeDataTitle("Data Umum", doc)
+        val judulUmum = listOf("Nama Perusahaan", "Alamat Perusahaan", "Nomor Tangki", "Waktu Sounding", "Lokasi Sounding")
+        val nilaiUmum = listOf(
+            it.perusahaan_sounding,
+            it.alamat_perusahaan_sounding,
+            it.no_tangki,
+            (it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," "),
+            it.lokasi_sounding,
+        )
+        writeDatawithSemicolomn(judulUmum, nilaiUmum, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
+
+        writeDataTitle("Data Lapangan", doc)
+        val judulLapangan = listOf("Tinggi Cairan", "Suhu Cairan")
+        val nilaiLapangan = listOf(
+            "${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+            "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
+        )
+        writeDatawithSemicolomn(judulLapangan, nilaiLapangan, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
+
+        writeDataTitle("Data Tangki", doc)
+        val judulTangki = listOf("Suhu Kalibrasi Tangki", "Tinggi Meja", "Koefisien Muai Tangki")
+        val nilaiTangki = listOf(
+            "${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C",
+            "${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm",
+            zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")
+        )
+        writeDatawithSemicolomn(judulTangki, nilaiTangki, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
+
+        writeDataTitle("Data Tabel", doc)
+        val judulTabel: List<String>
+        val nilaiTabel: List<String>
+        if (metodeFraksi) {
+            judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Cairan")
+            nilaiTabel = listOf(
+                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
+            )
+        } else {
+            judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Cairan")
+            nilaiTabel = listOf(
+                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L",
+                "${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
+            )
+        }
+        writeDatawithSemicolomn(judulTabel, nilaiTabel, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(5f))
+
+        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
+        writeDataTitle("Hasil Perhitungan $metode", doc)
+        val calcData = listOf("Tinggi Terkoreksi", "Volume App", "Volume Obs", "Volume", "Hasil Akhir Muatan")
+        val calcValue = listOf(
+            "${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m",
+            "${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L",
+            "${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L",
+            "${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL",
+            "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
+        )
+        writeDatawithSemicolomn(calcData, calcValue, doc)
+        doc.add(Paragraph().add("\n").setFixedLeading(8f))
+
+        val ttdPenggunaJasa = listOf("Mengetahui,", "Eksportir", "\n\n\n")
+        val ttdPegawai = listOf("Disusun oleh,", "Pemeriksa Bea Cukai", "\n\n\n")
+        writeAuthenticationwithCustomer(ttdPenggunaJasa, ttdPegawai, doc)
+
+        val table = Table(floatArrayOf(PageSize.A4.width/2f, PageSize.A4.width/2f))
+        table.setWidth(PageSize.A4.width)
+        val namaPJ = Paragraph().add(it.pengguna_jasa_sounding).setFont(fontHelvetica).setFontSize(11f)
+        namaPJ.setUnderline(0.5f, -2f)
+        val pjCell = Cell().add(namaPJ)
+        pjCell.setBorder(Border.NO_BORDER)
+        pjCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
+        pjCell.setVerticalAlignment(VerticalAlignment.TOP)
+        pjCell.setPaddingLeft(38f)
+        table.addCell(pjCell)
+        val namaPeg = Paragraph().add(it.pegawai_sounding).setFont(fontHelvetica).setFontSize(11f)
+        namaPeg.setUnderline(0.5f, -2f)
+        val pegCell = Cell().add(namaPeg)
+        pegCell.setBorder(Border.NO_BORDER)
+        pegCell.setHorizontalAlignment(HorizontalAlignment.LEFT)
+        pegCell.setVerticalAlignment(VerticalAlignment.TOP)
+        pegCell.setPaddingLeft(51f)
+        table.addCell(pegCell)
+        doc.add(table)
+//        table.deleteBodyRows()
+
+        val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
+                " " + it.nip_pegawai.subSequence(8,14).toString() +
+                " " + it.nip_pegawai.subSequence(14,15).toString() +
+                " " + it.nip_pegawai.subSequence(15,it.nip_pegawai.length).toString()
+        val nip = listOf(nipSpace)
+        val jabatan = listOf(it.jabatan_pengguna_jasa)
+        writeAuthenticationwithCustomer(jabatan, nip, doc)
+    }
+    private fun writeDataTitle(text: String, doc: Document) {
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val padding = 2f
+        val judul= Text(text).setFont(fontHelvetica).setFontSize(13f).setBold()
+        judul.setUnderline(0.5f, -2f)
+        val paraJudul = Paragraph(judul).setMultipliedLeading(1.15f)
+        paraJudul.setMarginLeft(19*padding-1f)
+        doc.add(paraJudul)
+    }
+    private fun writeDatawithSemicolomn(listJudul: List<String>, listNilai: List<String>, doc: Document) {
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val padding = 2f
+        val table = Table(floatArrayOf(1.65f*PageSize.A4.width/5.18f, 0.03f*PageSize.A4.width/5.18f, 3.5f*PageSize.A4.width/5.18f))
+        table.setWidth(PageSize.A4.width)
+        for (i in listJudul.indices) {
+            val idCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listJudul[i]).setFont(fontHelvetica).setFontSize(11f)))
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(padding)
+                .setPaddingBottom(padding)
+                .setPaddingLeft(19*padding)
+            table.addCell(idCell)
+
+            val separatorCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(":").setFont(fontHelvetica).setFontSize(11f)))
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(padding)
+                .setPaddingBottom(padding)
+            table.addCell(separatorCell)
+
+            val valueCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listNilai[i]).setFont(fontHelvetica).setFontSize(11f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(padding)
+                .setPaddingBottom(padding)
+                .setPaddingLeft(4*padding)
+                .setPaddingRight(4*padding)
+            table.addCell(valueCell)
+        }
+        doc.add(table)
+    }
+    private fun writeAuthenticationwithCustomer(listPenggunaJasa: List<String>, listPegawai: List<String>, doc: Document) {
+        val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val table = Table(floatArrayOf(PageSize.A4.width/2f, PageSize.A4.width/2f))
+        table.setWidth(PageSize.A4.width)
+        for (i in listPegawai.indices) {
+            val pjCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listPenggunaJasa[i]).setFont(fontHelvetica).setFontSize(11f)))
+            pjCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(38f)
+            table.addCell(pjCell)
+
+            val pegCell = Cell().add(Paragraph().setMultipliedLeading(1.15f).add(Text(listPegawai[i]).setFont(fontHelvetica).setFontSize(11f)))
+            pegCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(51f)
+            table.addCell(pegCell)
+        }
+        doc.add(table)
+//        table.deleteBodyRows()
+    }
+    private fun getQrCodeBitmap(it: SoundingEntity): Bitmap {
+        val size = 512 //pixels
+        val metodeFraksi = it.volume_fraksi > 0
+        val metode = if (metodeFraksi) "Metode Fraksi" else "Metode Interpolasi"
+        val qrCodeContent = if (metodeFraksi) {
+            "${it.perusahaan_sounding}\n" +
+                    "${it.alamat_perusahaan_sounding}\n" +
+                    "Tangki ${it.no_tangki}\n" +
+                    "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
+                    "${it.lokasi_sounding}\n\n" +
+                    "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
+                    "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
+                    "Tinggi Meja ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
+                    "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
+                    "Hasil Perhitungan $metode\n" +
+                    "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "${it.judulFraksi} ${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
+                    "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Volume: ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
+                    "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
+                    "${it.pegawai_sounding}, ${it.nip_pegawai}"
+        } else {
+            "${it.perusahaan_sounding}\n" +
+                    "${it.alamat_perusahaan_sounding}\n" +
+                    "Tangki ${it.no_tangki}\n" +
+                    "${(it.waktu.subSequence(0, it.waktu.indexOf(":")-3).toString()+" Pukul${it.waktu.subSequence(it.waktu.indexOf(":")-3, it.waktu.length)}").replace("-"," ")}\n" +
+                    "${it.lokasi_sounding}\n" +
+                    "Tinggi Cairan ${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Suhu Cairan ${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C\n" +
+                    "Suhu Kalibrasi Tangki ${zeroRemover(it.suhu_kalibrasi_tangki.toBigDecimal().toPlainString()).replace(".",",")} °C\n" +
+                    "Tinggi Meja: ${zeroRemover(it.tinggi_meja.toBigDecimal().toPlainString()).replace(".",",")} mm\n" +
+                    "Koefisien Muai Tangki ${zeroRemover(it.faktor_muai.toBigDecimal().toPlainString()).replace(".",",")}\n\n" +
+                    "Hasil Perhitungan $metode\n" +
+                    "${it.judulKalibrasi1} ${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Tabel Kalibrasi (${it.judulDataTabel}): ${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L" +
+                    "${it.judulKalibrasi2} ${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L" +
+                    "Massa Jenis Cairan ${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL\n" +
+                    "Tinggi Terkoreksi ${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m\n" +
+                    "Volume App ${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L\n" +
+                    "Volume Obs ${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L\n" +
+                    "Volume ${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL\n" +
+                    "Hasil Akhir ${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT\n" +
+                    "${it.pegawai_sounding}, ${it.nip_pegawai}"
+        }
+        val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
+        return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
+            for (x in 0 until size) {
+                for (y in 0 until size) {
+                    it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
+                }
+            }
+        }
+    }
+
     private fun setupListOfDataIntoRecyclerViewReport(reportList:ArrayList<ReportEntity>, userDao: UserDao) {
         _binding2?.soundingParent?.visibility = View.VISIBLE
         if (reportList.isNotEmpty()) {
@@ -3667,6 +3159,501 @@ class TabFragment(private val title: String) : Fragment() {
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
+    }
+
+    private fun pdfReportSounding(id: Int, userDao: UserDao) {
+        lifecycleScope.launch {
+            userDao.fetchReportById(id).collect {
+                try {
+                    Dexter.withContext(requireContext())
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                if (report.areAllPermissionsGranted()) {
+                                    val sdf = SimpleDateFormat(" ddMMyy HHmmss", Locale.getDefault())
+                                    val currentDate = sdf.format(Calendar.getInstance().time)
+//                                    val outPath = requireContext().getExternalFilesDir(null).toString() +  "/Report " + it.no_tangki + currentDate + ".pdf"
+                                    val noTangkiUnik = it.no_tangki.distinctBy { it1 -> it1.uppercase() }
+                                    var noSemuaTangki = String()
+                                    for (i in noTangkiUnik.indices) {
+                                        if (i!=0) {
+                                            noSemuaTangki += ", ${noTangkiUnik[i].uppercase()}"
+                                        }
+                                        else {
+                                            noSemuaTangki = noTangkiUnik[i]
+                                        }
+                                    }
+                                    noSemuaTangki = endSpaceRemover(noSemuaTangki)
+                                    if (noSemuaTangki.subSequence(noSemuaTangki.length-1,noSemuaTangki.length) == ",") {
+                                        noSemuaTangki = noSemuaTangki.subSequence(0, noSemuaTangki.length-1).toString()
+                                    }
+                                    val outPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/Report " + noSemuaTangki + " Printed on" + currentDate + ".pdf"  //Location where the pdf will be stored
+                                    if (File(outPath).exists()) {
+                                        File(outPath).delete()
+                                    }
+                                    Log.d("PDF Location", outPath)
+                                    val writer = PdfWriter(FileOutputStream(outPath))
+                                    val pdfDoc = PdfDocument(writer)
+                                    val doc = Document(pdfDoc, PageSize.A4)
+                                    doc.setMargins(0f, 0f, 20f, 20f)
+                                    page1FinalReport(doc, it)
+                                    if (it.hasil.size > 1) {
+                                        pageExtraFinalReport(doc, it)
+                                    }
+                                    doc.close()
+
+                                    val file = File(outPath)
+                                    file.listFiles()
+                                    val path: Uri = FileProvider.getUriForFile(Objects.requireNonNull(activity!!.applicationContext),
+                                        BuildConfig.APPLICATION_ID + ".provider", file)
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW)
+                                        intent.setDataAndType(path, "application/pdf")
+                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(requireContext(), "Tidak Ditemukan Aplikasi PDF Viewer", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                } else {
+                                    Toast.makeText(requireContext(), "Akses Tidak Diberikan\n(Permission Not Granted)", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: List<PermissionRequest>,
+                                token: PermissionToken
+                            ) {
+                                token.continuePermissionRequest()
+                            }
+                        }).check()
+                } catch (e: Exception) {
+                    Log.d("okimatra9", "" + e.message)
+                }
+            }
+        }
+    }
+    private fun page1FinalReport(doc: Document, it: ReportEntity) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val header = Text("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\nDIREKTORAT JENDERAL BEA DAN CUKAI\n${it.kanwil_pegawai_final}\n${it.kantor_pegawai_final}\n\n")
+            .setFont(fontArial).setFontSize(10f)
+        val headerPara = Paragraph().add(header).setMultipliedLeading(1.2f).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(10f).setPaddingTop(10f)
+        val title = Text("BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
+                "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
+            .setFont(fontArial).setFontSize(10f)
+        val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER)
+        val cellTop = Cell(1,2).add(headerPara).add(titlePara)
+
+        val para1 = Paragraph().add(Text("1. Telah dilakukan pemeriksaan fisik sebelum pengajuan PEB atas barang ekspor pada:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para1)
+        writeDataListwithSemicolomn(listOf("a.", "b."), listOf("Lokasi","Nama Sarana Pengangkut"), listOf(it.lokasi_sounding[0], it.nama_sarkut), cellTop)
+
+        val para2 = Paragraph().add(Text("2. Eksportir:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para2)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("NPWP", "Nama", "Alamat"), listOf(it.npwp_perusahaan_sounding[0], it.perusahaan_sounding[0], it.alamat_perusahaan_sounding[0]), cellTop)
+
+        val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para3)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+            listOf(
+                it.no_tangki[0],
+                "${zeroRemover(it.suhu_kalibrasi_tangki[0].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+            cellTop)
+
+        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
+        val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4).add(para4a)
+        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+            listOf(
+                it.waktu[0].subSequence(it.waktu[0].indexOf(",") + 2, it.waktu[0].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[0].subSequence(it.waktu[0].indexOf(":")-3, it.waktu[0].length)}",
+                "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+            cellTop)
+
+        val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4b)
+        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+            listOf(
+                it.waktu[1].subSequence(it.waktu[1].indexOf(",") + 2, it.waktu[1].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[1].subSequence(it.waktu[1].indexOf(":")-3, it.waktu[1].length)}",
+                "${zeroRemover(it.suhu_cairan[1].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                "${zeroRemover((it.tinggi_cairan[1]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                "${zeroRemover(it.density_cairan[1].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                "${zeroRemover(it.volume_app[1].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.hasil_sounding[1].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+            cellTop)
+
+        val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text("         :    ${zeroRemover(it.hasil[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4c)
+
+        val para5 = Paragraph().add(Text("5. Keterangan:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para5)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan, ""), cellTop)
+        cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
+        writeDataList2withSemicolomn(listOf("1)", "2)"), listOf("Waktu dan Pukul                      ", "Jumlah Contoh Barang"),
+            listOf(
+                (it.waktu_aju.subSequence(it.waktu_aju.indexOf(",")+2, it.waktu_aju.indexOf(":")-3).toString()+" Pukul${it.waktu_aju.subSequence(it.waktu_aju.indexOf(":")-3, it.waktu_aju.length)}").replace("-"," "),
+                it.jumlah_contoh),
+            cellTop)
+
+        val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f)
+        cellTop.add(paraMengetahui)
+
+        val paraLeft = Paragraph()
+            .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",")+2, it.tanggal_ba.length)}\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val cellLeft = Cell().add(paraLeft)
+        writeReportwithSemicolomn(listOf("Nama","Jabatan"), listOf(it.pengguna_jasa_sounding[0], it.jabatan_pengguna_jasa[0]), cellLeft)
+
+        val paraRight = Paragraph()
+            .add(Text("\n\n\n\n\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val cellRight = Cell().add(paraRight)
+        val nipSpace = it.nip_pegawai[0].subSequence(0,8).toString() +
+                " " + it.nip_pegawai[0].subSequence(8,14).toString() +
+                " " + it.nip_pegawai[0].subSequence(14,15).toString() +
+                " " + it.nip_pegawai[0].subSequence(15,it.nip_pegawai[0].length).toString()
+        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace), cellRight)
+
+        val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
+        table.addCell(cellLeft).addCell(cellRight)
+        doc.add(table)
+    }
+    private fun pageExtraFinalReport(doc: Document, it: ReportEntity) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val maxIndex = (it.hasil_sounding.size-3)/4
+        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
+        for (i in 0..maxIndex) {
+            doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
+            val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
+                    "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
+                .setFont(fontArial).setFontSize(10f)
+            val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
+            val cellTop = Cell(1,2).add(titlePara)
+            Log.d("testing0", maxIndex.toString() + ((0+1)*4+2).toString() + it.hasil_sounding.size.toString())
+
+
+            if (it.hasil_sounding.size >= (i+1)*4+2) {
+                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                cellTop.add(para1)
+                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+                    listOf(
+                        it.no_tangki[i*4+2],
+                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                        "${zeroRemover(it.tinggi_meja[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+                    cellTop)
+                val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2).add(para2a)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(",") + 2, it.waktu[i*4+2].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(":")-3, it.waktu[i*4+2].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2b)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(",") + 2, it.waktu[i*4+3].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(":")-3, it.waktu[i*4+3].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2c)
+
+                val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                cellTop.add(para3)
+                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+                    listOf(
+                        it.no_tangki[i*4+4],
+                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                        "${zeroRemover(it.tinggi_meja[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+                    cellTop)
+
+                val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para4).add(para4a)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+4].subSequence(it.waktu[i*4+4].indexOf(",") + 2, it.waktu[i*4+4].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+4].subSequence(it.waktu[i*4+4].indexOf(":")-3, it.waktu[i*4+4].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+4]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para4b)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+5].subSequence(it.waktu[i*4+5].indexOf(",") + 2, it.waktu[i*4+5].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+5].subSequence(it.waktu[i*4+5].indexOf(":")-3, it.waktu[i*4+5].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+5]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+2].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para4c)
+//                for (j in i*4+2..(i*4+1) step 2) {}
+            }
+            else {
+                Log.d("testing", i.toString())
+                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                cellTop.add(para1)
+                writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+                    listOf(
+                        it.no_tangki[i*4+2],
+                        "${zeroRemover(it.suhu_kalibrasi_tangki[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                        "${zeroRemover(it.tinggi_meja[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+                    cellTop)
+                val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2).add(para2a)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(",") + 2, it.waktu[i*4+2].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+2].subSequence(it.waktu[i*4+2].indexOf(":")-3, it.waktu[i*4+2].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2b)
+                writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+                    listOf(
+                        it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(",") + 2, it.waktu[i*4+3].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[i*4+3].subSequence(it.waktu[i*4+3].indexOf(":")-3, it.waktu[i*4+3].length)}",
+                        "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                        "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                        "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                    cellTop)
+
+                val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+                    .add(soundingItalic)
+                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+                cellTop.add(para2c)
+            }
+
+            val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(287f)
+            cellTop.add(paraMengetahui)
+
+            val cellLeft = Cell()
+
+            val paraRight = Paragraph()
+                .add(Text("\n\n\n\n").setFont(fontArial).setFontSize(10f))
+                .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
+                .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+            val cellRight = Cell().add(paraRight)
+            val nipSpace = it.nip_pegawai[i*4+2].subSequence(0,8).toString() +
+                    " " + it.nip_pegawai[i*4+2].subSequence(8,14).toString() +
+                    " " + it.nip_pegawai[i*4+2].subSequence(14,15).toString() +
+                    " " + it.nip_pegawai[i*4+2].subSequence(15,it.nip_pegawai[0].length).toString()
+            writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[i*4+2], nipSpace), cellRight)
+
+            val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
+            table.addCell(cellLeft).addCell(cellRight)
+            doc.add(table)
+        }
+    }
+    private fun writeReportwithSemicolomn(listJudul: List<String>, listNilai: List<String>, cell: Cell) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val padding = 3f
+        val tablelist = Table(floatArrayOf(2f, 0.05f, 5f))
+        tablelist.width = cell.width
+        for (i in listJudul.indices) {
+            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(10f)
+            tablelist.addCell(idCell)
+
+            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(2*padding)
+                .setPaddingTop(-padding)
+            tablelist.addCell(separatorCell)
+
+            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(3*padding)
+                .setPaddingRight(5*padding)
+            tablelist.addCell(valueCell)
+        }
+        cell.add(tablelist)
+    }
+    private fun writeDataListwithSemicolomn(list: List<String>, listJudul: List<String>, listNilai: List<String>, cell: Cell) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val padding = 3f
+        val tablelist = Table(floatArrayOf(0.2f, 2f, 0.05f, 5f))
+        tablelist.width = cell.width
+        for (i in list.indices) {
+            val idPoint = Cell().add(Paragraph().add(Text(list[i]).setFont(fontArial).setFontSize(10f)))
+            idPoint.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(7.3f*padding)
+            tablelist.addCell(idPoint)
+
+            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+            tablelist.addCell(idCell)
+
+            val separatorCell = Cell()
+            if (listJudul[i] != "Contoh Barang Diambil/Diajukan") {
+                separatorCell.add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
+            } else {
+                separatorCell.add(Paragraph().add(Text("").setFont(fontArial).setFontSize(10f)))
+            }
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(2*padding)
+                .setPaddingTop(-padding)
+            tablelist.addCell(separatorCell)
+
+            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(3*padding)
+                .setPaddingRight(5*padding)
+            tablelist.addCell(valueCell)
+        }
+        cell.add(tablelist)
+        cell.add(Paragraph().add("\n").setFixedLeading(5f))
+    }
+    private fun writeDataList2withSemicolomn(list: List<String>, listJudul: List<String>, listNilai: List<String>, cell: Cell) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val padding = 3f
+        val tablelist = Table(floatArrayOf(0.2f, 2f, 0.05f, 5f))
+        tablelist.width = cell.width
+        for (i in list.indices) {
+            val idPoint = Cell().add(Paragraph().add(Text(list[i]).setFont(fontArial).setFontSize(10f)))
+            idPoint.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(11.3f*padding)
+            tablelist.addCell(idPoint)
+
+            val idCell = Cell()
+            if (listJudul[i] != "Density Cairan") {
+                idCell.add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
+            } else {
+                idCell.add(Paragraph().add(Text("Density").setItalic().setFont(fontArial).setFontSize(10f)).add(Text("Cairan").setFont(fontArial).setFontSize(10f)))
+            }
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+            tablelist.addCell(idCell)
+
+            val separatorCell = Cell().add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+            tablelist.addCell(separatorCell)
+
+            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(3*padding)
+                .setPaddingRight(5*padding)
+            tablelist.addCell(valueCell)
+        }
+        cell.add(tablelist)
+        cell.add(Paragraph().add("\n").setFixedLeading(5f))
     }
 
     private fun populateDropdownUser(list:ArrayList<PegawaiEntity>, spinner: Spinner) {
