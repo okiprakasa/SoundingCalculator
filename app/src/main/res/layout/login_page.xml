@@ -12,15 +12,15 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="235dp"
+            android:layout_height="300dp"
             android:background="@drawable/blue_bg2">
 
             <ImageView
-                android:contentDescription="@string/bea_cukai"
                 android:layout_width="77dp"
                 android:layout_height="77dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="50dp"
+                android:contentDescription="@string/bea_cukai"
                 android:src="@drawable/logo" />
 
         </FrameLayout>
@@ -61,6 +61,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/nama_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="53dp"
@@ -89,6 +90,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/nip_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="53dp"
@@ -117,12 +119,14 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/golongan_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="53dp"
             android:layout_marginTop="12.7dp"
             android:layout_marginRight="53dp"
-            android:background="@drawable/rounded_input">
+            android:background="@drawable/rounded_input"
+            android:visibility="gone">
 
             <Spinner
                 android:id="@+id/golongan_pegawai"
@@ -137,12 +141,14 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/jabatan_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="53dp"
             android:layout_marginTop="18.7dp"
             android:layout_marginRight="53dp"
-            android:background="@drawable/rounded_input">
+            android:background="@drawable/rounded_input"
+            android:visibility="gone">
 
             <!-- INPUT -->
             <androidx.appcompat.widget.AppCompatEditText
@@ -165,12 +171,14 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/kantor_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="53dp"
             android:layout_marginTop="12.7dp"
             android:layout_marginRight="53dp"
-            android:background="@drawable/rounded_input">
+            android:background="@drawable/rounded_input"
+            android:visibility="gone">
 
             <Spinner
                 android:id="@+id/kantor_pegawai"
@@ -181,8 +189,39 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:spinnerMode="dropdown" />
-
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="53dp"
+            android:layout_marginRight="53dp"
+            android:layout_marginTop="18.7dp"
+            android:layout_marginBottom="18.7dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins_light"
+            android:gravity="center"
+            android:text="@string/next"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="53dp"
+            android:layout_marginTop="18.7dp"
+            android:layout_marginRight="53dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins_light"
+            android:gravity="center"
+            android:text="@string/back"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_start"
@@ -197,7 +236,8 @@
             android:gravity="center"
             android:text="@string/masuk"
             android:textColor="#ffffff"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

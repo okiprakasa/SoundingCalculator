@@ -203,11 +203,9 @@ class LoginActivity : AppCompatActivity() {
 
             populateDropdownGolongan(golonganPegawai, this@LoginActivity)
 
-            btnStart.setOnClickListener {
+            btnNext.setOnClickListener {
                 val nama = endSpaceRemover(inputNama.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                 val nip = inputNip.text.toString()
-                val gol = golonganPegawai.selectedItem.toString()
-                val jabatan = endSpaceRemover(inputJabatan.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                 when {
                     nama.isEmpty() -> {
                         Toast.makeText(this@LoginActivity, "Mohon masukkan Nama Anda", Toast.LENGTH_SHORT).show()
@@ -242,6 +240,36 @@ class LoginActivity : AppCompatActivity() {
                     nip.substring(14,15).toInt() !in 1..2 -> {
                         Toast.makeText(this@LoginActivity, "Mohon Periksa Kode Terkait Jenis Kelamin Anda", Toast.LENGTH_SHORT).show()
                     }
+                    else -> {
+                        namaLayout.visibility = View.GONE
+                        nipLayout.visibility = View.GONE
+                        btnNext.visibility = View.GONE
+                        golonganLayout.visibility = View.VISIBLE
+                        jabatanLayout.visibility = View.VISIBLE
+                        kantorLayout.visibility = View.VISIBLE
+                        btnBack.visibility = View.VISIBLE
+                        btnStart.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            btnBack.setOnClickListener {
+                namaLayout.visibility = View.VISIBLE
+                nipLayout.visibility = View.VISIBLE
+                btnNext.visibility = View.VISIBLE
+                golonganLayout.visibility = View.GONE
+                jabatanLayout.visibility = View.GONE
+                kantorLayout.visibility = View.GONE
+                btnBack.visibility = View.GONE
+                btnStart.visibility = View.GONE
+            }
+
+            btnStart.setOnClickListener {
+                val nama = endSpaceRemover(inputNama.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                val nip = inputNip.text.toString()
+                val gol = golonganPegawai.selectedItem.toString()
+                val jabatan = endSpaceRemover(inputJabatan.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                when {
                     jabatan.isEmpty() -> {
                         Toast.makeText(this@LoginActivity, "Mohon masukkan Jabatan Anda", Toast.LENGTH_SHORT).show()
                     }

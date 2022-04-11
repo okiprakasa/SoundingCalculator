@@ -98,10 +98,6 @@ class TabFragment(private val title: String) : Fragment() {
     }
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     private val currentyear = yearFormat.format(cal.time).toString()
-//    private val timeFormat = SimpleDateFormat("EEEE, dd-MMMM-yyyy hh:mm", Locale.getDefault())
-//    private val currentTime = dayConverter(monthConverter(timeFormat.format(cal.time).toString())) + " $timeZone"
-//    private val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-//    private val currentdate = dateFormat.format(cal.time).toString()
 
     private lateinit var ivCvMap: MutableMap<ImageView, CardView>
     private lateinit var ivTvMap: MutableMap<ImageView, TextView>
@@ -949,6 +945,8 @@ class TabFragment(private val title: String) : Fragment() {
                 }
 
                 binding3.apply {
+                    populateDropdownGolongan(gol, requireContext())
+
                     kantorPegawaiTab.setOnClickListener {
                         kantorPegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                         kantorPegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -1260,7 +1258,7 @@ class TabFragment(private val title: String) : Fragment() {
 
                 val spAwal = Spinner(requireContext())
                 spAwal.layoutParams = awal1.layoutParams
-                spAwal.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
+                spAwal.background = ResourcesCompat.getDrawable(resources, R.color.transparent, null)
 
                 val tvAkhir = TextView(requireContext())
                 tvAkhir.text = getString(R.string.akhir)
@@ -1274,7 +1272,7 @@ class TabFragment(private val title: String) : Fragment() {
 
                 val spAkhir = Spinner(requireContext())
                 spAkhir.layoutParams = akhir1.layoutParams
-                spAkhir.background = ResourcesCompat.getDrawable(resources, R.color.Transparent, null)
+                spAkhir.background = ResourcesCompat.getDrawable(resources, R.color.transparent, null)
 
                 val tvHasil = TextView(requireContext())
                 tvHasil.text = getString(R.string.hasil)
@@ -1890,12 +1888,14 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
     private fun addRecordUser(userDao: UserDao) {
-        val name = endSpaceRemover(_binding3?.nama?.text.toString())
+        val name = endSpaceRemover(_binding3?.nama?.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
         val nip = _binding3?.nip?.text.toString()
         val sdfyear = SimpleDateFormat("yyyy", Locale.getDefault())
         val sdfdate = SimpleDateFormat("yyyyMM", Locale.getDefault())
         val year = sdfyear.format(Calendar.getInstance().time)
         val date = sdfdate.format(Calendar.getInstance().time)
+        val gol = _binding3?.gol?.selectedItem.toString()
+        val jabatan = endSpaceRemover(_binding3?.jabatan?.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
         when {
             name.isEmpty() -> {
                 Toast.makeText(context, "Mohon Masukkan Nama Anda", Toast.LENGTH_SHORT).show()
@@ -1930,12 +1930,19 @@ class TabFragment(private val title: String) : Fragment() {
             nip.substring(14,15).toInt() !in 1..2 -> {
                 Toast.makeText(context, "Mohon Periksa Kode Terkait Jenis Kelamin Anda", Toast.LENGTH_SHORT).show()
             }
+            jabatan.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Jabatan Anda", Toast.LENGTH_SHORT).show()
+            }
             else -> {
                 lifecycleScope.launch {
                     userDao.fetchUserOfficeByKota(binding3.kantorPegawai.selectedItem.toString()).collect {
                         lifecycleScope.launch {
-                            userDao.insertUser(PegawaiEntity(nama_pegawai = name,
+                            userDao.insertUser(PegawaiEntity(
+                                nama_pegawai = name,
                                 nip = nip,
+                                gol = gol,
+                                pangkat = golonganToPangkat(gol),
+                                jabatan_pegawai = jabatan,
                                 kota_pegawai = it.kota,
                                 kantor_pegawai = it.kantor,
                                 kanwil_pegawai = it.kanwil,
@@ -1958,6 +1965,7 @@ class TabFragment(private val title: String) : Fragment() {
         val binding = DialogUpdateBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        populateDropdownGolongan(binding.updateGolongan, requireContext())
         lifecycleScope.launch {
             userDao.fetchAllUserOffice().collect { it ->
                 populateDropdownUserOffice(ArrayList(it), binding.updateKantor)
@@ -1975,8 +1983,11 @@ class TabFragment(private val title: String) : Fragment() {
                         try {
                             binding.updateNama.setText(it.nama_pegawai)
                             binding.updateNip.setText(it.nip)
-                            val spinnerPosition = adapter.getPosition(it.kota_pegawai)
-                            binding.updateKantor.setSelection(spinnerPosition)
+                            binding.updateJabatan.setText(it.jabatan_pegawai)
+                            val kantorSpinnerPosition = adapter.getPosition(it.kota_pegawai)
+                            binding.updateKantor.setSelection(kantorSpinnerPosition)
+                            val golonganSpinnerPosition = adapter.getPosition(it.gol)
+                            binding.updateGolongan.setSelection(golonganSpinnerPosition)
                         } catch (e: Exception) {
                             Log.e("okimatra13", "" + e.message)
                         }
@@ -1985,16 +1996,6 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            userDao.fetchUserById(id).collect {
-                try {
-                    binding.updateNama.setText(it.nama_pegawai)
-                    binding.updateNip.setText(it.nip)
-                } catch (e: Exception) {
-                    Log.e("okimatra14", "" + e.message)
-                }
-            }
-        }
         binding.tvUpdate.setOnClickListener {
             val name = endSpaceRemover(binding.updateNama.text.toString())
             val nip = binding.updateNip.text.toString()

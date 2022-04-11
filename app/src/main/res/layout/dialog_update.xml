@@ -17,7 +17,7 @@
         android:text="@string/update_record"
         android:textColor="@android:color/black"
         android:fontFamily="@font/nunito"
-        android:textSize="17sp"
+        android:textSize="15sp"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="35dp"
         android:layout_marginTop="15dp"
@@ -34,7 +34,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/nama"
         android:fontFamily="@font/helvetica"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:layout_marginStart="7dp"
@@ -49,11 +49,10 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_nama"
         android:fontFamily="@font/poppins_light"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:autofillHints="name"
         android:inputType="textMultiLine|textPersonName"
         android:scrollbars="vertical"/>
-
 
     <TextView
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +65,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/nip"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,13 +81,75 @@
         android:hint="@string/hint_nip"
         android:fontFamily="@font/poppins_light"
         android:layout_marginEnd="5dp"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:maxLength="18"
         tools:ignore="Autofill" />
 
     <TextView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/update_nip"
+        android:id="@+id/judul_golongan"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/helvetica"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="@string/golongan"
+        android:textSize="13sp" />
+
+    <Spinner
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/judul_golongan"
+        android:id="@+id/update_golongan"
+        android:layout_width="0dp"
+        android:layout_marginStart="-5dp"
+        android:layout_marginTop="-10dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textPersonName"
+        android:backgroundTint="@color/appTheme"
+        android:hint="@string/hint_perusahaan"
+        android:fontFamily="@font/poppins_light"
+        android:layout_marginEnd="5dp"
+        android:textSize="12sp"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/update_golongan"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/judul_jabatan"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/jabatan"
+        android:fontFamily="@font/helvetica"
+        android:textSize="13sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_marginStart="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/judul_jabatan"
+        android:layout_marginTop="-10dp"
+        android:id="@+id/update_jabatan"
+        android:layout_width="0dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="@color/appTheme"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_jabatan_pegawai"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="12sp"
+        android:autofillHints="name"
+        android:inputType="textMultiLine|textPersonName"
+        android:scrollbars="vertical"/>
+
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_jabatan"
         android:id="@+id/judul_kantor"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
@@ -97,7 +158,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:text="@string/kantor"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 
     <Spinner
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,10 +174,9 @@
         android:hint="@string/hint_perusahaan"
         android:fontFamily="@font/poppins_light"
         android:layout_marginEnd="5dp"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         tools:ignore="Autofill"/>
-
 
     <TextView
         app:layout_constraintTop_toBottomOf="@id/update_kantor"
@@ -127,7 +187,7 @@
         android:gravity="center"
         android:padding="15dp"
         android:fontFamily="@font/nunito"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:text="@string/update"
         android:textColor="@color/appTheme"
         android:textStyle="bold" />
@@ -138,7 +198,7 @@
         android:id="@+id/tvCancel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:gravity="center"
         android:fontFamily="@font/nunito"
         android:padding="15dp"
