@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/switch_off"
+        android:elevation="15dp"
+        android:clipToPadding="false">
+
+        <TextView
+            android:id="@+id/perusahaan_tab"
+            android:text="@string/company"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:textSize="13sp"
+            android:paddingBottom="5dp"
+            android:fontFamily="@font/nunito"
+            android:background="@drawable/switch_on"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/pengguna_jasa_tab"
+            android:text="@string/exporter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:textSize="13sp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/appTheme"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/judul_nama"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:layout_weight="2"
+            android:fontFamily="@font/helvetica"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/nama"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/nama"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/hint_nama"
+            android:autofillHints="name"
+            android:inputType="textPersonName"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/npwp_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvNPWPLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/npwp"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/etNPWPId"
+            android:layout_width="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:inputType="number"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:maxLength="21"
+            android:hint="@string/hint_npwp"
+            tools:ignore="Autofill"/>
+        <!--            android:digits="1234567890.-"-->
+        <!--            -->
+        <!--            android:inputType="textNoSuggestions"-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/alamat_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvAlamatLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/alamat"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/etAlamatId"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:hint="@string/hint_alamat"
+            tools:ignore="Autofill"
+            android:gravity="center_vertical"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/penggunajasa_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/judul_jabatan"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/jabatan"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/jabatan"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:hint="@string/hint_jabatan"
+            tools:ignore="Autofill"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/perusahaan_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/judul_perusahaan"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/company"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/perusahaan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="-13dp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAddCompany"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:background="@drawable/rounded_button"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/tambah_data"/>
+
+    <Button
+        android:id="@+id/btnAddPenggunaJasa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:background="@drawable/rounded_button"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/tambah_data"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:id="@+id/svCompanyList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCompanyList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/svServiceUserList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvServiceUserList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tvNoRecordsAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_record"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:visibility="gone"/>
+
+</LinearLayout>

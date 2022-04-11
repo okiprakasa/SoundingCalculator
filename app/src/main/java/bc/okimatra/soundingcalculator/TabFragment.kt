@@ -68,12 +68,14 @@ import kotlin.math.roundToLong
 
 class TabFragment(private val title: String) : Fragment() {
 
-    private var _binding1: FragmentOneBinding? = null
+    private var _binding1: Fragment1Binding? = null
     private val binding1 get() = _binding1!!
-    private var _binding2: FragmentTwoBinding? = null
+    private var _binding2: Fragment2Binding? = null
     private val binding2 get() = _binding2!!
-    private var _binding3: FragmentThreeBinding? = null
+    private var _binding3: Fragment3Binding? = null
     private val binding3 get() = _binding3!!
+    private var _binding4: Fragment4Binding? = null
+    private val binding4 get() = _binding4!!
 
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
@@ -117,16 +119,20 @@ class TabFragment(private val title: String) : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
             title === "Calculator" -> {
-                _binding1 = FragmentOneBinding.inflate(inflater, container, false)
+                _binding1 = Fragment1Binding.inflate(inflater, container, false)
                 binding1.root
             }
             title === "Data" -> {
-                _binding2 = FragmentTwoBinding.inflate(inflater, container, false)
+                _binding2 = Fragment2Binding.inflate(inflater, container, false)
                 binding2.root
             }
-            else -> {
-                _binding3 = FragmentThreeBinding.inflate(inflater, container, false)
+            title === "BC" -> {
+                _binding3 = Fragment3Binding.inflate(inflater, container, false)
                 binding3.root
+            }
+            else -> {
+                _binding4 = Fragment4Binding.inflate(inflater, container, false)
+                binding4.root
             }
         }
     }
@@ -445,7 +451,7 @@ class TabFragment(private val title: String) : Fragment() {
                             userDao.fetchAllSounding().collect {
                                 Log.d("okimatra4", "$it")
                                 val list = ArrayList(it)
-                                setupListOfDataIntoRecyclerViewSounding(list,userDao)
+                                setupSounding(list,userDao)
                             }
                         }
                     }, 10)
@@ -465,7 +471,7 @@ class TabFragment(private val title: String) : Fragment() {
                                 userDao.fetchAllSounding().collect {
                                     Log.d("okimatra5", "$it")
                                     val list = ArrayList(it)
-                                    setupListOfDataIntoRecyclerViewSounding(list,userDao)
+                                    setupSounding(list,userDao)
                                 }
                             }
                         }, 10)
@@ -488,7 +494,7 @@ class TabFragment(private val title: String) : Fragment() {
                                         lifecycleScope.launch {
                                             userDao.fetchAllReport().collect {
                                                 val list = ArrayList(it)
-                                                setupListOfDataIntoRecyclerViewReport(list, userDao)
+                                                setupReport(list, userDao)
                                             }
                                         }
                                         fabFinalReport.visibility = View.VISIBLE
@@ -934,15 +940,105 @@ class TabFragment(private val title: String) : Fragment() {
                     addClickListener(binding2, btnAddSounding, userDao)
                 }
             }
-            else -> {
+            title === "BC" -> {
                 lifecycleScope.launch {
-                    userDao.fetchAllUser().collect {
+                    userDao.fetchAllUserOffice().collect {
                         val list = ArrayList(it)
-                        setupListOfUserDataIntoRecyclerView(list,userDao)
+                        setupUserOffice(list,userDao)
                     }
                 }
 
                 binding3.apply {
+                    kantorPegawaiTab.setOnClickListener {
+                        kantorPegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                        kantorPegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        pegawaiTab.background = null
+                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
+                        btnAddUser.visibility = View.GONE
+                        namaLayout.visibility = View.GONE
+                        pegawaiLayout.visibility = View.GONE
+                        kantorLayout.visibility = View.GONE
+                        svUserList.visibility = View.GONE
+                        kotaLayout.visibility = View.VISIBLE
+                        lokasiBaLayout.visibility = View.VISIBLE
+                        tvKantorLabel.visibility = View.VISIBLE
+                        kantor.visibility = View.VISIBLE
+                        tvKanwilLabel.visibility = View.VISIBLE
+                        kanwil.visibility = View.VISIBLE
+                        tvFormatBaSoundingLabel.visibility = View.VISIBLE
+                        formatBaSounding.visibility = View.VISIBLE
+                        tvFormatBaSamplingLabel.visibility = View.VISIBLE
+                        formatBaSampling.visibility = View.VISIBLE
+                        btnAddUserOffice.visibility = View.VISIBLE
+                        lifecycleScope.launch {
+                            userDao.fetchAllUserOffice().collect {
+                                val list = ArrayList(it)
+                                setupUserOffice(list, userDao)
+                            }
+                        }
+                    }
+
+                    pegawaiTab.setOnClickListener {
+                        lifecycleScope.launch {
+                            userDao.countAllUserOffice().collect { it1 ->
+                                if (it1>0) {
+                                    pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
+                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                                    kantorPegawaiTab.background = null
+                                    kantorPegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
+                                    btnAddUser.visibility = View.VISIBLE
+                                    namaLayout.visibility = View.VISIBLE
+                                    pegawaiLayout.visibility = View.VISIBLE
+                                    kantorLayout.visibility = View.VISIBLE
+                                    svUserList.visibility = View.VISIBLE
+                                    kotaLayout.visibility = View.GONE
+                                    lokasiBaLayout.visibility = View.GONE
+                                    tvKantorLabel.visibility = View.GONE
+                                    kantor.visibility = View.GONE
+                                    tvKanwilLabel.visibility = View.GONE
+                                    kanwil.visibility = View.GONE
+                                    tvFormatBaSoundingLabel.visibility = View.GONE
+                                    formatBaSounding.visibility = View.GONE
+                                    tvFormatBaSamplingLabel.visibility = View.GONE
+                                    formatBaSampling.visibility = View.GONE
+                                    btnAddUserOffice.visibility = View.GONE
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllUser().collect { it2 ->
+                                            val list = ArrayList(it2)
+                                            setupUser(list, userDao)
+                                        }
+                                    }
+                                    lifecycleScope.launch {
+                                        userDao.fetchAllUserOffice().collect { it3 ->
+                                            populateDropdownUserOffice(ArrayList(it3), kantorPegawai)
+                                        }
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(context, "Mohon Tambahkan Data\nKantor BC Terlebih Dahulu\nPada Tab Kantor BC", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                    }
+
+                    btnAddUserOffice.setOnClickListener {
+                        addRecordUserOffice(userDao)
+                    }
+
+                    btnAddUser.setOnClickListener {
+                        addRecordUser(userDao)
+                    }
+                }
+            }
+            else -> {
+                lifecycleScope.launch {
+                    userDao.fetchAllUser().collect {
+                        val list = ArrayList(it)
+                        setupUser(list,userDao)
+                    }
+                }
+
+                binding4.apply {
 
                     var number = ""
                     var numberOld = ""
@@ -950,12 +1046,6 @@ class TabFragment(private val title: String) : Fragment() {
                     val holder = "__.___.___._-___.___"
                     var cursorPosition: Int
                     var cursor: Int
-
-                    lifecycleScope.launch {
-                        userDao.fetchAllKantor().collect {
-                            populateDropdownKantor(ArrayList(it), kantorPegawai)
-                        }
-                    }
 
                     etNPWPId.setOnFocusChangeListener { _, _ ->
                         if (etNPWPId.text.toString().isEmpty()) {
@@ -1052,15 +1142,10 @@ class TabFragment(private val title: String) : Fragment() {
                                 if (it1>0) {
                                     penggunaJasaTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
                                     penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                                    pegawaiTab.background = null
-                                    pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                                     perusahaanTab.background = null
                                     perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
-                                    pegawaiLayout.visibility = View.GONE //NIP
-                                    btnAddUser.visibility = View.GONE
                                     npwpLayout.visibility = View.GONE
                                     alamatLayout.visibility = View.GONE
-                                    kantorLayout.visibility = View.GONE
                                     btnAddCompany.visibility = View.GONE
                                     penggunajasaLayout.visibility = View.VISIBLE //Jabatan
                                     btnAddPenggunaJasa.visibility = View.VISIBLE
@@ -1070,7 +1155,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     lifecycleScope.launch {
                                         userDao.fetchAllServiceUser().collect {
                                             val list = ArrayList(it)
-                                            setupListOfServiceUserDataIntoRecyclerView(list, userDao)
+                                            setupServiceUser(list, userDao)
                                         }
                                     }
                                     lifecycleScope.launch {
@@ -1080,32 +1165,10 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                 }
                                 else {
-                                    Toast.makeText(context, "Mohon Tambahkan Data\nPerusahaanTerlebih Dahulu\nPada Tab Company", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Mohon Tambahkan Data\nPerusahaan Terlebih Dahulu\nPada Tab Perusahaan", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
-                    }
-
-                    pegawaiTab.setOnClickListener {
-                        pegawaiTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
-                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
-                        penggunaJasaTab.background = null
-                        penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
-                        perusahaanTab.background = null
-                        perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
-                        npwpLayout.visibility = View.GONE
-                        alamatLayout.visibility = View.GONE
-                        btnAddCompany.visibility = View.GONE
-                        penggunajasaLayout.visibility = View.GONE
-                        btnAddPenggunaJasa.visibility = View.GONE
-                        btnAddUser.visibility = View.VISIBLE
-                        pegawaiLayout.visibility = View.VISIBLE
-                        kantorLayout.visibility = View.VISIBLE
-                        nama.hint = getText(R.string.hint_nama)
-                        svUserList.visibility = View.VISIBLE
-                        svServiceUserList.visibility = View.GONE
-                        perusahaanLayout.visibility = View.GONE
-                        svCompanyList.visibility = View.GONE
                     }
 
                     perusahaanTab.setOnClickListener {
@@ -1113,24 +1176,18 @@ class TabFragment(private val title: String) : Fragment() {
                         perusahaanTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                         penggunaJasaTab.background = null
                         penggunaJasaTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
-                        pegawaiTab.background = null
-                        pegawaiTab.setTextColor(ContextCompat.getColor(requireContext(),R.color.appTheme))
                         npwpLayout.visibility = View.VISIBLE
                         alamatLayout.visibility = View.VISIBLE
                         btnAddCompany.visibility = View.VISIBLE
                         penggunajasaLayout.visibility = View.GONE
                         btnAddPenggunaJasa.visibility = View.GONE
-                        btnAddUser.visibility = View.GONE
-                        pegawaiLayout.visibility = View.GONE
                         svServiceUserList.visibility = View.GONE
                         perusahaanLayout.visibility = View.GONE
-                        kantorLayout.visibility = View.GONE
                         nama.hint = getText(R.string.hint_perusahaan)
-                        svUserList.visibility = View.GONE
                         lifecycleScope.launch {
                             userDao.fetchAllCompany().collect {
                                 val list = ArrayList(it)
-                                setupListOfDataIntoRecyclerViewCompany(list, userDao)
+                                setupCompany(list, userDao)
                             }
                         }
                         svCompanyList.visibility = View.VISIBLE
@@ -1138,10 +1195,6 @@ class TabFragment(private val title: String) : Fragment() {
 
                     btnAddCompany.setOnClickListener {
                         addRecordCompany(userDao)
-                    }
-
-                    btnAddUser.setOnClickListener {
-                        addRecordUser(userDao)
                     }
 
                     btnAddPenggunaJasa.setOnClickListener {
@@ -1158,7 +1211,7 @@ class TabFragment(private val title: String) : Fragment() {
         _binding3 = null
     }
 
-    private fun addClickListener(binding: FragmentTwoBinding, btn: Button, userDao: UserDao) {
+    private fun addClickListener(binding: Fragment2Binding, btn: Button, userDao: UserDao) {
         val radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, requireContext().resources.displayMetrics)
         val elevation = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, requireContext().resources.displayMetrics)
         binding.apply {
@@ -1271,7 +1324,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-    private fun removeListener(binding: FragmentTwoBinding, iv: ImageView) {
+    private fun removeListener(binding: Fragment2Binding, iv: ImageView) {
         var i = 1
         binding.apply {
             iv.setOnClickListener {
@@ -1290,7 +1343,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-    private fun spinnerListener(binding: FragmentTwoBinding, iv: ImageView, userDao: UserDao) {
+    private fun spinnerListener(binding: Fragment2Binding, iv: ImageView, userDao: UserDao) {
         val spAwal = ivSpAwalMap[iv]!!
         val spAkhir = ivSpAkhirMap[iv]!!
         val tvHasil = ivTvHasilMap[iv]!!
@@ -1819,20 +1872,20 @@ class TabFragment(private val title: String) : Fragment() {
         return results1
     }
 
-    private fun setupListOfUserDataIntoRecyclerView(employeesList:ArrayList<PegawaiEntity>, userDao: UserDao) {
+    private fun setupUser(employeesList:ArrayList<PegawaiEntity>, userDao: UserDao) {
         if (employeesList.isNotEmpty()) {
             val itemAdapter = PegawaiAdapter(employeesList,{ updateId ->
-                updateRecordDialogUser(updateId,userDao)
-            }){deleteId->deleteRecordAlertDialogUser(deleteId,userDao)
+                updateDialogUser(updateId,userDao)
+            }){deleteId->deleteDialogUser(deleteId,userDao)
             }
             _binding3?.rvUserList?.layoutManager = LinearLayoutManager(requireContext())
             _binding3?.rvUserList?.adapter = itemAdapter
             _binding3?.svUserList?.visibility = View.VISIBLE
-            _binding3?.svServiceUserList?.visibility = View.GONE
+            _binding3?.svUserOfficeList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.GONE
         } else {
             _binding3?.svUserList?.visibility = View.GONE
-            _binding3?.svServiceUserList?.visibility = View.GONE
+            _binding3?.svUserOfficeList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
@@ -1879,7 +1932,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-                    userDao.fetchKantorByKota(binding3.kantorPegawai.selectedItem.toString()).collect {
+                    userDao.fetchUserOfficeByKota(binding3.kantorPegawai.selectedItem.toString()).collect {
                         lifecycleScope.launch {
                             userDao.insertUser(PegawaiEntity(nama_pegawai = name,
                                 nip = nip,
@@ -1887,7 +1940,7 @@ class TabFragment(private val title: String) : Fragment() {
                                 kantor_pegawai = it.kantor,
                                 kanwil_pegawai = it.kanwil,
                                 lokasi_ba_pegawai = it.lokasi_ba,
-                                format_ba_pegawai = it.format_ba,
+                                format_ba_pegawai = it.format_ba_sounding,
                                 format_3d_pegawai = it.format_3d
                             ))
                             Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
@@ -1899,15 +1952,15 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-    private fun updateRecordDialogUser(id:Int, userDao: UserDao) {
+    private fun updateDialogUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
         val binding = DialogUpdateBinding.inflate(layoutInflater)
         updateDialog.setContentView(binding.root)
         updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         lifecycleScope.launch {
-            userDao.fetchAllKantor().collect { it ->
-                populateDropdownKantor(ArrayList(it), binding.updateKantor)
+            userDao.fetchAllUserOffice().collect { it ->
+                populateDropdownUserOffice(ArrayList(it), binding.updateKantor)
                 val items = arrayListOf<String>()
                 for (i in 0 until ArrayList(it).size) {
                     items.add(ArrayList(it)[i].kota)
@@ -1985,7 +2038,7 @@ class TabFragment(private val title: String) : Fragment() {
                 }
                 else -> {
                     lifecycleScope.launch {
-                        userDao.fetchKantorByKota(binding.updateKantor.selectedItem.toString()).collect {
+                        userDao.fetchUserOfficeByKota(binding.updateKantor.selectedItem.toString()).collect {
                             lifecycleScope.launch {
                                 userDao.updateUser(PegawaiEntity(id,
                                     name,
@@ -1994,7 +2047,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     kantor_pegawai = it.kantor,
                                     kanwil_pegawai = it.kanwil,
                                     lokasi_ba_pegawai = it.lokasi_ba,
-                                    format_ba_pegawai = it.format_ba,
+                                    format_ba_pegawai = it.format_ba_sounding,
                                     format_3d_pegawai = it.format_3d
                                 ))
                                 Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
@@ -2011,7 +2064,7 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-    private fun deleteRecordAlertDialogUser(id:Int,userDao: UserDao) {
+    private fun deleteDialogUser(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
@@ -2029,24 +2082,150 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
-    private fun setupListOfServiceUserDataIntoRecyclerView(penggunaJasaList:ArrayList<PenggunaJasaEntity>, userDao: UserDao) {
-        if (penggunaJasaList.isNotEmpty()) {
-            val penggunaJasaAdapter = PenggunaJasaAdapter(penggunaJasaList,{updateId -> updateRecordDialogServiceUser(updateId,userDao)},{deleteId->deleteRecordAlertDialogServiceUser(deleteId,userDao)})
-            _binding3?.rvServiceUserList?.layoutManager = LinearLayoutManager(context)
-            _binding3?.rvServiceUserList?.adapter = penggunaJasaAdapter
-            _binding3?.svServiceUserList?.visibility = View.VISIBLE
+    private fun setupUserOffice(userOfficeList:ArrayList<KantorEntity>, userDao: UserDao) {
+        if (userOfficeList.isNotEmpty()) {
+            val itemAdapter = KantorAdapter(userOfficeList,{ updateId ->
+                updateDialogUserOffice(updateId,userDao)
+            }){deleteId->deleteDialogUserOffice(deleteId,userDao)
+            }
+            _binding3?.rvUserOfficeList?.layoutManager = LinearLayoutManager(requireContext())
+            _binding3?.rvUserOfficeList?.adapter = itemAdapter
+            _binding3?.svUserOfficeList?.visibility = View.VISIBLE
             _binding3?.svUserList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.GONE
         } else {
             _binding3?.svUserList?.visibility = View.GONE
-            _binding3?.svServiceUserList?.visibility = View.GONE
+            _binding3?.svUserOfficeList?.visibility = View.GONE
             _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
+    private fun addRecordUserOffice(userDao: UserDao) {
+        val kota = _binding3?.kota?.text.toString()
+        val lokasiBa = _binding3?.lokasiBa?.text.toString()
+        val kantor = _binding3?.kantor?.text.toString()
+        val kanwil = _binding3?.kanwil?.text.toString()
+        val baSounding = _binding3?.formatBaSounding?.text.toString()
+        val baSampling = _binding3?.formatBaSampling?.text.toString()
+        when {
+            kota.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Kota Kantor Anda", Toast.LENGTH_SHORT).show()
+            }
+            lokasiBa.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Lokasi Pembuatan Berita Acara Anda", Toast.LENGTH_SHORT).show()
+            }
+            kantor.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Nama Kantor Anda", Toast.LENGTH_SHORT).show()
+            }
+            kanwil.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Nama Kanwil Kantor Anda", Toast.LENGTH_SHORT).show()
+            }
+            baSounding.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Format Nomor BA Sounding Kantor Anda", Toast.LENGTH_SHORT).show()
+            }
+            baSampling.isEmpty() -> {
+                Toast.makeText(context, "Mohon Masukkan Format Nomor BA Sampling Kantor Anda", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                lifecycleScope.launch {
+                    userDao.insertUserOffice(KantorEntity(
+                        kota = kota,
+                        kantor = kantor,
+                        kanwil = kanwil,
+                        lokasi_ba = lokasiBa,
+                        format_ba_sounding = baSounding,
+                        format_ba_sampling = baSampling
+                    ))
+                    Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
+                    _binding3?.kota?.text?.clear()
+                    _binding3?.lokasiBa?.text?.clear()
+                    _binding3?.kantor?.text?.clear()
+                    _binding3?.kanwil?.text?.clear()
+                    _binding3?.formatBaSounding?.text?.clear()
+                    _binding3?.formatBaSampling?.text?.clear()
+
+                }
+            }
+        }
+    }
+    private fun updateDialogUserOffice(id:Int, userDao: UserDao) {
+        val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
+        updateDialog.setCancelable(false)
+        val binding = DialogUpdateUserOfficeBinding.inflate(layoutInflater)
+        updateDialog.setContentView(binding.root)
+        updateDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        lifecycleScope.launch {
+            userDao.fetchUserOfficeById(id).collect {
+                try {
+                    binding.kota.setText(it.kota)
+                    binding.lokasiBa.setText(it.lokasi_ba)
+                    binding.kantor.setText(it.kantor)
+                    binding.kanwil.setText(it.kanwil)
+                    binding.formatBaSounding.setText(it.format_ba_sounding)
+                    binding.formatBaSampling.setText(it.format_ba_sampling)
+                } catch (e: Exception) {
+                    Log.e("okimatra13", "" + e.message)
+                }
+            }
+        }
+        binding.tvUpdate.setOnClickListener {
+            val kota = endSpaceRemover(binding.kota.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+            val lokasiBa = endSpaceRemover(binding.lokasiBa.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+            val kantor = endSpaceRemover(binding.kantor.text.toString().uppercase())
+            val kanwil = endSpaceRemover(binding.kanwil.text.toString().uppercase())
+            val baSounding = endSpaceRemover(binding.formatBaSounding.text.toString().uppercase())
+            val baSampling = endSpaceRemover(binding.formatBaSampling.text.toString().uppercase())
+            when {
+                kota.isEmpty() -> { Toast.makeText(context, "Mohon masukkan Kota Kantor Anda", Toast.LENGTH_SHORT).show() }
+                else -> {
+                    lifecycleScope.launch {
+                        userDao.updateUserOffice(KantorEntity(id, kota, kantor, kanwil, lokasiBa, baSounding, baSampling))
+                        Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT).show()
+                        updateDialog.dismiss()
+                    }
+                }
+            }
+        }
+        binding.tvCancel.setOnClickListener{
+            updateDialog.dismiss()
+        }
+        updateDialog.show()
+    }
+    private fun deleteDialogUserOffice(id:Int,userDao: UserDao) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
+        builder.setPositiveButton("Yes") { dialogInterface, _ ->
+            lifecycleScope.launch {
+                userDao.deleteUserOffice(KantorEntity(id))
+                Toast.makeText(context,"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
+            }
+        }
+        builder.setNegativeButton("No") { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
+
+    private fun setupServiceUser(penggunaJasaList:ArrayList<PenggunaJasaEntity>, userDao: UserDao) {
+        if (penggunaJasaList.isNotEmpty()) {
+            val penggunaJasaAdapter = PenggunaJasaAdapter(penggunaJasaList,{updateId -> updateDialogServiceUser(updateId,userDao)},{deleteId->deleteDialogServiceUser(deleteId,userDao)})
+            _binding4?.rvServiceUserList?.layoutManager = LinearLayoutManager(context)
+            _binding4?.rvServiceUserList?.adapter = penggunaJasaAdapter
+            _binding4?.svServiceUserList?.visibility = View.VISIBLE
+            _binding4?.svCompanyList?.visibility = View.GONE
+            _binding4?.tvNoRecordsAvailable?.visibility = View.GONE
+        } else {
+            _binding4?.svCompanyList?.visibility = View.GONE
+            _binding4?.svServiceUserList?.visibility = View.GONE
+            _binding4?.tvNoRecordsAvailable?.visibility = View.VISIBLE
+        }
+    }
     private fun addRecordServiceUser(userDao: UserDao) {
-        val name = endSpaceRemover(_binding3?.nama?.text.toString())
-        val jabatan = endSpaceRemover(_binding3?.jabatan?.text.toString())
-        val perusahaan = _binding3?.perusahaan?.selectedItem.toString()
+        val name = endSpaceRemover(_binding4?.nama?.text.toString())
+        val jabatan = endSpaceRemover(_binding4?.jabatan?.text.toString())
+        val perusahaan = _binding4?.perusahaan?.selectedItem.toString()
         var npwpPerusahaan: String
         var alamatPerusahaan: String
         lifecycleScope.launch {
@@ -2068,8 +2247,8 @@ class TabFragment(private val title: String) : Fragment() {
                             lifecycleScope.launch {
                                 userDao.insertServiceUser(PenggunaJasaEntity(nama_pengguna_jasa = name, jabatan = jabatan, perusahaan_pengguna_jasa = perusahaan, npwp_perusahaan = npwpPerusahaan, alamat_perusahaan = alamatPerusahaan))
                                 Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
-                                _binding3?.nama?.text?.clear()
-                                _binding3?.jabatan?.text?.clear()
+                                _binding4?.nama?.text?.clear()
+                                _binding4?.jabatan?.text?.clear()
                             }
                         }
                     }
@@ -2079,7 +2258,7 @@ class TabFragment(private val title: String) : Fragment() {
             }
         }
     }
-    private fun updateRecordDialogServiceUser(id:Int, userDao: UserDao) {
+    private fun updateDialogServiceUser(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
         val binding = DialogUpdateServiceUserBinding.inflate(layoutInflater)
@@ -2173,7 +2352,7 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-    private fun deleteRecordAlertDialogServiceUser(id:Int,userDao: UserDao) {
+    private fun deleteDialogServiceUser(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
@@ -2196,22 +2375,22 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
-    private fun setupListOfDataIntoRecyclerViewCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
+    private fun setupCompany(perusahaanList:ArrayList<PerusahaanEntity>, userDao: UserDao) {
         if (perusahaanList.isNotEmpty()) {
-            val companyAdapter = PerusahaanAdapter(perusahaanList, {updateId->updateRecordDialogCompany(updateId,userDao)}) {deleteId->deleteRecordAlertDialogCompany(deleteId,userDao)}
-            _binding3?.rvCompanyList?.layoutManager = LinearLayoutManager(context)
-            _binding3?.rvCompanyList?.adapter = companyAdapter
-            _binding3?.svCompanyList?.visibility = View.VISIBLE
-            _binding3?.tvNoRecordsAvailable?.visibility = View.GONE
+            val companyAdapter = PerusahaanAdapter(perusahaanList, {updateId->updateDialogCompany(updateId,userDao)}) {deleteId->deleteDialogCompany(deleteId,userDao)}
+            _binding4?.rvCompanyList?.layoutManager = LinearLayoutManager(context)
+            _binding4?.rvCompanyList?.adapter = companyAdapter
+            _binding4?.svCompanyList?.visibility = View.VISIBLE
+            _binding4?.tvNoRecordsAvailable?.visibility = View.GONE
         } else {
-            _binding3?.svCompanyList?.visibility = View.GONE
-            _binding3?.tvNoRecordsAvailable?.visibility = View.VISIBLE
+            _binding4?.svCompanyList?.visibility = View.GONE
+            _binding4?.tvNoRecordsAvailable?.visibility = View.VISIBLE
         }
     }
     private fun addRecordCompany(userDao: UserDao) {
-        val name = endSpaceRemover(_binding3?.nama?.text.toString())
-        val npwp = _binding3?.etNPWPId?.text.toString()
-        val alamat = endSpaceRemover(_binding3?.etAlamatId?.text.toString())
+        val name = endSpaceRemover(_binding4?.nama?.text.toString())
+        val npwp = _binding4?.etNPWPId?.text.toString()
+        val alamat = endSpaceRemover(_binding4?.etAlamatId?.text.toString())
         when {
             name.isEmpty() -> {
                 Toast.makeText(context, "Mohon Masukkan Nama Perusahaan", Toast.LENGTH_SHORT).show()
@@ -2226,14 +2405,14 @@ class TabFragment(private val title: String) : Fragment() {
                 lifecycleScope.launch {
                     userDao.insertCompany(PerusahaanEntity(nama_perusahaan = name, npwp = npwp, alamat = alamat))
                     Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
-                    _binding3?.nama?.text?.clear()
-                    _binding3?.etNPWPId?.text?.clear()
-                    _binding3?.etAlamatId?.text?.clear()
+                    _binding4?.nama?.text?.clear()
+                    _binding4?.etNPWPId?.text?.clear()
+                    _binding4?.etAlamatId?.text?.clear()
                 }
             }
         }
     }
-    private fun updateRecordDialogCompany(id:Int, userDao: UserDao) {
+    private fun updateDialogCompany(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
         val binding = DialogUpdateCompanyBinding.inflate(layoutInflater)
@@ -2376,7 +2555,7 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-    private fun deleteRecordAlertDialogCompany(id:Int,userDao: UserDao) {
+    private fun deleteDialogCompany(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
@@ -2398,9 +2577,9 @@ class TabFragment(private val title: String) : Fragment() {
         alertDialog.show()
     }
 
-    private fun setupListOfDataIntoRecyclerViewSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
+    private fun setupSounding(soundingList:ArrayList<SoundingEntity>, userDao: UserDao) {
         if (soundingList.isNotEmpty()) {
-            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateRecordDialogSounding(updateId,userDao)},{deleteId->deleteRecordAlertDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
+            val soundingAdapter = SoundingAdapter(soundingList,{updateId->updateDialogSounding(updateId,userDao)},{deleteId->deleteDialogSounding(deleteId,userDao)},{pdfId->pdfSounding(pdfId,userDao)})
             _binding2?.rvSoundingList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvSoundingList?.adapter = soundingAdapter
             _binding2?.svSoundingList?.visibility = View.VISIBLE
@@ -2410,7 +2589,7 @@ class TabFragment(private val title: String) : Fragment() {
             _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
         }
     }
-    private fun updateRecordDialogSounding(id:Int, userDao: UserDao) {
+    private fun updateDialogSounding(id:Int, userDao: UserDao) {
         val updateDialog = Dialog(requireContext(), R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
         val binding = DialogUpdateSoundingBinding.inflate(layoutInflater)
@@ -2764,7 +2943,7 @@ class TabFragment(private val title: String) : Fragment() {
         }
         updateDialog.show()
     }
-    private fun deleteRecordAlertDialogSounding(id:Int,userDao: UserDao) {
+    private fun deleteDialogSounding(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
@@ -3124,10 +3303,10 @@ class TabFragment(private val title: String) : Fragment() {
         }
     }
 
-    private fun setupListOfDataIntoRecyclerViewReport(reportList:ArrayList<ReportEntity>, userDao: UserDao) {
+    private fun setupReport(reportList:ArrayList<ReportEntity>, userDao: UserDao) {
         _binding2?.soundingParent?.visibility = View.VISIBLE
         if (reportList.isNotEmpty()) {
-            val reportAdapter = ReportAdapter(reportList,{deleteId->deleteRecordAlertDialogReport(deleteId,userDao)},{pdfId->pdfReportSounding(pdfId,userDao)})
+            val reportAdapter = ReportAdapter(reportList,{deleteId->deleteDialogReport(deleteId,userDao)},{pdfId->pdfReportSounding(pdfId,userDao)})
             _binding2?.rvFinalList?.layoutManager = LinearLayoutManager(context)
             _binding2?.rvFinalList?.adapter = reportAdapter
             _binding2?.rvFinalList?.visibility = View.VISIBLE
@@ -3137,7 +3316,7 @@ class TabFragment(private val title: String) : Fragment() {
             _binding2?.tvNoRawDataAvailable?.visibility = View.VISIBLE
         }
     }
-    private fun deleteRecordAlertDialogReport(id:Int,userDao: UserDao) {
+    private fun deleteDialogReport(id:Int,userDao: UserDao) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Hapus Data").setMessage("Apakah Anda yakin ingin menghapus data?")
         builder.setPositiveButton("Yes") { dialogInterface, _ ->
@@ -3232,7 +3411,9 @@ class TabFragment(private val title: String) : Fragment() {
     private fun page1FinalReport(doc: Document, it: ReportEntity) {
         val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
         val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val header = Text("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\nDIREKTORAT JENDERAL BEA DAN CUKAI\n${it.kanwil_pegawai_final}\n${it.kantor_pegawai_final}\n\n")
+        val header = Text("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA\nDIREKTORAT JENDERAL BEA DAN CUKAI\n" +
+                "${it.kanwil_pegawai_final.replace("KANWIL", "KANTOR WILAYAH").replace("KPU", "KANTOR PELAYANAN UTAMA").replace("DJBC", "DIREKTORAT JENDERAL BEA DAN CUKAI").replace("BC", "BEA DAN CUKAI")}\n" +
+                "${it.kantor_pegawai_final.replace("KPPBC", "KANTOR PENGAWASAN DAN PELAYANAN BEA DAN CUKAI").replace("TMP", "TIPE MADYA PABEAN")}\n\n")
             .setFont(fontArial).setFontSize(10f)
         val headerPara = Paragraph().add(header).setMultipliedLeading(1.2f).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(10f).setPaddingTop(10f)
         val title = Text("BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
@@ -3666,7 +3847,7 @@ class TabFragment(private val title: String) : Fragment() {
             spinner.adapter = adapter
         }
     }
-    private fun populateDropdownKantor(list:ArrayList<KantorEntity>, spinner: Spinner) {
+    private fun populateDropdownUserOffice(list:ArrayList<KantorEntity>, spinner: Spinner) {
         val items = arrayListOf<String>()
         if (list.isNotEmpty()) {
             for (i in 0 until list.size) {

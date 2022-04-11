@@ -8,11 +8,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!--Tab-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="2"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/switch_off"
@@ -20,8 +21,8 @@
         android:clipToPadding="false">
 
         <TextView
-            android:id="@+id/pegawai_tab"
-            android:text="@string/user"
+            android:id="@+id/kantor_pegawai_tab"
+            android:text="@string/user_office"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -35,22 +36,8 @@
             android:textColor="@color/white"/>
 
         <TextView
-            android:id="@+id/perusahaan_tab"
-            android:text="@string/company"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:paddingTop="5dp"
-            android:textSize="13sp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/appTheme"
-            android:fontFamily="@font/nunito"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/pengguna_jasa_tab"
-            android:text="@string/exporter"
+            android:id="@+id/pegawai_tab"
+            android:text="@string/user"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -64,17 +51,203 @@
 
     </LinearLayout>
 
+    <!--Kota-->
     <LinearLayout
+        android:id="@+id/kota_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvKotaLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2.2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/tv_kota"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/kota"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:hint="@string/hint_kota"
+            tools:ignore="Autofill"
+            android:gravity="center_vertical"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+
+    <!--Lokasi Ba-->
+    <LinearLayout
+        android:id="@+id/lokasi_ba_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvLokasiBaLabel"
+            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_weight="2.2"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/lokasi_ba"
+            android:fontFamily="@font/helvetica"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:backgroundTint="@color/appTheme"
+            android:id="@+id/lokasiBa"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:fontFamily="@font/poppins_light"
+            android:textSize="12sp"
+            android:hint="@string/hint_lokasi"
+            tools:ignore="Autofill"
+            android:gravity="center_vertical"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvKantorLabel"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:text="@string/tv_kantor"
+        android:fontFamily="@font/helvetica"
+        android:textSize="12sp"/>
+
+    <EditText
+        android:backgroundTint="@color/appTheme"
+        android:id="@+id/kantor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="-10dp"
+        android:inputType="textMultiLine|textCapCharacters"
+        android:textSize="12sp"
+        android:fontFamily="@font/poppins_light"
+        android:hint="@string/hint_kantor"
+        android:gravity="center_vertical"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill" />
+
+    <TextView
+        android:id="@+id/tvKanwilLabel"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:text="@string/tv_kanwil"
+        android:fontFamily="@font/helvetica"
+        android:textSize="12sp"/>
+
+    <EditText
+        android:backgroundTint="@color/appTheme"
+        android:id="@+id/kanwil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="-10dp"
+        android:inputType="textMultiLine|textCapCharacters"
+        android:textSize="12sp"
+        android:fontFamily="@font/poppins_light"
+        android:hint="@string/hint_kanwil"
+        android:gravity="center_vertical"
+        android:scrollbars="vertical"
+        tools:ignore="Autofill" />
+
+    <TextView
+        android:id="@+id/tvFormatBaSoundingLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/helvetica"
+        android:gravity="center_vertical"
+        android:text="@string/tv_format_ba"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+    <EditText
+        android:backgroundTint="@color/appTheme"
+        android:id="@+id/formatBaSounding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="-10dp"
+        android:inputType="text"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="12sp"
+        android:hint="@string/hint_format_ba"
+        tools:ignore="Autofill"
+        android:gravity="center_vertical"
+        android:scrollbars="vertical"/>
+
+    <TextView
+        android:id="@+id/tvFormatBaSamplingLabel"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginStart="5dp"
+        android:text="@string/tv_format_ba_sampling"
+        android:fontFamily="@font/helvetica"
+        android:textSize="12sp"/>
+
+    <EditText
+        android:backgroundTint="@color/appTheme"
+        android:id="@+id/formatBaSampling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="-10dp"
+        android:inputType="text"
+        android:fontFamily="@font/poppins_light"
+        android:textSize="12sp"
+        android:hint="@string/hint_format_ba_sampling"
+        tools:ignore="Autofill"
+        android:gravity="center_vertical"
+        android:scrollbars="vertical"/>
+
+    <!--Nama-->
+    <LinearLayout
+        android:id="@+id/nama_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/judul_nama"
             android:textColor="@color/black"
             android:layout_width="0dp"
             android:gravity="center_vertical"
-            android:layout_weight="2"
+            android:layout_weight="2.2"
             android:fontFamily="@font/helvetica"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -97,18 +270,19 @@
             android:scrollbars="vertical"/>
     </LinearLayout>
 
+    <!--NIP-->
     <LinearLayout
         android:id="@+id/pegawai_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/judul_nip"
             android:textColor="@color/black"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="2.2"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -132,17 +306,18 @@
             tools:ignore="Autofill"/>
     </LinearLayout>
 
+    <!--Kantor-->
     <LinearLayout
         android:id="@+id/kantor_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
         <TextView
             android:id="@+id/judul_kantor"
             android:textColor="@color/black"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="2.2"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -160,145 +335,8 @@
             android:layout_marginStart="-13dp"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/penggunajasa_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/judul_jabatan"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/jabatan"
-            android:fontFamily="@font/helvetica"
-            android:textSize="12sp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:backgroundTint="@color/appTheme"
-            android:id="@+id/jabatan"
-            android:layout_width="0dp"
-            android:layout_weight="9"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:fontFamily="@font/poppins_light"
-            android:textSize="12sp"
-            android:hint="@string/hint_jabatan"
-            tools:ignore="Autofill"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/npwp_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tvNPWPLabel"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/npwp"
-            android:fontFamily="@font/helvetica"
-            android:textSize="12sp"/>
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:backgroundTint="@color/appTheme"
-            android:id="@+id/etNPWPId"
-            android:layout_width="0dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"
-            android:inputType="number"
-            android:fontFamily="@font/poppins_light"
-            android:textSize="12sp"
-            android:maxLength="21"
-            android:hint="@string/hint_npwp"
-            tools:ignore="Autofill"/>
-        <!--            android:digits="1234567890.-"-->
-        <!--            -->
-        <!--            android:inputType="textNoSuggestions"-->
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/alamat_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tvAlamatLabel"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/alamat"
-            android:fontFamily="@font/helvetica"
-            android:textSize="12sp"/>
-
-        <EditText
-            android:backgroundTint="@color/appTheme"
-            android:id="@+id/etAlamatId"
-            android:layout_width="0dp"
-            android:layout_weight="9"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:fontFamily="@font/poppins_light"
-            android:textSize="12sp"
-            android:hint="@string/hint_alamat"
-            tools:ignore="Autofill"
-            android:gravity="center_vertical"
-            android:scrollbars="vertical"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/perusahaan_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/judul_perusahaan"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/company"
-            android:fontFamily="@font/helvetica"
-            android:textSize="12sp" />
-
-        <Spinner
-            android:backgroundTint="@color/appTheme"
-            android:id="@+id/perusahaan"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="-13dp"/>
-    </LinearLayout>
-
     <Button
-        android:id="@+id/btnAddUser"
+        android:id="@+id/btnAddUserOffice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
@@ -309,7 +347,7 @@
         android:text="@string/tambah_data"/>
 
     <Button
-        android:id="@+id/btnAddPenggunaJasa"
+        android:id="@+id/btnAddUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
@@ -320,17 +358,21 @@
         android:text="@string/tambah_data"
         android:visibility="gone"/>
 
-    <Button
-        android:id="@+id/btnAddCompany"
+    <ScrollView
+        android:id="@+id/svUserOfficeList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
-        android:background="@drawable/rounded_button"
-        android:textColor="#ffffff"
-        android:textSize="15sp"
-        android:layout_marginTop="5dp"
-        android:text="@string/tambah_data"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUserOfficeList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+
 
     <ScrollView
         android:id="@+id/svUserList"
@@ -345,37 +387,6 @@
             android:id="@+id/rvUserList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </ScrollView>
-
-    <ScrollView
-        android:id="@+id/svServiceUserList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="60dp"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvServiceUserList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
-
-    <ScrollView
-        android:id="@+id/svCompanyList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="60dp"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCompanyList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
     </ScrollView>
 
     <TextView

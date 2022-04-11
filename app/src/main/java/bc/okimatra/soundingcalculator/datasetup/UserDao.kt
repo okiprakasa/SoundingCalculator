@@ -112,14 +112,23 @@ interface UserDao {
     fun fetchReportById(id:Int):Flow<ReportEntity>
 
     @Insert
-    suspend fun insertKantor(kantorEntity: KantorEntity)
+    suspend fun insertUserOffice(kantorEntity: KantorEntity)
+
+    @Update
+    suspend fun updateUserOffice(kantorEntity: KantorEntity)
+
+    @Delete
+    suspend fun deleteUserOffice(kantorEntity: KantorEntity)
 
     @Query("Select count(*) from `office-table`")
-    fun countAllKantor():Flow<Int>
+    fun countAllUserOffice():Flow<Int>
 
     @Query("Select * from `office-table`")
-    fun fetchAllKantor():Flow<List<KantorEntity>>
+    fun fetchAllUserOffice():Flow<List<KantorEntity>>
 
     @Query("Select * from `office-table` WHERE kota=:kota")
-    fun fetchKantorByKota(kota:String):Flow<KantorEntity>
+    fun fetchUserOfficeByKota(kota:String):Flow<KantorEntity>
+
+    @Query("Select * from `office-table` where id=:id")
+    fun fetchUserOfficeById(id:Int):Flow<KantorEntity>
 }

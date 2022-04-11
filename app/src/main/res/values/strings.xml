@@ -94,7 +94,7 @@
     <string name="second_edited">%s.%s.___._-___.___</string>
     <string name="bea_cukai">BEA CUKAI</string>
     <string name="makin_baik">MAKIN BAIK</string>
-    <string name="company">Company</string>
+    <string name="company">Perusahaan</string>
     <string name="kantor">Kantor</string>
     <string name="sounding_system">Sounding System</string>
     <string name="nama_nip">Masukkan Nama dan NIP Anda</string>
@@ -160,4 +160,18 @@
     <string name="hint_hapus_sounding">Apakah Anda yakin akan menghapus data sounding Tangki: %s %s pada %s?</string>
     <string name="exporter">Pengguna Jasa</string>
     <string name="user">Petugas BC</string>
+    <string name="user_office">Kantor BC</string>
+    <string name="tv_kota">Kota</string>
+    <string name="hint_kota">Cth: Pantoloan</string>
+    <string name="tv_kantor">Nama Kantor</string>
+    <string name="hint_kantor">Cth: KPPBC TMP C Pantoloan</string>
+    <string name="tv_kanwil">Nama Kanwil</string>
+    <string name="hint_kanwil">Cth: Kanwil DJBC Sulawesi Bagian Utara</string>
+    <string name="hint_lokasi">Cth: Pasangkayu</string>
+    <string name="tv_format_ba">Format BA Sounding (Tanpa Tahun)</string>
+    <string name="hint_format_ba">Cth: BA-PFP-X/KBC.180104/</string>
+    <string name="tv_format_3d">Format Form 3D (Tanpa Tahun)</string>
+    <string name="hint_format_3d">Cth: DP110800</string>
+    <string name="tv_format_ba_sampling">Format BA Sampling (Tanpa Tahun)</string>
+    <string name="hint_format_ba_sampling">Cth: BA-PCB-X/WBC.15/KPP.MP.0504/</string>
 </resources>

@@ -12,6 +12,10 @@ data class KantorEntity(
     val kantor: String="",
     val kanwil: String="",
     val lokasi_ba: String="",
-    val format_ba: String="",
-    val format_3d: String=""
+    val format_ba_sounding: String="",
+    val format_ba_sampling: String="",
+    val format_3d: String="",
+    val alamat_kantor: String="",
+    val telepon: String="",
+    val faximile: String="",
         )

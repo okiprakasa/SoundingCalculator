@@ -16,7 +16,7 @@ import java.util.ArrayList
 class MainActivity : AppCompatActivity() {
     private val mFragmentList: MutableList<Fragment> = ArrayList()
     private var tabBubbleAnimator: TabBubbleAnimator? = null
-    private val titles = arrayOf("Calculator", "Data", "User")
+    private val titles = arrayOf("Calculator", "Data", "BC", "Company")
     //private val colors = intArrayOf(R.color.login, R.color.login, R.color.login)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         mFragmentList.add(TabFragment(titles[0]))
         mFragmentList.add(TabFragment(titles[1]))
         mFragmentList.add(TabFragment(titles[2]))
+        mFragmentList.add(TabFragment(titles[3]))
         val viewPager = findViewById<ViewPager>(R.id.viewPager)
         val adapter: FragmentStatePagerAdapter = object : FragmentStatePagerAdapter(
             supportFragmentManager
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         tabBubbleAnimator!!.addTabItem(titles[0], R.drawable.ic_calculator, R.color.appTheme)
         tabBubbleAnimator!!.addTabItem(titles[1], R.drawable.ic_files, R.color.appTheme)
         tabBubbleAnimator!!.addTabItem(titles[2], R.drawable.ic_user, R.color.appTheme)
+        tabBubbleAnimator!!.addTabItem(titles[3], R.drawable.ic_company, R.color.appTheme)
         tabBubbleAnimator!!.setUnselectedColorId(Color.BLACK)
         tabBubbleAnimator!!.highLightTab(0)
         viewPager.addOnPageChangeListener(tabBubbleAnimator!!)
