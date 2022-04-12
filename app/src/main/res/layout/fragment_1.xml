@@ -594,7 +594,7 @@
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
                         android:text="@string/hasil"
-                        android:textSize="17sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <ImageView

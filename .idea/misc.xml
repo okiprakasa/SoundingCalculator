@@ -16,19 +16,12 @@
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/rounded_hasil.xml" value="0.2035" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/rounded_input.xml" value="0.24" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable/rounded_tittle.xml" value="0.2035" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/activity_main.xml" value="0.18489583333333334" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_delete.xml" value="0.18489583333333334" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update.xml" value="0.264" />
+        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update.xml" value="0.15208333333333332" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_company.xml" value="0.192481884057971" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_exporter.xml" value="0.18704710144927536" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_service_user.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_sounding.xml" value="0.264" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_user_office.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dropdown_layout.xml" value="0.6" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_1.xml" value="0.18489583333333334" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_2.xml" value="0.18489583333333334" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_3.xml" value="0.22509057971014493" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_4.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_four.xml" value="0.192481884057971" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_one.xml" value="0.21707818930041153" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_three.xml" value="0.2825520833333333" />
@@ -37,7 +30,6 @@
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/items_row_company.xml" value="0.536" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/items_row_report.xml" value="0.4" />
         <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/items_row_sounding.xml" value="0.4" />
-        <entry key="..\:/Users/Matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/login_page.xml" value="0.176" />
         <entry key="..\:/Users/Matra/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_spinner_item.xml" value="0.4" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable-v24/ic_action_add_24dp.xml" value="0.3525" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/drawable-v24/ic_add.xml" value="0.3165" />
@@ -58,8 +50,14 @@
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update.xml" value="0.29846014492753625" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_company.xml" value="0.29846014492753625" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_exporter.xml" value="0.3625" />
+        <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_service_user.xml" value="0.264945652173913" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_sounding.xml" value="0.2798913043478261" />
+        <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dialog_update_user_office.xml" value="0.3015625" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/dropdown_layout.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_1.xml" value="0.3015625" />
+        <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_2.xml" value="0.3015625" />
+        <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_3.xml" value="0.3015625" />
+        <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_4.xml" value="0.3015625" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_four.xml" value="0.2717391304347826" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_one.xml" value="0.29846014492753625" />
         <entry key="..\:/Users/matra/AndroidStudioProjects/SoundingCalculator/app/src/main/res/layout/fragment_three.xml" value="0.29846014492753625" />
