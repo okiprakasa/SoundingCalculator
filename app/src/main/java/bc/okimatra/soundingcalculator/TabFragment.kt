@@ -342,6 +342,9 @@ class TabFragment(private val title: String) : Fragment() {
                                                         val nip = it.nip
                                                         val kantorPegawai = it.kantor_pegawai
                                                         val kanwilPegawai = it.kanwil_pegawai
+                                                        val pangkatPegawai = it.pangkat
+                                                        val golPegawai = it.gol
+                                                        val jabatanPegawai = it.jabatan_pegawai
                                                         lifecycleScope.launch {
                                                             userDao.insertSounding(SoundingEntity(
                                                                 tinggi_cairan = tinggiCairanAngka,
@@ -362,6 +365,9 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 no_tangki = nomorTangkiText,
                                                                 pegawai_sounding = petugasSounding,
                                                                 nip_pegawai = nip,
+                                                                pangkat_pegawai = pangkatPegawai,
+                                                                gol_pegawai = golPegawai,
+                                                                jabatan_pegawai = jabatanPegawai,
                                                                 pengguna_jasa_sounding = penggunaJasa,
                                                                 jabatan_pengguna_jasa = jabatan,
                                                                 perusahaan_sounding = perusahaan,
@@ -455,7 +461,6 @@ class TabFragment(private val title: String) : Fragment() {
                     Handler(Looper.getMainLooper()).postDelayed({
                         lifecycleScope.launch {
                             userDao.fetchAllSounding().collect {
-                                Log.d("okimatra4", "$it")
                                 val list = ArrayList(it)
                                 setupSounding(list,userDao)
                             }
@@ -475,7 +480,6 @@ class TabFragment(private val title: String) : Fragment() {
                         Handler(Looper.getMainLooper()).postDelayed({
                             lifecycleScope.launch {
                                 userDao.fetchAllSounding().collect {
-                                    Log.d("okimatra5", "$it")
                                     val list = ArrayList(it)
                                     setupSounding(list,userDao)
                                 }
@@ -525,7 +529,19 @@ class TabFragment(private val title: String) : Fragment() {
                                             }
                                         }
                                     }
-                                    spinnerListener(binding2, addOrClose1, userDao)
+                                    try {
+                                        spinnerListener(binding2, addOrClose1, userDao)
+                                    } catch (e: Exception) {
+                                        spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                                        spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                                        ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                                        ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                                        ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                                        ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                                        ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                                        ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                                        spinnerListener(binding2, addOrClose1, userDao)
+                                    }
                                 } else {
                                     Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui\nSimpan Data Pada\nTab Calculator", Toast.LENGTH_LONG).show()
                                 }
@@ -718,7 +734,7 @@ class TabFragment(private val title: String) : Fragment() {
                         val form3dValue = endSpaceRemover(form3d.text.toString())
                         val petugas2Value = endSpaceRemover(petugas.selectedItem.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                         val saksi2Value = endSpaceRemover(saksi.selectedItem.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
-                        val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir: ","").replace(".",",")
+                        val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir : ","").replace(".",",")
                         val listSounding = ArrayList<String>()
                         ivSpAwalMap.keys.forEach {
                             listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
@@ -795,6 +811,9 @@ class TabFragment(private val title: String) : Fragment() {
                                 val noTangkiList = MutableList(listSounding.size) {""}
                                 val pegawaiSoundingList = MutableList(listSounding.size) {""}
                                 val nipPegawaiList = MutableList(listSounding.size) {""}
+                                val pangkatPegawaiList = MutableList(listSounding.size) {""}
+                                val golPegawaiList = MutableList(listSounding.size) {""}
+                                val jabatanPegawaiList = MutableList(listSounding.size) {""}
                                 val penggunaJasaSoundingList = MutableList(listSounding.size) {""}
                                 val jabatanPenggunaJasaList = MutableList(listSounding.size) {""}
                                 val perusahaanSoundingList = MutableList(listSounding.size) {""}
@@ -828,9 +847,7 @@ class TabFragment(private val title: String) : Fragment() {
                                             )
                                         ).collect {
                                             try {
-                                                Log.d("okimatra1", tinggiCairanList.toString())
                                                 tinggiCairanList[i] = it.tinggi_cairan
-                                                Log.d("okimatra2", tinggiCairanList.toString())
                                                 suhuCairanList[i] = it.suhu_cairan
                                                 suhuKalibrasiTangkiList[i] =
                                                     it.suhu_kalibrasi_tangki
@@ -850,6 +867,9 @@ class TabFragment(private val title: String) : Fragment() {
                                                 noTangkiList[i] = it.no_tangki
                                                 pegawaiSoundingList[i] = it.pegawai_sounding
                                                 nipPegawaiList[i] = it.nip_pegawai
+                                                pangkatPegawaiList[i] = it.pangkat_pegawai
+                                                golPegawaiList[i] = it.gol_pegawai
+                                                jabatanPegawaiList[i] = it.jabatan_pegawai
                                                 penggunaJasaSoundingList[i] =
                                                     it.pengguna_jasa_sounding
                                                 jabatanPenggunaJasaList[i] =
@@ -875,112 +895,507 @@ class TabFragment(private val title: String) : Fragment() {
                                     }
                                 }
                                 Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
-                                    Log.d("okimatra8", tinggiCairanList.toString())
-                                    lifecycleScope.launch {
-                                        userDao.insertReport(ReportEntity(
-                                            tinggi_cairan = tinggiCairanList as ArrayList<Double>,
-                                            suhu_cairan = suhuCairanList as ArrayList<Double>,
-                                            suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
-                                            tinggi_meja = tinggiMejaList as ArrayList<Double>,
-                                            faktor_muai = faktorMuaiList as ArrayList<Double>,
-                                            tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
-                                            volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
-                                            density_cairan = densityCairanList as ArrayList<Double>,
-                                            volume_fraksi = volumeFraksiList as ArrayList<Double>,
-                                            volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
-                                            volume_mid = volumeMidList as ArrayList<Double>,
-                                            volume_app = volumeAppList as ArrayList<Double>,
-                                            volume_obs = volumeObsList as ArrayList<Double>,
-                                            volume = volumeList as ArrayList<Double>,
-                                            hasil_sounding = hasilSoundingList as ArrayList<Double>,
-                                            no_tangki = noTangkiList as ArrayList<String>,
-                                            pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
-                                            nip_pegawai = nipPegawaiList as ArrayList<String>,
-                                            pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
-                                            jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
-                                            perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
-                                            npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
-                                            alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
-                                            lokasi_sounding = lokasiSoundingList as ArrayList<String>,
-                                            waktu = waktuList as ArrayList<String>,
-                                            waktu_date = Date().time,
-                                            judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
-                                            judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
-                                            judulFraksi = judulFraksiList as ArrayList<String>,
-                                            judulDataTabel = judulDataTabelList as ArrayList<String>,
-                                            hasil = hasilList as ArrayList<String>,
-                                            hasil_perhitungan = hasilPerhitunganValue,
-                                            produk = produkValue,
-                                            bentuk = bentukValue,
-                                            nama_sarkut = namaSarkutValue,
-                                            nomor_ba_sounding = noBaSoundingValue,
-                                            tanggal_ba_sounding = tanggalBaSoundingValue,
-                                            lokasi_ba = lokasiBaValue,
-                                            jumlah_contoh = jumlahContohValue,
-                                            waktu_aju = waktuAjuValue,
-                                            nomor_ba_sampling = noBaSamplingValue,
-                                            tanggal_ba_sampling = tanggalBaSamplingValue,
-                                            no_form_3d = form3dValue,
-                                            petugas_2 = petugas2Value,
-                                            saksi_2 = saksi2Value,
-                                            kantor_pegawai_final = kantorPegawai,
-                                            kanwil_pegawai_final = kanwilPegawai
-                                        ))
-                                        kantorPegawai = ""
-                                        kanwilPegawai = ""
-                                        fabOverSounding = true
-                                        soundingContainer.visibility = View.GONE
-                                        btnAddSounding.visibility = View.GONE
-                                        btnSave.visibility = View.GONE
-                                        hasilLayout.visibility = View.GONE
-                                        fabCancelReport.visibility = View.GONE
-                                        fabFinalReport.visibility = View.VISIBLE
-                                        produk.text?.clear()
-                                        bentuk.text?.clear()
-                                        namaSarkut.text?.clear()
-                                        waktuBarcon.text?.clear()
-                                        tanggalBa.text?.clear()
+                                    if (petugas2Value != "Empty") {
                                         lifecycleScope.launch {
-                                            userDao.fetchAllUser().collect { itUser ->
-                                                if (itUser.isNotEmpty()) {
-                                                    noBa.setText(String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear)))
-                                                    noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear))
-                                                    lokasiBa.setText(itUser[0].lokasi_ba_pegawai)
-                                                    lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser[0].lokasi_ba_pegawai)
+                                            userDao.fetchUserByName(petugas2Value).collect { itUser ->
+                                                if (saksi2Value != "Empty") {
+                                                    lifecycleScope.launch {
+                                                        userDao.fetchServiceUserByName(saksi2Value).collect { itServiceUser ->
+                                                            lifecycleScope.launch {
+                                                                userDao.insertReport(ReportEntity(
+                                                                    tinggi_cairan = tinggiCairanList as ArrayList<Double>,
+                                                                    suhu_cairan = suhuCairanList as ArrayList<Double>,
+                                                                    suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
+                                                                    tinggi_meja = tinggiMejaList as ArrayList<Double>,
+                                                                    faktor_muai = faktorMuaiList as ArrayList<Double>,
+                                                                    tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
+                                                                    volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
+                                                                    density_cairan = densityCairanList as ArrayList<Double>,
+                                                                    volume_fraksi = volumeFraksiList as ArrayList<Double>,
+                                                                    volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
+                                                                    volume_mid = volumeMidList as ArrayList<Double>,
+                                                                    volume_app = volumeAppList as ArrayList<Double>,
+                                                                    volume_obs = volumeObsList as ArrayList<Double>,
+                                                                    volume = volumeList as ArrayList<Double>,
+                                                                    hasil_sounding = hasilSoundingList as ArrayList<Double>,
+                                                                    no_tangki = noTangkiList as ArrayList<String>,
+                                                                    pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
+                                                                    nip_pegawai = nipPegawaiList as ArrayList<String>,
+                                                                    pangkat_pegawai = pangkatPegawaiList as ArrayList<String>,
+                                                                    gol_pegawai = golPegawaiList as ArrayList<String>,
+                                                                    jabatan_pegawai = jabatanPegawaiList as ArrayList<String>,
+                                                                    pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
+                                                                    jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
+                                                                    perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
+                                                                    npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
+                                                                    alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
+                                                                    lokasi_sounding = lokasiSoundingList as ArrayList<String>,
+                                                                    waktu = waktuList as ArrayList<String>,
+                                                                    waktu_date = Date().time,
+                                                                    judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
+                                                                    judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
+                                                                    judulFraksi = judulFraksiList as ArrayList<String>,
+                                                                    judulDataTabel = judulDataTabelList as ArrayList<String>,
+                                                                    hasil = hasilList as ArrayList<String>,
+                                                                    hasil_perhitungan = hasilPerhitunganValue,
+                                                                    produk = produkValue,
+                                                                    bentuk = bentukValue,
+                                                                    nama_sarkut = namaSarkutValue,
+                                                                    nomor_ba_sounding = noBaSoundingValue,
+                                                                    tanggal_ba_sounding = tanggalBaSoundingValue,
+                                                                    lokasi_ba = lokasiBaValue,
+                                                                    jumlah_contoh = jumlahContohValue,
+                                                                    waktu_aju = waktuAjuValue,
+                                                                    nomor_ba_sampling = noBaSamplingValue,
+                                                                    tanggal_ba_sampling = tanggalBaSamplingValue,
+                                                                    no_form_3d = form3dValue,
+                                                                    petugas_2 = petugas2Value,
+                                                                    petugas_2_nip = itUser.nip,
+                                                                    petugas_2_pangkat = itUser.pangkat,
+                                                                    petugas_2_gol = itUser.gol,
+                                                                    petugas_2_jabatan = itUser.jabatan_pegawai,
+                                                                    saksi_2 = saksi2Value,
+                                                                    saksi_2_jabatan = itServiceUser.jabatan,
+                                                                    saksi_2_perusahaan = itServiceUser.perusahaan_pengguna_jasa,
+                                                                    kantor_pegawai_final = kantorPegawai,
+                                                                    kanwil_pegawai_final = kanwilPegawai
+                                                                ))
+                                                                kantorPegawai = ""
+                                                                kanwilPegawai = ""
+                                                                fabOverSounding = true
+                                                                soundingContainer.visibility = View.GONE
+                                                                btnAddSounding.visibility = View.GONE
+                                                                btnSave.visibility = View.GONE
+                                                                hasilLayout.visibility = View.GONE
+                                                                fabCancelReport.visibility = View.GONE
+                                                                fabFinalReport.visibility = View.VISIBLE
+                                                                produk.text?.clear()
+                                                                bentuk.text?.clear()
+                                                                namaSarkut.text?.clear()
+                                                                waktuBarcon.text?.clear()
+                                                                tanggalBa.text?.clear()
+                                                                petugas.setSelection(0)
+                                                                saksi.setSelection(0)
+                                                                lifecycleScope.launch {
+                                                                    userDao.fetchAllUser().collect { itUser2 ->
+                                                                        if (itUser2.isNotEmpty()) {
+                                                                            noBa.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)))
+                                                                            noBa.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)).replace("X","001")
+                                                                            noBaSampling.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)))
+                                                                            noBaSampling.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)).replace("X","001")
+                                                                            lokasiBa.setText(itUser2[0].lokasi_ba_pegawai)
+                                                                            lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser2[0].lokasi_ba_pegawai)
+                                                                            form3d.setText(String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear)))
+                                                                            form3d.hint = String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear))
+                                                                        }
+                                                                    }
+                                                                }
+                                                                val safeCastIv = mutableListOf(addOrClose1)
+                                                                //Remove added input sounding
+                                                                ivTvMap.keys.forEach {
+                                                                    safeCastIv += it
+                                                                }
+                                                                safeCastIv.forEach {
+                                                                    if (it != addOrClose1) {
+                                                                        (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                                                        ivCvMap.remove(it)
+                                                                        ivSpAwalMap.remove(it)
+                                                                        ivSpAkhirMap.remove(it)
+                                                                        ivTvMap.remove(it)
+                                                                        ivTvHasilMap.remove(it)
+                                                                    }
+                                                                }
+                                                                val safeCastSpAwal = mutableListOf(awal1)
+                                                                spAwalDbFinalMap.keys.forEach {
+                                                                    safeCastSpAwal += it
+                                                                }
+                                                                safeCastSpAwal.forEach {
+                                                                    if (it != awal1) {
+                                                                        spAwalDbFinalMap.remove(it)
+                                                                    }
+                                                                }
+                                                                val safeCastSpAkhir = mutableListOf(akhir1)
+                                                                spAkhirDbFinalMap.keys.forEach {
+                                                                    safeCastSpAkhir += it
+                                                                }
+                                                                safeCastSpAkhir.forEach {
+                                                                    if (it != akhir1) {
+                                                                        spAkhirDbFinalMap.remove(it)
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else {
+                                                    lifecycleScope.launch {
+                                                        userDao.insertReport(ReportEntity(
+                                                            tinggi_cairan = tinggiCairanList as ArrayList<Double>,
+                                                            suhu_cairan = suhuCairanList as ArrayList<Double>,
+                                                            suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
+                                                            tinggi_meja = tinggiMejaList as ArrayList<Double>,
+                                                            faktor_muai = faktorMuaiList as ArrayList<Double>,
+                                                            tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
+                                                            volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
+                                                            density_cairan = densityCairanList as ArrayList<Double>,
+                                                            volume_fraksi = volumeFraksiList as ArrayList<Double>,
+                                                            volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
+                                                            volume_mid = volumeMidList as ArrayList<Double>,
+                                                            volume_app = volumeAppList as ArrayList<Double>,
+                                                            volume_obs = volumeObsList as ArrayList<Double>,
+                                                            volume = volumeList as ArrayList<Double>,
+                                                            hasil_sounding = hasilSoundingList as ArrayList<Double>,
+                                                            no_tangki = noTangkiList as ArrayList<String>,
+                                                            pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
+                                                            nip_pegawai = nipPegawaiList as ArrayList<String>,
+                                                            pangkat_pegawai = pangkatPegawaiList as ArrayList<String>,
+                                                            gol_pegawai = golPegawaiList as ArrayList<String>,
+                                                            jabatan_pegawai = jabatanPegawaiList as ArrayList<String>,
+                                                            pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
+                                                            jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
+                                                            perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
+                                                            npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
+                                                            alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
+                                                            lokasi_sounding = lokasiSoundingList as ArrayList<String>,
+                                                            waktu = waktuList as ArrayList<String>,
+                                                            waktu_date = Date().time,
+                                                            judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
+                                                            judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
+                                                            judulFraksi = judulFraksiList as ArrayList<String>,
+                                                            judulDataTabel = judulDataTabelList as ArrayList<String>,
+                                                            hasil = hasilList as ArrayList<String>,
+                                                            hasil_perhitungan = hasilPerhitunganValue,
+                                                            produk = produkValue,
+                                                            bentuk = bentukValue,
+                                                            nama_sarkut = namaSarkutValue,
+                                                            nomor_ba_sounding = noBaSoundingValue,
+                                                            tanggal_ba_sounding = tanggalBaSoundingValue,
+                                                            lokasi_ba = lokasiBaValue,
+                                                            jumlah_contoh = jumlahContohValue,
+                                                            waktu_aju = waktuAjuValue,
+                                                            nomor_ba_sampling = noBaSamplingValue,
+                                                            tanggal_ba_sampling = tanggalBaSamplingValue,
+                                                            no_form_3d = form3dValue,
+                                                            petugas_2 = petugas2Value,
+                                                            petugas_2_nip = itUser.nip,
+                                                            petugas_2_pangkat = itUser.pangkat,
+                                                            petugas_2_gol = itUser.gol,
+                                                            petugas_2_jabatan = itUser.jabatan_pegawai,
+                                                            saksi_2 = saksi2Value,
+                                                            kantor_pegawai_final = kantorPegawai,
+                                                            kanwil_pegawai_final = kanwilPegawai
+                                                        ))
+                                                        kantorPegawai = ""
+                                                        kanwilPegawai = ""
+                                                        fabOverSounding = true
+                                                        soundingContainer.visibility = View.GONE
+                                                        btnAddSounding.visibility = View.GONE
+                                                        btnSave.visibility = View.GONE
+                                                        hasilLayout.visibility = View.GONE
+                                                        fabCancelReport.visibility = View.GONE
+                                                        fabFinalReport.visibility = View.VISIBLE
+                                                        produk.text?.clear()
+                                                        bentuk.text?.clear()
+                                                        namaSarkut.text?.clear()
+                                                        waktuBarcon.text?.clear()
+                                                        tanggalBa.text?.clear()
+                                                        petugas.setSelection(0)
+                                                        saksi.setSelection(0)
+                                                        lifecycleScope.launch {
+                                                            userDao.fetchAllUser().collect { itUser2 ->
+                                                                if (itUser2.isNotEmpty()) {
+                                                                    noBa.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)))
+                                                                    noBa.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)).replace("X","001")
+                                                                    noBaSampling.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)))
+                                                                    noBaSampling.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)).replace("X","001")
+                                                                    lokasiBa.setText(itUser2[0].lokasi_ba_pegawai)
+                                                                    lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser2[0].lokasi_ba_pegawai)
+                                                                    form3d.setText(String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear)))
+                                                                    form3d.hint = String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear))
+                                                                }
+                                                            }
+                                                        }
+                                                        val safeCastIv = mutableListOf(addOrClose1)
+                                                        //Remove added input sounding
+                                                        ivTvMap.keys.forEach {
+                                                            safeCastIv += it
+                                                        }
+                                                        safeCastIv.forEach {
+                                                            if (it != addOrClose1) {
+                                                                (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                                                ivCvMap.remove(it)
+                                                                ivSpAwalMap.remove(it)
+                                                                ivSpAkhirMap.remove(it)
+                                                                ivTvMap.remove(it)
+                                                                ivTvHasilMap.remove(it)
+                                                            }
+                                                        }
+                                                        val safeCastSpAwal = mutableListOf(awal1)
+                                                        spAwalDbFinalMap.keys.forEach {
+                                                            safeCastSpAwal += it
+                                                        }
+                                                        safeCastSpAwal.forEach {
+                                                            if (it != awal1) {
+                                                                spAwalDbFinalMap.remove(it)
+                                                            }
+                                                        }
+                                                        val safeCastSpAkhir = mutableListOf(akhir1)
+                                                        spAkhirDbFinalMap.keys.forEach {
+                                                            safeCastSpAkhir += it
+                                                        }
+                                                        safeCastSpAkhir.forEach {
+                                                            if (it != akhir1) {
+                                                                spAkhirDbFinalMap.remove(it)
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
-                                        val safeCastIv = mutableListOf(addOrClose1)
-                                        //Remove added input sounding
-                                        ivTvMap.keys.forEach {
-                                            safeCastIv += it
-                                        }
-                                        safeCastIv.forEach {
-                                            if (it != addOrClose1) {
-                                                (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
-                                                ivCvMap.remove(it)
-                                                ivSpAwalMap.remove(it)
-                                                ivSpAkhirMap.remove(it)
-                                                ivTvMap.remove(it)
-                                                ivTvHasilMap.remove(it)
+                                    }
+                                    else {
+                                        if (saksi2Value != "Empty") {
+                                            lifecycleScope.launch {
+                                                userDao.fetchServiceUserByName(saksi2Value).collect { itServiceUser ->
+                                                    lifecycleScope.launch {
+                                                        userDao.insertReport(ReportEntity(
+                                                            tinggi_cairan = tinggiCairanList as ArrayList<Double>,
+                                                            suhu_cairan = suhuCairanList as ArrayList<Double>,
+                                                            suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
+                                                            tinggi_meja = tinggiMejaList as ArrayList<Double>,
+                                                            faktor_muai = faktorMuaiList as ArrayList<Double>,
+                                                            tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
+                                                            volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
+                                                            density_cairan = densityCairanList as ArrayList<Double>,
+                                                            volume_fraksi = volumeFraksiList as ArrayList<Double>,
+                                                            volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
+                                                            volume_mid = volumeMidList as ArrayList<Double>,
+                                                            volume_app = volumeAppList as ArrayList<Double>,
+                                                            volume_obs = volumeObsList as ArrayList<Double>,
+                                                            volume = volumeList as ArrayList<Double>,
+                                                            hasil_sounding = hasilSoundingList as ArrayList<Double>,
+                                                            no_tangki = noTangkiList as ArrayList<String>,
+                                                            pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
+                                                            nip_pegawai = nipPegawaiList as ArrayList<String>,
+                                                            pangkat_pegawai = pangkatPegawaiList as ArrayList<String>,
+                                                            gol_pegawai = golPegawaiList as ArrayList<String>,
+                                                            jabatan_pegawai = jabatanPegawaiList as ArrayList<String>,
+                                                            pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
+                                                            jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
+                                                            perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
+                                                            npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
+                                                            alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
+                                                            lokasi_sounding = lokasiSoundingList as ArrayList<String>,
+                                                            waktu = waktuList as ArrayList<String>,
+                                                            waktu_date = Date().time,
+                                                            judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
+                                                            judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
+                                                            judulFraksi = judulFraksiList as ArrayList<String>,
+                                                            judulDataTabel = judulDataTabelList as ArrayList<String>,
+                                                            hasil = hasilList as ArrayList<String>,
+                                                            hasil_perhitungan = hasilPerhitunganValue,
+                                                            produk = produkValue,
+                                                            bentuk = bentukValue,
+                                                            nama_sarkut = namaSarkutValue,
+                                                            nomor_ba_sounding = noBaSoundingValue,
+                                                            tanggal_ba_sounding = tanggalBaSoundingValue,
+                                                            lokasi_ba = lokasiBaValue,
+                                                            jumlah_contoh = jumlahContohValue,
+                                                            waktu_aju = waktuAjuValue,
+                                                            nomor_ba_sampling = noBaSamplingValue,
+                                                            tanggal_ba_sampling = tanggalBaSamplingValue,
+                                                            no_form_3d = form3dValue,
+                                                            petugas_2 = petugas2Value,
+                                                            saksi_2 = saksi2Value,
+                                                            saksi_2_jabatan = itServiceUser.jabatan,
+                                                            saksi_2_perusahaan = itServiceUser.perusahaan_pengguna_jasa,
+                                                            kantor_pegawai_final = kantorPegawai,
+                                                            kanwil_pegawai_final = kanwilPegawai
+                                                        ))
+                                                        kantorPegawai = ""
+                                                        kanwilPegawai = ""
+                                                        fabOverSounding = true
+                                                        soundingContainer.visibility = View.GONE
+                                                        btnAddSounding.visibility = View.GONE
+                                                        btnSave.visibility = View.GONE
+                                                        hasilLayout.visibility = View.GONE
+                                                        fabCancelReport.visibility = View.GONE
+                                                        fabFinalReport.visibility = View.VISIBLE
+                                                        produk.text?.clear()
+                                                        bentuk.text?.clear()
+                                                        namaSarkut.text?.clear()
+                                                        waktuBarcon.text?.clear()
+                                                        tanggalBa.text?.clear()
+                                                        petugas.setSelection(0)
+                                                        saksi.setSelection(0)
+                                                        lifecycleScope.launch {
+                                                            userDao.fetchAllUser().collect { itUser2 ->
+                                                                if (itUser2.isNotEmpty()) {
+                                                                    noBa.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)))
+                                                                    noBa.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)).replace("X","001")
+                                                                    noBaSampling.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)))
+                                                                    noBaSampling.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)).replace("X","001")
+                                                                    lokasiBa.setText(itUser2[0].lokasi_ba_pegawai)
+                                                                    lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser2[0].lokasi_ba_pegawai)
+                                                                    form3d.setText(String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear)))
+                                                                    form3d.hint = String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear))
+                                                                }
+                                                            }
+                                                        }
+                                                        val safeCastIv = mutableListOf(addOrClose1)
+                                                        //Remove added input sounding
+                                                        ivTvMap.keys.forEach {
+                                                            safeCastIv += it
+                                                        }
+                                                        safeCastIv.forEach {
+                                                            if (it != addOrClose1) {
+                                                                (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                                                ivCvMap.remove(it)
+                                                                ivSpAwalMap.remove(it)
+                                                                ivSpAkhirMap.remove(it)
+                                                                ivTvMap.remove(it)
+                                                                ivTvHasilMap.remove(it)
+                                                            }
+                                                        }
+                                                        val safeCastSpAwal = mutableListOf(awal1)
+                                                        spAwalDbFinalMap.keys.forEach {
+                                                            safeCastSpAwal += it
+                                                        }
+                                                        safeCastSpAwal.forEach {
+                                                            if (it != awal1) {
+                                                                spAwalDbFinalMap.remove(it)
+                                                            }
+                                                        }
+                                                        val safeCastSpAkhir = mutableListOf(akhir1)
+                                                        spAkhirDbFinalMap.keys.forEach {
+                                                            safeCastSpAkhir += it
+                                                        }
+                                                        safeCastSpAkhir.forEach {
+                                                            if (it != akhir1) {
+                                                                spAkhirDbFinalMap.remove(it)
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
-                                        val safeCastSpAwal = mutableListOf(awal1)
-                                        spAwalDbFinalMap.keys.forEach {
-                                            safeCastSpAwal += it
-                                        }
-                                        safeCastSpAwal.forEach {
-                                            if (it != awal1) {
-                                                spAwalDbFinalMap.remove(it)
-                                            }
-                                        }
-                                        val safeCastSpAkhir = mutableListOf(akhir1)
-                                        spAkhirDbFinalMap.keys.forEach {
-                                            safeCastSpAkhir += it
-                                        }
-                                        safeCastSpAkhir.forEach {
-                                            if (it != akhir1) {
-                                                spAkhirDbFinalMap.remove(it)
+                                        else {
+                                            lifecycleScope.launch {
+                                                userDao.insertReport(ReportEntity(
+                                                    tinggi_cairan = tinggiCairanList as ArrayList<Double>,
+                                                    suhu_cairan = suhuCairanList as ArrayList<Double>,
+                                                    suhu_kalibrasi_tangki = suhuKalibrasiTangkiList as ArrayList<Double>,
+                                                    tinggi_meja = tinggiMejaList as ArrayList<Double>,
+                                                    faktor_muai = faktorMuaiList as ArrayList<Double>,
+                                                    tinggi_cairan_terkoreksi = tinggiCairanTerkoreksiList as ArrayList<Double>,
+                                                    volume_kalibrasi1 = volumeKalibrasi1List as ArrayList<Double>,
+                                                    density_cairan = densityCairanList as ArrayList<Double>,
+                                                    volume_fraksi = volumeFraksiList as ArrayList<Double>,
+                                                    volume_kalibrasi2 = volumeKalibrasi2List as ArrayList<Double>,
+                                                    volume_mid = volumeMidList as ArrayList<Double>,
+                                                    volume_app = volumeAppList as ArrayList<Double>,
+                                                    volume_obs = volumeObsList as ArrayList<Double>,
+                                                    volume = volumeList as ArrayList<Double>,
+                                                    hasil_sounding = hasilSoundingList as ArrayList<Double>,
+                                                    no_tangki = noTangkiList as ArrayList<String>,
+                                                    pegawai_sounding = pegawaiSoundingList as ArrayList<String>,
+                                                    nip_pegawai = nipPegawaiList as ArrayList<String>,
+                                                    pangkat_pegawai = pangkatPegawaiList as ArrayList<String>,
+                                                    gol_pegawai = golPegawaiList as ArrayList<String>,
+                                                    jabatan_pegawai = jabatanPegawaiList as ArrayList<String>,
+                                                    pengguna_jasa_sounding = penggunaJasaSoundingList as ArrayList<String>,
+                                                    jabatan_pengguna_jasa = jabatanPenggunaJasaList as ArrayList<String>,
+                                                    perusahaan_sounding = perusahaanSoundingList as ArrayList<String>,
+                                                    npwp_perusahaan_sounding = npwpPerusahaanSoundingList as ArrayList<String>,
+                                                    alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
+                                                    lokasi_sounding = lokasiSoundingList as ArrayList<String>,
+                                                    waktu = waktuList as ArrayList<String>,
+                                                    waktu_date = Date().time,
+                                                    judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
+                                                    judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
+                                                    judulFraksi = judulFraksiList as ArrayList<String>,
+                                                    judulDataTabel = judulDataTabelList as ArrayList<String>,
+                                                    hasil = hasilList as ArrayList<String>,
+                                                    hasil_perhitungan = hasilPerhitunganValue,
+                                                    produk = produkValue,
+                                                    bentuk = bentukValue,
+                                                    nama_sarkut = namaSarkutValue,
+                                                    nomor_ba_sounding = noBaSoundingValue,
+                                                    tanggal_ba_sounding = tanggalBaSoundingValue,
+                                                    lokasi_ba = lokasiBaValue,
+                                                    jumlah_contoh = jumlahContohValue,
+                                                    waktu_aju = waktuAjuValue,
+                                                    nomor_ba_sampling = noBaSamplingValue,
+                                                    tanggal_ba_sampling = tanggalBaSamplingValue,
+                                                    no_form_3d = form3dValue,
+                                                    petugas_2 = petugas2Value,
+                                                    saksi_2 = saksi2Value,
+                                                    kantor_pegawai_final = kantorPegawai,
+                                                    kanwil_pegawai_final = kanwilPegawai
+                                                ))
+                                                kantorPegawai = ""
+                                                kanwilPegawai = ""
+                                                fabOverSounding = true
+                                                soundingContainer.visibility = View.GONE
+                                                btnAddSounding.visibility = View.GONE
+                                                btnSave.visibility = View.GONE
+                                                hasilLayout.visibility = View.GONE
+                                                fabCancelReport.visibility = View.GONE
+                                                fabFinalReport.visibility = View.VISIBLE
+                                                produk.text?.clear()
+                                                bentuk.text?.clear()
+                                                namaSarkut.text?.clear()
+                                                waktuBarcon.text?.clear()
+                                                tanggalBa.text?.clear()
+                                                petugas.setSelection(0)
+                                                saksi.setSelection(0)
+                                                lifecycleScope.launch {
+                                                    userDao.fetchAllUser().collect { itUser2 ->
+                                                        if (itUser2.isNotEmpty()) {
+                                                            noBa.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)))
+                                                            noBa.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)).replace("X","001")
+                                                            noBaSampling.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)))
+                                                            noBaSampling.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)).replace("X","001")
+                                                            lokasiBa.setText(itUser2[0].lokasi_ba_pegawai)
+                                                            lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser2[0].lokasi_ba_pegawai)
+                                                            form3d.setText(String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear)))
+                                                            form3d.hint = String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear))
+                                                        }
+                                                    }
+                                                }
+                                                val safeCastIv = mutableListOf(addOrClose1)
+                                                //Remove added input sounding
+                                                ivTvMap.keys.forEach {
+                                                    safeCastIv += it
+                                                }
+                                                safeCastIv.forEach {
+                                                    if (it != addOrClose1) {
+                                                        (ivCvMap[it]?.parent as ViewGroup).removeView(ivCvMap[it])
+                                                        ivCvMap.remove(it)
+                                                        ivSpAwalMap.remove(it)
+                                                        ivSpAkhirMap.remove(it)
+                                                        ivTvMap.remove(it)
+                                                        ivTvHasilMap.remove(it)
+                                                    }
+                                                }
+                                                val safeCastSpAwal = mutableListOf(awal1)
+                                                spAwalDbFinalMap.keys.forEach {
+                                                    safeCastSpAwal += it
+                                                }
+                                                safeCastSpAwal.forEach {
+                                                    if (it != awal1) {
+                                                        spAwalDbFinalMap.remove(it)
+                                                    }
+                                                }
+                                                val safeCastSpAkhir = mutableListOf(akhir1)
+                                                spAkhirDbFinalMap.keys.forEach {
+                                                    safeCastSpAkhir += it
+                                                }
+                                                safeCastSpAkhir.forEach {
+                                                    if (it != akhir1) {
+                                                        spAkhirDbFinalMap.remove(it)
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -2034,6 +2449,7 @@ class TabFragment(private val title: String) : Fragment() {
                             Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
                             _binding3?.nama?.text?.clear()
                             _binding3?.nip?.text?.clear()
+                            _binding3?.jabatan?.text?.clear()
                         }
                     }
                 }
@@ -2980,6 +3396,9 @@ class TabFragment(private val title: String) : Fragment() {
                                         val nip = it.nip
                                         val kantorPegawai = it.kantor_pegawai
                                         val kanwilPegawai = it.kanwil_pegawai
+                                        val pangkatPegawai = it.pangkat
+                                        val golPegawai = it.gol
+                                        val jabatanPegawai = it.jabatan_pegawai
                                         lifecycleScope.launch {
                                             userDao.updateSounding(SoundingEntity(id,
                                                 tinggi_cairan = tinggiCairanAngka,
@@ -3000,6 +3419,9 @@ class TabFragment(private val title: String) : Fragment() {
                                                 no_tangki = nomorTangkiText,
                                                 pegawai_sounding = petugasSounding,
                                                 nip_pegawai = nip,
+                                                pangkat_pegawai = pangkatPegawai,
+                                                gol_pegawai = golPegawai,
+                                                jabatan_pegawai = jabatanPegawai,
                                                 pengguna_jasa_sounding = penggunaJasa,
                                                 jabatan_pengguna_jasa = jabatan,
                                                 perusahaan_sounding = perusahaan,
@@ -3069,7 +3491,6 @@ class TabFragment(private val title: String) : Fragment() {
                                     if (file.exists()) {
                                         file.delete()
                                     }
-                                    Log.d("loc", outPath)
 //                                    val writer = PdfWriter(file)
                                     val writer = PdfWriter(FileOutputStream(outPath))
                                     val pdfDoc = PdfDocument(writer)
@@ -3256,11 +3677,7 @@ class TabFragment(private val title: String) : Fragment() {
         table.addCell(pegCell)
         doc.add(table)
 
-        val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
-                " " + it.nip_pegawai.subSequence(8,14).toString() +
-                " " + it.nip_pegawai.subSequence(14,15).toString() +
-                " " + it.nip_pegawai.subSequence(15,it.nip_pegawai.length).toString()
-        val nip = listOf(nipSpace)
+        val nip = listOf(nipSpace(it.nip_pegawai))
         val jabatan = listOf(it.jabatan_pengguna_jasa)
         writeAuthenticationwithCustomer(jabatan, nip, doc)
 
@@ -3453,11 +3870,10 @@ class TabFragment(private val title: String) : Fragment() {
                                     if (File(outPath).exists()) {
                                         File(outPath).delete()
                                     }
-                                    Log.d("PDF Location", outPath)
                                     val writer = PdfWriter(FileOutputStream(outPath))
                                     val pdfDoc = PdfDocument(writer)
                                     val doc = Document(pdfDoc, PageSize.A4)
-                                    doc.setMargins(0f, 0f, 20f, 40f)
+                                    doc.setMargins(0f, 0f, 20f, 20f)
                                     page1FinalReport(doc, it)
                                     if (it.hasil.size > 1) {
                                         pageExtraFinalReport(doc, it)
@@ -3510,15 +3926,15 @@ class TabFragment(private val title: String) : Fragment() {
         val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER)
         val cellTop = Cell(1,2).add(headerPara).add(titlePara)
 
-        val para1 = Paragraph().add(Text("1. Telah dilakukan pemeriksaan fisik sebelum pengajuan PEB atas barang ekspor pada:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para1 = Paragraph().add(Text("1. Telah dilakukan pemeriksaan fisik sebelum pengajuan PEB atas barang ekspor pada :\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         cellTop.add(para1)
         writeDataListwithSemicolomn(listOf("a.", "b."), listOf("Lokasi","Nama Sarana Pengangkut"), listOf(it.lokasi_sounding[0], it.nama_sarkut), cellTop)
 
-        val para2 = Paragraph().add(Text("2. Eksportir:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para2 = Paragraph().add(Text("2. Eksportir :\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         cellTop.add(para2)
         writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("NPWP", "Nama", "Alamat"), listOf(it.npwp_perusahaan_sounding[0], it.perusahaan_sounding[0], it.alamat_perusahaan_sounding[0]), cellTop)
 
-        val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para3 = Paragraph().add(Text("3. Data Umum :\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         cellTop.add(para3)
         writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
             listOf(
@@ -3530,11 +3946,11 @@ class TabFragment(private val title: String) : Fragment() {
         val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
         val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
             .add(soundingItalic)
-            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+            .add(Text(" :\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
             .add(soundingItalic)
-            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+            .add(Text(" Awal :\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
         cellTop.add(para4).add(para4a)
         writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3549,7 +3965,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
             .add(soundingItalic)
-            .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+            .add(Text(" Akhir :\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
         cellTop.add(para4b)
         writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3568,7 +3984,7 @@ class TabFragment(private val title: String) : Fragment() {
             .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
         cellTop.add(para4c)
 
-        val para5 = Paragraph().add(Text("5. Keterangan:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para5 = Paragraph().add(Text("5. Keterangan :").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         cellTop.add(para5)
         writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan, ""), cellTop)
         cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
@@ -3578,7 +3994,7 @@ class TabFragment(private val title: String) : Fragment() {
                 it.jumlah_contoh),
             cellTop)
 
-        val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f)
+        val paraMengetahui = Paragraph().add(Text("Mengetahui :").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f)
         cellTop.add(paraMengetahui)
 
         val paraLeft = Paragraph()
@@ -3595,11 +4011,7 @@ class TabFragment(private val title: String) : Fragment() {
             .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         val cellRight = Cell().add(paraRight)
-        val nipSpace = it.nip_pegawai[0].subSequence(0,8).toString() +
-                " " + it.nip_pegawai[0].subSequence(8,14).toString() +
-                " " + it.nip_pegawai[0].subSequence(14,15).toString() +
-                " " + it.nip_pegawai[0].subSequence(15,it.nip_pegawai[0].length).toString()
-        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace), cellRight)
+        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace(it.nip_pegawai[0])), cellRight)
 
         val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
         table.addCell(cellLeft).addCell(cellRight)
@@ -3617,11 +4029,9 @@ class TabFragment(private val title: String) : Fragment() {
                 .setFont(fontArial).setFontSize(10f)
             val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
             val cellTop = Cell(1,2).add(titlePara)
-            Log.d("testing0", maxIndex.toString() + ((0+1)*4+2).toString() + it.hasil_sounding.size.toString())
-
 
             if (it.hasil_sounding.size >= (i+1)*4+2) {
-                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para1 = Paragraph().add(Text("1. Data Umum :\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
                 cellTop.add(para1)
                 writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
                     listOf(
@@ -3631,11 +4041,11 @@ class TabFragment(private val title: String) : Fragment() {
                     cellTop)
                 val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
                 val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" Awal :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2).add(para2a)
                 writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3650,7 +4060,7 @@ class TabFragment(private val title: String) : Fragment() {
 
                 val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" Akhir :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2b)
                 writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3669,7 +4079,7 @@ class TabFragment(private val title: String) : Fragment() {
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2c)
 
-                val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para3 = Paragraph().add(Text("3. Data Umum :\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
                 cellTop.add(para3)
                 writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
                     listOf(
@@ -3680,11 +4090,11 @@ class TabFragment(private val title: String) : Fragment() {
 
                 val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
                 val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" Awal :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para4).add(para4a)
                 writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3699,7 +4109,7 @@ class TabFragment(private val title: String) : Fragment() {
 
                 val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" Akhir :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para4b)
                 writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3720,8 +4130,7 @@ class TabFragment(private val title: String) : Fragment() {
 //                for (j in i*4+2..(i*4+1) step 2) {}
             }
             else {
-                Log.d("testing", i.toString())
-                val para1 = Paragraph().add(Text("1. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+                val para1 = Paragraph().add(Text("1. Data Umum :\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
                 cellTop.add(para1)
                 writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
                     listOf(
@@ -3731,11 +4140,11 @@ class TabFragment(private val title: String) : Fragment() {
                     cellTop)
                 val para2 = Paragraph().add(Text("2. Hasil ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
                 val para2a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" Awal :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2).add(para2a)
                 writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3750,7 +4159,7 @@ class TabFragment(private val title: String) : Fragment() {
 
                 val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text(" Akhir :\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2b)
                 writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
@@ -3770,7 +4179,7 @@ class TabFragment(private val title: String) : Fragment() {
                 cellTop.add(para2c)
             }
 
-            val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(287f)
+            val paraMengetahui = Paragraph().add(Text("Mengetahui :").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(287f)
             cellTop.add(paraMengetahui)
 
             val cellLeft = Cell()
@@ -3780,11 +4189,7 @@ class TabFragment(private val title: String) : Fragment() {
                 .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
                 .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
             val cellRight = Cell().add(paraRight)
-            val nipSpace = it.nip_pegawai[i*4+2].subSequence(0,8).toString() +
-                    " " + it.nip_pegawai[i*4+2].subSequence(8,14).toString() +
-                    " " + it.nip_pegawai[i*4+2].subSequence(14,15).toString() +
-                    " " + it.nip_pegawai[i*4+2].subSequence(15,it.nip_pegawai[0].length).toString()
-            writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[i*4+2], nipSpace), cellRight)
+            writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[i*4+2], nipSpace(it.nip_pegawai[i*4+2])), cellRight)
 
             val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(20f).useAllAvailableWidth().addCell(cellTop)
             table.addCell(cellLeft).addCell(cellRight)
@@ -3799,103 +4204,102 @@ class TabFragment(private val title: String) : Fragment() {
         val angkaTahun = it.tanggal_ba_sampling.subSequence(it.tanggal_ba_sampling.length-4, it.tanggal_ba_sampling.length).toString()
         val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
         val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val title = Text("BERITA ACARA PENGAMBILAN CONTOH\n").setFont(fontArial).setFontSize(10f).setBold()
-        val subTitle = Text("NOMOR: ${it.nomor_ba_sampling.uppercase()}\n\n").setFont(fontArial).setFontSize(10f)
+        val title = Text("\n\nBERITA ACARA PENGAMBILAN CONTOH\n").setFont(fontArial).setFontSize(11f).setBold()
+        val subTitle = Text("NOMOR: ${it.nomor_ba_sampling.uppercase()}\n\n\n").setFont(fontArial).setFontSize(10f)
         val titlePara = Paragraph().add(title).add(subTitle).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
         val cellTop = Cell(1,2).add(titlePara).setBorder(Border.NO_BORDER)
 
-        val para1 = Paragraph().add(Text("Pada hari ini $hari, tanggal ${twoNumToWords(angkaHari)} bulan $bulan tahun ${fourNumToWords(angkaTahun)}, kami yang bertanda tangan dibawah ini:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para1 = Paragraph().add(Text("Pada hari ini $hari, tanggal ${twoNumToWords(angkaHari)} bulan $bulan tahun ${fourNumToWords(angkaTahun)}, kami yang bertanda tangan di bawah ini :\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingTop(-5f).setPaddingBottom(3f)
         cellTop.add(para1)
-        writeDataListwithSemicolomn(listOf("a.", "b."), listOf("Lokasi","Nama Sarana Pengangkut"), listOf(it.lokasi_sounding[0], it.nama_sarkut), cellTop)
+        writeDataListwithSemicolomn(listOf("1.", "", ""),
+            listOf("Nama/NIP","Pangkat/Gol.","Jabatan"),
+            listOf("${it.pegawai_sounding[0]} / ${nipSpace(it.nip_pegawai[0])}","${it.pangkat_pegawai[0]} / ${it.gol_pegawai[0]}", it.jabatan_pegawai[0].replace("PBC","Pemeriksa Bea Cukai")), cellTop)
 
-        val para2 = Paragraph().add(Text("2. Eksportir:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para2)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("NPWP", "Nama", "Alamat"), listOf(it.npwp_perusahaan_sounding[0], it.perusahaan_sounding[0], it.alamat_perusahaan_sounding[0]), cellTop)
-
-        val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para3)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
-            listOf(
-                it.no_tangki[0],
-                "${zeroRemover(it.suhu_kalibrasi_tangki[0].toBigDecimal().toPlainString()).replace(".",",")} °C",
-                "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
-            cellTop)
-
-        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
-        val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+        val paraRight = Paragraph() //To Merge with if it.petugas_2 statement
+            .add(Text("Yang mengambil Contoh Barang\n\n\n\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("1. ${it.pegawai_sounding[0]}\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4).add(para4a)
-        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-            listOf(
-                it.waktu[0].subSequence(it.waktu[0].indexOf(",") + 2, it.waktu[0].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[0].subSequence(it.waktu[0].indexOf(":")-3, it.waktu[0].length)}",
-                "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-            cellTop)
+        val paraRighta = Paragraph()
+            .add(Text("NIP ${it.nip_pegawai[0]}\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.5f).setPaddingTop(-3f).setPaddingBottom(3f)
+        val cellRight = Cell().add(paraRight).add(paraRighta).setBorder(Border.NO_BORDER)
 
-        val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4b)
-        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
-            listOf(
-                it.waktu[1].subSequence(it.waktu[1].indexOf(",") + 2, it.waktu[1].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[1].subSequence(it.waktu[1].indexOf(":")-3, it.waktu[1].length)}",
-                "${zeroRemover(it.suhu_cairan[1].toBigDecimal().toPlainString()).replace(".", ",")} °C",
-                "${zeroRemover((it.tinggi_cairan[1]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-                "${zeroRemover(it.density_cairan[1].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[1].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[1].toBigDecimal().toPlainString()).replace(".",",")} MT"),
-            cellTop)
+        if (it.petugas_2 != "Empty") {
+            cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
+            writeDataListwithSemicolomn(listOf("2.", "", ""),
+                listOf("Nama/NIP","Pangkat/Gol.","Jabatan"),
+                listOf("${it.petugas_2} / ${nipSpace(it.petugas_2_nip)}","${it.petugas_2_pangkat} / ${it.petugas_2_gol}", it.petugas_2_jabatan.replace("PBC","Pemeriksa Bea Cukai")), cellTop)
 
-        val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
-            .add(soundingItalic)
-            .add(Text("         :    ${zeroRemover(it.hasil[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
-            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
-        cellTop.add(para4c)
+            val paraRight2 = Paragraph() //To Merge with if it.petugas_2 statement
+                .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
+                .add(Text("2. ${it.petugas_2}\n").setFont(fontArial).setFontSize(10f))
+                .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+            val paraRight2a = Paragraph()
+                .add(Text("NIP ${it.petugas_2_nip}\n").setFont(fontArial).setFontSize(10f))
+                .setMultipliedLeading(1.2f).setPaddingLeft(21.5f).setPaddingTop(-3f).setPaddingBottom(3f)
+            cellRight.add(paraRight2).add(paraRight2a).setBorder(Border.NO_BORDER)
+        }
 
-        val para5 = Paragraph().add(Text("5. Keterangan:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        cellTop.add(para5)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan, ""), cellTop)
-        cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
-        writeDataList2withSemicolomn(listOf("1)", "2)"), listOf("Waktu dan Pukul                      ", "Jumlah Contoh Barang"),
-            listOf(
-                (it.waktu_aju.subSequence(it.waktu_aju.indexOf(",")+2, it.waktu_aju.indexOf(":")-3).toString()+" Pukul${it.waktu_aju.subSequence(it.waktu_aju.indexOf(":")-3, it.waktu_aju.length)}").replace("-"," "),
-                it.jumlah_contoh),
-            cellTop)
-
-        val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f)
-        cellTop.add(paraMengetahui)
+        val para2 = Paragraph()
+            .add(Text("\nMasing-masing petugas ${it.kantor_pegawai_final.uppercase()
+                .replace("KANTOR PENGAWASAN DAN PELAYANAN BEA DAN CUKAI", "KPPBC")
+                .replace("KANTOR PENGAWASAN DAN PELAYANAN BEA CUKAI", "KPPBC")
+                .replace("TIPE MADYA PABEAN", "TMP")}, dengan disaksikan oleh :\n")
+            .setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingTop(-5f).setPaddingBottom(3f)
+        cellTop.add(para2)
 
         val paraLeft = Paragraph()
-            .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("${it.tanggal_ba_sounding.replace("-"," ").subSequence(it.tanggal_ba_sounding.indexOf(",")+2, it.tanggal_ba_sounding.length)}\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
+            .add(Text("Yang menyaksikan\n\n\n\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("1. ${it.pengguna_jasa_sounding[0]}\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         val cellLeft = Cell().add(paraLeft).setBorder(Border.NO_BORDER)
-        writeReportwithSemicolomn(listOf("Nama","Jabatan"), listOf(it.pengguna_jasa_sounding[0], it.jabatan_pengguna_jasa[0]), cellLeft)
 
-        val paraRight = Paragraph()
-            .add(Text("\n\n\n\n\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
+        if (it.saksi_2 != "Empty") {
+            writeDataList3withSemicolomn(listOf("1.", "", "", "2.", "", ""),
+                listOf("Nama", "Perusahaan ", "Jabatan","Nama", "Perusahaan ", "Jabatan"),
+                listOf(it.pengguna_jasa_sounding[0], it.perusahaan_sounding[0], it.jabatan_pengguna_jasa[0], it.saksi_2, it.saksi_2_perusahaan, it.saksi_2_jabatan),
+                listOf("(Importir/eksportir/kuasanya*)", "", "", "(Importir/eksportir/kuasanya*)", "", ""),
+                cellTop)
+
+            val paraLeft2 = Paragraph()
+                .add(Text("\n\n\n\n").setFont(fontArial).setFontSize(10f))
+                .add(Text("2. ${it.saksi_2}\n").setFont(fontArial).setFontSize(10f))
+                .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+            cellLeft.add(paraLeft2).setBorder(Border.NO_BORDER)
+        }
+        else {
+            writeDataList3withSemicolomn(listOf("1.", "", ""),
+                listOf("Nama", "Perusahaan ", "Jabatan"),
+                listOf(it.pengguna_jasa_sounding[0], it.perusahaan_sounding[0], it.jabatan_pengguna_jasa[0]),
+                listOf("(Importir/eksportir/kuasanya*)", "", ""),
+                cellTop)
+        }
+        val para3 = Paragraph()
+            .add(Text("\nBerdasarkan instruksi pemeriksaan nomor : -   atas ").setFont(fontArial).setFontSize(10f))
+            .add(Text("PIB").setUnderline(0.5f, 4f).setFont(fontArial).setFontSize(10f))
+            .add(Text("/").setFont(fontArial).setFontSize(10f))
+            .add(Text("PEB").setUnderline(0.5f, 4f).setFont(fontArial).setFontSize(10f))
+            .add(Text("/dokumen form 3d nomor ${it.no_form_3d} telah melakukan pengambilan Contoh Barang yang ditimbun di ${it.lokasi_sounding[0]} berupa :\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingTop(-5f).setPaddingBottom(3f)
+        cellTop.add(para3)
+
+        val para4 = Paragraph()
+            .add(Text("a. ${it.produk}\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(22.5f).setPaddingTop(-3f)
+        cellTop.add(para4)
+
+        val para4a = Paragraph()
+            .add(Text("Yang selanjutnya dikemas dalam ${it.jumlah_contoh.replace(".","")}.\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
-        val cellRight = Cell().add(paraRight).setBorder(Border.NO_BORDER)
-        val nipSpace = it.nip_pegawai[0].subSequence(0,8).toString() +
-                " " + it.nip_pegawai[0].subSequence(8,14).toString() +
-                " " + it.nip_pegawai[0].subSequence(14,15).toString() +
-                " " + it.nip_pegawai[0].subSequence(15,it.nip_pegawai[0].length).toString()
-        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace), cellRight)
+        cellTop.add(para4a)
 
-        val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(40f).useAllAvailableWidth().addCell(cellTop)
+        val para5 = Paragraph()
+            .add(Text("\nDemikian berita acara pengambilan Contoh Barang ini dibuat dengan sebenar-benarnya dengan mengingat sumpah jabatan.\n\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingTop(-5f).setPaddingBottom(3f)
+        cellTop.add(para5)
+
+        val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginLeft(20f).setMarginRight(40f).useAllAvailableWidth().addCell(cellTop)
         table.addCell(cellLeft).addCell(cellRight)
         doc.add(table)
     }
@@ -4078,6 +4482,62 @@ class TabFragment(private val title: String) : Fragment() {
                 .setPaddingLeft(3*padding)
                 .setPaddingRight(5*padding)
             tablelist.addCell(valueCell)
+        }
+        cell.add(tablelist)
+        cell.add(Paragraph().add("\n").setFixedLeading(5f))
+    }
+    private fun writeDataList3withSemicolomn(list: List<String>, listJudul: List<String>, listNilai: List<String>, listAkhir: List<String>, cell: Cell) {
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val padding = 3f
+        val tablelist = Table(floatArrayOf(0.2f, 2f, 0.05f, 3f, 3f))
+        tablelist.width = cell.width
+        for (i in list.indices) {
+            val idPoint = Cell().add(Paragraph().add(Text(list[i]).setFont(fontArial).setFontSize(10f)))
+            idPoint.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(7.3f*padding)
+            tablelist.addCell(idPoint)
+
+            val idCell = Cell().add(Paragraph().add(Text(listJudul[i]).setFont(fontArial).setFontSize(10f)))
+            idCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+            tablelist.addCell(idCell)
+
+            val separatorCell = Cell()
+            if (listJudul[i] != "Contoh Barang Diambil/Diajukan") {
+                separatorCell.add(Paragraph().add(Text(":").setFont(fontArial).setFontSize(10f)))
+            } else {
+                separatorCell.add(Paragraph().add(Text("").setFont(fontArial).setFontSize(10f)))
+            }
+            separatorCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingLeft(2*padding)
+                .setPaddingTop(-padding)
+            tablelist.addCell(separatorCell)
+
+            val valueCell = Cell().add(Paragraph().add(Text(listNilai[i]).setFont(fontArial).setFontSize(10f)))
+            valueCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(3*padding)
+                .setPaddingRight(3*padding)
+            tablelist.addCell(valueCell)
+
+            val akhirCell = Cell().add(Paragraph().add(Text(listAkhir[i]).setFont(fontArial).setFontSize(10f)))
+            akhirCell.setBorder(Border.NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.TOP)
+                .setPaddingTop(-padding)
+                .setPaddingLeft(3*padding)
+                .setPaddingRight(5*padding)
+            tablelist.addCell(akhirCell)
         }
         cell.add(tablelist)
         cell.add(Paragraph().add("\n").setFixedLeading(5f))

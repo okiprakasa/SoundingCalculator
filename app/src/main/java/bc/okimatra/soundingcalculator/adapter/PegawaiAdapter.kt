@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
 import bc.okimatra.soundingcalculator.databinding.ItemsRowBinding
 import bc.okimatra.soundingcalculator.datasetup.PegawaiEntity
+import bc.okimatra.soundingcalculator.nipSpace
 
 class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
                      private val updateListener:(id:Int)->Unit,
@@ -23,13 +24,9 @@ class PegawaiAdapter(private val items: ArrayList<PegawaiEntity>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.itemView.context
         val item = items[position]
-        val nipSpace = item.nip.subSequence(0,8).toString() +
-                " " + item.nip.subSequence(8,14).toString() +
-                " " + item.nip.subSequence(14,15).toString() +
-                " " + item.nip.subSequence(15,item.nip.length).toString()
 
         holder.tvName.text = item.nama_pegawai
-        holder.tvBarisKedua.text = nipSpace
+        holder.tvBarisKedua.text = nipSpace(item.nip)
         holder.tvBarisKetiga.text = item.kantor_pegawai.replace(("KANTOR PENGAWASAN DAN PELAYANAN BEA DAN CUKAI"),"KPPBC").replace("TIPE MADYA PABEAN","TMP")
 
         holder.llMain.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))

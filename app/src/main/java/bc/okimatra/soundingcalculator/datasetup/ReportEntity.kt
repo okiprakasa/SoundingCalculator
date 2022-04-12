@@ -26,6 +26,9 @@ data class ReportEntity(
     val no_tangki: ArrayList<String> = arrayListOf(""),
     val pegawai_sounding: ArrayList<String> = arrayListOf(""),
     val nip_pegawai: ArrayList<String> = arrayListOf(""),
+    val pangkat_pegawai: ArrayList<String> = arrayListOf(""),
+    val gol_pegawai: ArrayList<String> = arrayListOf(""),
+    val jabatan_pegawai: ArrayList<String> = arrayListOf(""),
     val pengguna_jasa_sounding: ArrayList<String> = arrayListOf(""),
     val jabatan_pengguna_jasa: ArrayList<String> = arrayListOf(""),
     val perusahaan_sounding: ArrayList<String> = arrayListOf(""),
@@ -53,7 +56,13 @@ data class ReportEntity(
     val tanggal_ba_sampling: String = "",
     val no_form_3d: String = "",
     val petugas_2: String = "",
+    val petugas_2_nip: String = "",
+    val petugas_2_pangkat: String = "",
+    val petugas_2_gol: String = "",
+    val petugas_2_jabatan: String = "",
     val saksi_2: String = "",
+    val saksi_2_perusahaan: String = "",
+    val saksi_2_jabatan: String = "",
     val kantor_pegawai_final: String = "",
     val kanwil_pegawai_final: String = ""
         )

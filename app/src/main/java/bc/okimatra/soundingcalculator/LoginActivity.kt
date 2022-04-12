@@ -357,3 +357,12 @@ fun golonganToPangkat(gol: String): String {
         else -> { "Pembina Utama" }
     }
 }
+
+fun nipSpace(nip: String): String {
+    return if (nip.length >= 15) {
+        nip.subSequence(0,8).toString() +
+                " " + nip.subSequence(8,14).toString() +
+                " " + nip.subSequence(14,15).toString() +
+                " " + nip.subSequence(15,nip.length).toString()
+    } else ""
+}
