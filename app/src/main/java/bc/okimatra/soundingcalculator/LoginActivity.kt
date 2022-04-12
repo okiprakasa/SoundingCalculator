@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
                 override fun run() {
                     try {
                         while (!this.isInterrupted) {
-                            sleep(2000)
+                            sleep(1000)
                             runOnUiThread {
                                 // update TextView here!
                                 when {
@@ -71,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
             var checker = 0
             lifecycleScope.launch {
                 userDao.countAllUserOffice().collect { it1 ->
-                    if (it1<12) {
+                    if (it1==0) {
                         if (checker == 0) {
                             checker = 1
                             insertKantorDB(userDao,

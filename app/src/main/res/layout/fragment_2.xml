@@ -123,6 +123,43 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/helvetica"
+                                android:gravity="center_horizontal"
+                                android:text="@string/produk"
+                                android:textSize="13sp"/>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input">
+
+                                <!-- INPUT -->
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/produk"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/poppins_light"
+                                    android:hint="@string/hint_produk"
+                                    android:inputType="textCapWords"
+                                    android:paddingStart="15dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:scrollbars="vertical"
+                                    android:textCursorDrawable="@drawable/cursor_color"
+                                    android:textSize="12sp"
+                                    tools:ignore="TooManyViews" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
                                 android:layout_marginTop="14dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
@@ -510,43 +547,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:layout_marginTop="20dp"
-                                android:fontFamily="@font/helvetica"
-                                android:gravity="center_horizontal"
-                                android:text="@string/produk"
-                                android:textSize="13sp"/>
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="25dp"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginEnd="25dp"
-                                android:background="@drawable/rounded_input">
-
-                                <!-- INPUT -->
-                                <androidx.appcompat.widget.AppCompatEditText
-                                    android:id="@+id/produk"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
-                                    android:fontFamily="@font/poppins_light"
-                                    android:hint="@string/hint_produk"
-                                    android:inputType="textCapWords"
-                                    android:paddingStart="15dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingEnd="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:scrollbars="vertical"
-                                    android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="12sp"
-                                    tools:ignore="TooManyViews" />
-                            </RelativeLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="25dp"
                                 android:layout_marginTop="12dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
@@ -570,11 +570,12 @@
                                     android:fontFamily="@font/poppins_light"
                                     android:hint="@string/hint_no_dokumen"
                                     android:paddingStart="15dp"
+                                    android:maxLength="24"
                                     android:paddingTop="10dp"
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"/>
                             </RelativeLayout>
 
                             <TextView

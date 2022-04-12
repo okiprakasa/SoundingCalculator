@@ -12,7 +12,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="280dp"
             android:background="@drawable/blue_bg2">
 
             <ImageView
@@ -28,9 +28,9 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="11.7dp"
-            android:layout_marginRight="53dp">
+            android:layout_marginRight="47dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -39,16 +39,16 @@
                 android:gravity="center"
                 android:text="@string/sounding_system"
                 android:textColor="#363A43"
-                android:textSize="27sp" />
+                android:textSize="25sp" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="0.5dp"
-            android:layout_marginRight="53dp">
+            android:layout_marginRight="47dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,6 +56,7 @@
                 android:fontFamily="@font/montserrat"
                 android:gravity="center"
                 android:text="@string/nama_nip"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
         </RelativeLayout>
@@ -64,9 +65,9 @@
             android:id="@+id/nama_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="18.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_input">
 
             <!-- INPUT -->
@@ -77,7 +78,7 @@
                 android:autofillHints="name"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_light"
-                android:hint="@string/nama"
+                android:hint="@string/nama_lengkap"
                 android:inputType="textCapWords"
                 android:maxLines="1"
                 android:paddingStart="17dp"
@@ -85,7 +86,7 @@
                 android:paddingEnd="0dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
@@ -93,9 +94,9 @@
             android:id="@+id/nip_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="12.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_input">
 
             <!-- INPUT -->
@@ -114,7 +115,7 @@
                 android:paddingEnd="0dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
@@ -122,9 +123,9 @@
             android:id="@+id/golongan_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="12.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_input"
             android:visibility="gone">
 
@@ -144,9 +145,9 @@
             android:id="@+id/jabatan_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="18.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_input"
             android:visibility="gone">
 
@@ -166,7 +167,7 @@
                 android:paddingEnd="0dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
@@ -174,9 +175,9 @@
             android:id="@+id/kantor_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="12.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_input"
             android:visibility="gone">
 
@@ -196,8 +197,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="53dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginLeft="47dp"
+            android:layout_marginRight="47dp"
             android:layout_marginTop="18.7dp"
             android:layout_marginBottom="18.7dp"
             android:background="@drawable/rounded_button"
@@ -205,22 +206,22 @@
             android:gravity="center"
             android:text="@string/next"
             android:textColor="#ffffff"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btn_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="18.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/poppins_light"
             android:gravity="center"
             android:text="@string/back"
             android:textColor="#ffffff"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <Button
@@ -228,15 +229,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="53dp"
+            android:layout_marginLeft="47dp"
             android:layout_marginTop="18.7dp"
-            android:layout_marginRight="53dp"
+            android:layout_marginRight="47dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/poppins_light"
             android:gravity="center"
             android:text="@string/masuk"
             android:textColor="#ffffff"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -256,7 +257,7 @@
             android:fontFamily="@font/poppins_light"
             android:gravity="center_horizontal"
             android:text="@string/surabaya"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -266,7 +267,7 @@
             android:fontFamily="@font/poppins_light"
             android:gravity="center_horizontal"
             android:text="@string/kotabaru"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone"/>
 

@@ -77,7 +77,7 @@
             android:textSize="12sp"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="5dp"
-            android:hint="@string/hint_nama"
+            android:hint="@string/hint_perusahaan"
             android:autofillHints="name"
             android:inputType="textPersonName"
             android:scrollbars="vertical"/>

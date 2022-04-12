@@ -79,23 +79,6 @@ class TabFragment(private val title: String) : Fragment() {
 
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
-    private val timeID = "EEEE, dd-MMMM-yyyy"
-    private val sdf = SimpleDateFormat(timeID, Locale.getDefault())
-    private val tanggalEng = sdf.format(cal.time).toString()
-    private val tanggalID = dayConverter(monthConverter(tanggalEng))
-    private val tz = TimeZone.getDefault()
-    private val now = Date()
-    private val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
-        in 6.9..7.8 -> {"WIB"}
-        in 7.9..8.8 -> {"WITA"}
-        in 8.9..9.8 -> {"WIT"}
-        in -13.0..-0.1 -> {
-            "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-        }
-        else -> {
-            "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
-        }
-    }
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     private val currentyear = yearFormat.format(cal.time).toString()
 
@@ -146,6 +129,23 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            val timeID = "EEEE, dd-MMMM-yyyy"
+                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalID = dayConverter(monthConverter(tanggalEng))
+                            val tz = TimeZone.getDefault()
+                            val now = Date()
+                            val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+                                in 6.9..7.8 -> {"WIB"}
+                                in 7.9..8.8 -> {"WITA"}
+                                in 8.9..9.8 -> {"WIT"}
+                                in -13.0..-0.1 -> {
+                                    "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                                }
+                                else -> {
+                                    "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                                }
+                            }
 
                             val mcurrentTime = Calendar.getInstance()
                             val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
@@ -460,7 +460,7 @@ class TabFragment(private val title: String) : Fragment() {
                                 setupSounding(list,userDao)
                             }
                         }
-                    }, 10)
+                    }, 50)
 
                     rawDataTab.setOnClickListener {
                         rawDataTab.background = ResourcesCompat.getDrawable(resources, R.drawable.switch_on,null)
@@ -620,8 +620,11 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            val timeID = "EEEE, dd-MMMM-yyyy"
+                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalID = dayConverter(monthConverter(tanggalEng))
                             tanggalBa.setText(tanggalID)
-                            tanggalBaSampling.setText(tanggalID)
                         }
                         DatePickerDialog(
                             requireContext(),
@@ -638,6 +641,10 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            val timeID = "EEEE, dd-MMMM-yyyy"
+                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalID = dayConverter(monthConverter(tanggalEng))
                             tanggalBaSampling.setText(tanggalID)
                         }
                         DatePickerDialog(
@@ -655,6 +662,24 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.YEAR, year)
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            val timeID = "EEEE, dd-MMMM-yyyy"
+                            val sdf = SimpleDateFormat(timeID, Locale.getDefault())
+                            val tanggalEng = sdf.format(cal.time).toString()
+                            val tanggalID = dayConverter(monthConverter(tanggalEng))
+                            val tz = TimeZone.getDefault()
+                            val now = Date()
+                            val timeZone: String = when ((tz.getOffset(now.time) / 3600000.0)) {
+                                in 6.9..7.8 -> {"WIB"}
+                                in 7.9..8.8 -> {"WITA"}
+                                in 8.9..9.8 -> {"WIT"}
+                                in -13.0..-0.1 -> {
+                                    "GMT" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                                }
+                                else -> {
+                                    "GMT+" + (tz.getOffset(now.time) / 3600000.0).toString().replace(".0","")
+                                }
+                            }
+                            tanggalBaSampling.setText(tanggalID)
 
                             val mcurrentTime = Calendar.getInstance()
                             val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
@@ -662,7 +687,8 @@ class TabFragment(private val title: String) : Fragment() {
                             val mTimePicker = TimePickerDialog(
                                 requireContext(),
                                 R.style.TimePickerTheme,
-                                { _, selectedHour, selectedMinute -> waktuBarcon.setText(String.format(getString(R.string.format_waktu, tanggalID, selectedHour, selectedMinute, timeZone))) },
+                                { _, selectedHour, selectedMinute ->
+                                    waktuBarcon.setText(String.format(getString(R.string.format_waktu, tanggalID, selectedHour, selectedMinute, timeZone))) },
                                 hour,
                                 minute,
                                 true
@@ -743,6 +769,9 @@ class TabFragment(private val title: String) : Fragment() {
                             }
                             form3dValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Nomor Form 3D Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            form3dValue.length < 23 -> {
+                                Toast.makeText(requireContext(), "Digit Form 3D Masih Kurang", Toast.LENGTH_SHORT).show()
                             }
                             emptyCounter > 0 -> {
                                 Toast.makeText(requireContext(), "$emptyCounter Nilai Sounding Masih Empty", Toast.LENGTH_SHORT).show()
@@ -1525,11 +1554,11 @@ class TabFragment(private val title: String) : Fragment() {
     private fun calculatorCheck(): Boolean {
         binding1.apply {
             val checkResult: Boolean = try {
-                tinggiCairan.text.toString().toDouble() > 0.0 &&
+                tinggiCairan.text.toString().toDouble() >= 0.0 &&
                         tinggiMeja.text.toString().toDouble() >= 0.0 &&
                         suhuCairan.text.toString().toDouble() >= 0.0 &&
                         suhuTetap.text.toString().toDouble() >= 0.0 &&
-                        muai.text.toString().toDouble() > 0.0 &&
+                        muai.text.toString().toDouble() >= 0.0 &&
                         densityCairan.text.toString().toDouble() > 0.0
             } catch (e: Exception) {
                 false
@@ -1764,11 +1793,11 @@ class TabFragment(private val title: String) : Fragment() {
     private fun calculatorCheckUpdate(binding: DialogUpdateSoundingBinding): Boolean {
         binding.apply {
             val checkResult: Boolean = try {
-                tinggiCairan.text.toString().toDouble() > 0.0 &&
-                        tinggiMeja.text.toString().toDouble() > 0.0 &&
-                        suhuCairan.text.toString().toDouble() > 0.0 &&
-                        suhuTetap.text.toString().toDouble() > 0.0 &&
-                        faktorMuai.text.toString().toDouble() > 0.0 &&
+                tinggiCairan.text.toString().toDouble() >= 0.0 &&
+                        tinggiMeja.text.toString().toDouble() >= 0.0 &&
+                        suhuCairan.text.toString().toDouble() >= 0.0 &&
+                        suhuTetap.text.toString().toDouble() >= 0.0 &&
+                        faktorMuai.text.toString().toDouble() >= 0.0 &&
                         densityCairan.text.toString().toDouble() > 0.0
             } catch (e: Exception) {
                 false
@@ -3428,11 +3457,12 @@ class TabFragment(private val title: String) : Fragment() {
                                     val writer = PdfWriter(FileOutputStream(outPath))
                                     val pdfDoc = PdfDocument(writer)
                                     val doc = Document(pdfDoc, PageSize.A4)
-                                    doc.setMargins(0f, 0f, 20f, 20f)
+                                    doc.setMargins(0f, 0f, 20f, 40f)
                                     page1FinalReport(doc, it)
                                     if (it.hasil.size > 1) {
                                         pageExtraFinalReport(doc, it)
                                     }
+                                    pageBaSampling(doc, it)
                                     doc.close()
 
                                     val file = File(outPath)
@@ -3760,6 +3790,170 @@ class TabFragment(private val title: String) : Fragment() {
             table.addCell(cellLeft).addCell(cellRight)
             doc.add(table)
         }
+    }
+    private fun pageBaSampling(doc: Document, it: ReportEntity) {
+        doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
+        val hari = it.tanggal_ba_sampling.subSequence(0, it.tanggal_ba_sampling.indexOf(","))
+        val angkaHari = it.tanggal_ba_sampling.subSequence(it.tanggal_ba_sampling.indexOf(",")+2, it.tanggal_ba_sampling.indexOf("-")).toString()
+        val bulan = it.tanggal_ba_sampling.subSequence(it.tanggal_ba_sampling.indexOf("-")+1, it.tanggal_ba_sampling.length-5).toString()
+        val angkaTahun = it.tanggal_ba_sampling.subSequence(it.tanggal_ba_sampling.length-4, it.tanggal_ba_sampling.length).toString()
+        val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
+        val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
+        val title = Text("BERITA ACARA PENGAMBILAN CONTOH\n").setFont(fontArial).setFontSize(10f).setBold()
+        val subTitle = Text("NOMOR: ${it.nomor_ba_sampling.uppercase()}\n\n").setFont(fontArial).setFontSize(10f)
+        val titlePara = Paragraph().add(title).add(subTitle).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
+        val cellTop = Cell(1,2).add(titlePara).setBorder(Border.NO_BORDER)
+
+        val para1 = Paragraph().add(Text("Pada hari ini $hari, tanggal ${twoNumToWords(angkaHari)} bulan $bulan tahun ${fourNumToWords(angkaTahun)}, kami yang bertanda tangan dibawah ini:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para1)
+        writeDataListwithSemicolomn(listOf("a.", "b."), listOf("Lokasi","Nama Sarana Pengangkut"), listOf(it.lokasi_sounding[0], it.nama_sarkut), cellTop)
+
+        val para2 = Paragraph().add(Text("2. Eksportir:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para2)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("NPWP", "Nama", "Alamat"), listOf(it.npwp_perusahaan_sounding[0], it.perusahaan_sounding[0], it.alamat_perusahaan_sounding[0]), cellTop)
+
+        val para3 = Paragraph().add(Text("3. Data Umum:\n").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para3)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Tangki Nomor", "Suhu Tetap Tangki", "Tinggi Meja Ukur"),
+            listOf(
+                it.no_tangki[0],
+                "${zeroRemover(it.suhu_kalibrasi_tangki[0].toBigDecimal().toPlainString()).replace(".",",")} °C",
+                "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
+            cellTop)
+
+        val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
+        val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(":\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val para4a = Paragraph().add(Text("a. ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(" Awal:\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4).add(para4a)
+        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+            listOf(
+                it.waktu[0].subSequence(it.waktu[0].indexOf(",") + 2, it.waktu[0].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[0].subSequence(it.waktu[0].indexOf(":")-3, it.waktu[0].length)}",
+                "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+            cellTop)
+
+        val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text(" Akhir:\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4b)
+        writeDataList2withSemicolomn(listOf("1)", "2)", "3)", "4)", "5)", "6)"), listOf("Waktu dan Pukul", "Suhu", "Tinggi Cairan", "Density Cairan", "Volume Tinggi", "Volume Tangki"),
+            listOf(
+                it.waktu[1].subSequence(it.waktu[1].indexOf(",") + 2, it.waktu[1].indexOf(":")-3).toString().replace("-"," ") + " Pukul${it.waktu[1].subSequence(it.waktu[1].indexOf(":")-3, it.waktu[1].length)}",
+                "${zeroRemover(it.suhu_cairan[1].toBigDecimal().toPlainString()).replace(".", ",")} °C",
+                "${zeroRemover((it.tinggi_cairan[1]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
+                "${zeroRemover(it.density_cairan[1].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
+                "${zeroRemover(it.volume_app[1].toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${zeroRemover(it.hasil_sounding[1].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+            cellTop)
+
+        val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
+            .add(soundingItalic)
+            .add(Text("         :    ${zeroRemover(it.hasil[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
+        cellTop.add(para4c)
+
+        val para5 = Paragraph().add(Text("5. Keterangan:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        cellTop.add(para5)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan, ""), cellTop)
+        cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
+        writeDataList2withSemicolomn(listOf("1)", "2)"), listOf("Waktu dan Pukul                      ", "Jumlah Contoh Barang"),
+            listOf(
+                (it.waktu_aju.subSequence(it.waktu_aju.indexOf(",")+2, it.waktu_aju.indexOf(":")-3).toString()+" Pukul${it.waktu_aju.subSequence(it.waktu_aju.indexOf(":")-3, it.waktu_aju.length)}").replace("-"," "),
+                it.jumlah_contoh),
+            cellTop)
+
+        val paraMengetahui = Paragraph().add(Text("Mengetahui:").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f)
+        cellTop.add(paraMengetahui)
+
+        val paraLeft = Paragraph()
+            .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("${it.tanggal_ba_sounding.replace("-"," ").subSequence(it.tanggal_ba_sounding.indexOf(",")+2, it.tanggal_ba_sounding.length)}\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val cellLeft = Cell().add(paraLeft).setBorder(Border.NO_BORDER)
+        writeReportwithSemicolomn(listOf("Nama","Jabatan"), listOf(it.pengguna_jasa_sounding[0], it.jabatan_pengguna_jasa[0]), cellLeft)
+
+        val paraRight = Paragraph()
+            .add(Text("\n\n\n\n\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("Tanda tangan Pelaksana Pemeriksa").setFont(fontArial).setFontSize(10f))
+            .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
+        val cellRight = Cell().add(paraRight).setBorder(Border.NO_BORDER)
+        val nipSpace = it.nip_pegawai[0].subSequence(0,8).toString() +
+                " " + it.nip_pegawai[0].subSequence(8,14).toString() +
+                " " + it.nip_pegawai[0].subSequence(14,15).toString() +
+                " " + it.nip_pegawai[0].subSequence(15,it.nip_pegawai[0].length).toString()
+        writeReportwithSemicolomn(listOf("Nama","NIP"), listOf(it.pegawai_sounding[0], nipSpace), cellRight)
+
+        val table = Table(UnitValue.createPercentArray(2)).setMarginTop(30f).setMarginRight(40f).useAllAvailableWidth().addCell(cellTop)
+        table.addCell(cellLeft).addCell(cellRight)
+        doc.add(table)
+    }
+    private fun numToWords(tgl: String): String {
+        return when (tgl) {
+            "1" -> {"satu"}
+            "2" -> {"dua"}
+            "3" -> {"tiga"}
+            "4" -> {"empat"}
+            "5" -> {"lima"}
+            "6" -> {"enam"}
+            "7" -> {"tujuh"}
+            "8" -> {"delapan"}
+            else -> {"sembilan"}
+        }
+    }
+    private fun twoNumToWords(tgl: String): String {
+        var words = ""
+        if (tgl.length == 2) {
+            words +=when {
+                tgl[0].toString() == "0" -> {
+                    numToWords(tgl[1].toString())
+                }
+                tgl == "10" -> {
+                    "sepuluh"
+                }
+                tgl == "11" -> {
+                    "sebelas"
+                }
+                tgl[0].toString() == "1" -> {
+                    numToWords(tgl[1].toString()) + " belas"
+                }
+                tgl[1].toString() == "0" -> {
+                    numToWords(tgl[0].toString()) + " puluh"
+                }
+                else -> {
+                    numToWords(tgl[0].toString()) + " puluh " + numToWords(tgl[1].toString())
+                }
+            }
+        }
+        return words
+    }
+    private fun fourNumToWords(tgl: String): String {
+        var words = ""
+        if (tgl.length == 4) {
+            words += when {
+                tgl[1].toString() == "0" -> {
+                    numToWords(tgl[0].toString()) + " ribu " + twoNumToWords(tgl.subSequence(2,4).toString())
+                }
+                tgl[1].toString() == "1" -> {
+                    numToWords(tgl[0].toString()) + " ribu " + "seratus " + twoNumToWords(tgl.subSequence(2,4).toString())
+                }
+                else -> {
+                    numToWords(tgl[0].toString()) + " ribu " + numToWords(tgl[1].toString()) + " ratus " + twoNumToWords(tgl.subSequence(2,4).toString())
+                }
+            }
+        }
+        return words
     }
     private fun writeReportwithSemicolomn(listJudul: List<String>, listNilai: List<String>, cell: Cell) {
         val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
