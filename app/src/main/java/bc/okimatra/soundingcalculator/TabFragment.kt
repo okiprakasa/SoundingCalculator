@@ -94,6 +94,7 @@ class TabFragment(private val title: String) : Fragment() {
     private var counterSounding = 1
     private var fabOverSounding = true
     private var mapInitializer = true
+    private var zCounter = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         return when {
@@ -577,13 +578,22 @@ class TabFragment(private val title: String) : Fragment() {
                             namaSarkut.text?.clear()
                             waktuBarcon.text?.clear()
                             tanggalBa.text?.clear()
+                            counterSounding = 1
+                            petugas.setSelection(0)
+                            saksi.setSelection(0)
+                            awal1.setSelection(0)
+                            akhir1.setSelection(0)
                             lifecycleScope.launch {
-                                userDao.fetchAllUser().collect { itUser ->
-                                    if (itUser.isNotEmpty()) {
-                                        noBa.setText(String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear)))
-                                        noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear))
-                                        lokasiBa.setText(itUser[0].lokasi_ba_pegawai)
-                                        lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser[0].lokasi_ba_pegawai)
+                                userDao.fetchAllUser().collect { itUser2 ->
+                                    if (itUser2.isNotEmpty()) {
+                                        noBa.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)))
+                                        noBa.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sounding_pegawai, currentyear)).replace("X","001")
+                                        noBaSampling.setText(String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)))
+                                        noBaSampling.hint = String.format(getString(R.string.number_0,itUser2[0].format_ba_sampling_pegawai, currentyear)).replace("X","001")
+                                        lokasiBa.setText(itUser2[0].lokasi_ba_pegawai)
+                                        lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser2[0].lokasi_ba_pegawai)
+                                        form3d.setText(String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear)))
+                                        form3d.hint = String.format(getString(R.string.number_0,itUser2[0].format_3d_pegawai, currentyear))
                                     }
                                 }
                             }
@@ -620,7 +630,15 @@ class TabFragment(private val title: String) : Fragment() {
                                     spAkhirDbFinalMap.remove(it)
                                 }
                             }
-                            counterSounding = 1
+                            spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                            spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                            ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                            ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                            ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                            ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                            ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                            ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                            spinnerListener(binding2, addOrClose1, userDao)
                             dialogInterface.dismiss()
                         }
                         builder.setNegativeButton("No") { dialogInterface, _ ->
@@ -828,12 +846,12 @@ class TabFragment(private val title: String) : Fragment() {
                                 val hasilList = MutableList((listSounding.size)/2) {""}
                                 var kantorPegawai = ""
                                 var kanwilPegawai = ""
-                                var z = 0
+                                zCounter = 0
                                 ivHasilMap.keys.forEach {
-                                    hasilList[z] = ivHasilMap[it].toString()
-                                    z++
+                                    hasilList[zCounter] = ivHasilMap[it].toString()
+                                    zCounter++
                                 }
-                                z = 0
+                                zCounter = 0
                                 counterSounding = 1
                                 for (i in listSounding.indices) {
                                     lifecycleScope.launch {
@@ -976,6 +994,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 tanggalBa.text?.clear()
                                                                 petugas.setSelection(0)
                                                                 saksi.setSelection(0)
+                                                                awal1.setSelection(0)
+                                                                akhir1.setSelection(0)
                                                                 lifecycleScope.launch {
                                                                     userDao.fetchAllUser().collect { itUser2 ->
                                                                         if (itUser2.isNotEmpty()) {
@@ -1023,6 +1043,15 @@ class TabFragment(private val title: String) : Fragment() {
                                                                         spAkhirDbFinalMap.remove(it)
                                                                     }
                                                                 }
+                                                                spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                                                                spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                                                                ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                                                                ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                                                                ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                                                                ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                                                                ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                                                                ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                                                                spinnerListener(binding2, addOrClose1, userDao)
                                                             }
                                                         }
                                                     }
@@ -1101,6 +1130,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                         tanggalBa.text?.clear()
                                                         petugas.setSelection(0)
                                                         saksi.setSelection(0)
+                                                        awal1.setSelection(0)
+                                                        akhir1.setSelection(0)
                                                         lifecycleScope.launch {
                                                             userDao.fetchAllUser().collect { itUser2 ->
                                                                 if (itUser2.isNotEmpty()) {
@@ -1148,6 +1179,15 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 spAkhirDbFinalMap.remove(it)
                                                             }
                                                         }
+                                                        spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                                                        spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                                                        ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                                                        ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                                                        ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                                                        ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                                                        ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                                                        ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                                                        spinnerListener(binding2, addOrClose1, userDao)
                                                     }
                                                 }
                                             }
@@ -1228,6 +1268,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                         tanggalBa.text?.clear()
                                                         petugas.setSelection(0)
                                                         saksi.setSelection(0)
+                                                        awal1.setSelection(0)
+                                                        akhir1.setSelection(0)
                                                         lifecycleScope.launch {
                                                             userDao.fetchAllUser().collect { itUser2 ->
                                                                 if (itUser2.isNotEmpty()) {
@@ -1275,6 +1317,15 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 spAkhirDbFinalMap.remove(it)
                                                             }
                                                         }
+                                                        spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                                                        spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                                                        ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                                                        ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                                                        ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                                                        ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                                                        ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                                                        ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                                                        spinnerListener(binding2, addOrClose1, userDao)
                                                     }
                                                 }
                                             }
@@ -1349,6 +1400,8 @@ class TabFragment(private val title: String) : Fragment() {
                                                 tanggalBa.text?.clear()
                                                 petugas.setSelection(0)
                                                 saksi.setSelection(0)
+                                                awal1.setSelection(0)
+                                                akhir1.setSelection(0)
                                                 lifecycleScope.launch {
                                                     userDao.fetchAllUser().collect { itUser2 ->
                                                         if (itUser2.isNotEmpty()) {
@@ -1396,6 +1449,15 @@ class TabFragment(private val title: String) : Fragment() {
                                                         spAkhirDbFinalMap.remove(it)
                                                     }
                                                 }
+                                                spAwalDbFinalMap = mutableMapOf(awal1 to 0.0)
+                                                spAkhirDbFinalMap = mutableMapOf(akhir1 to 0.0)
+                                                ivHasilMap = mutableMapOf(addOrClose1 to 0.0)
+                                                ivCvMap = mutableMapOf(addOrClose1 to soundingCardView1)
+                                                ivTvMap = mutableMapOf(addOrClose1 to titleSounding1)
+                                                ivTvHasilMap = mutableMapOf(addOrClose1 to hasilSounding1)
+                                                ivSpAwalMap = mutableMapOf(addOrClose1 to awal1)
+                                                ivSpAkhirMap = mutableMapOf(addOrClose1 to akhir1)
+                                                spinnerListener(binding2, addOrClose1, userDao)
                                             }
                                         }
                                     }
@@ -1892,7 +1954,10 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     } else {
                         spAwalDbFinalMap[spAwal] = 0.0
-                        ivHasilMap[iv] = roundDigits(spAwalDbFinalMap[spAwal]!! - spAkhirDbFinalMap[spAkhir]!!)
+                        Log.d("kasus", spAkhir.toString())
+                        ivHasilMap[iv] = roundDigits(
+                            spAwalDbFinalMap[spAwal]!! -
+                                    spAkhirDbFinalMap[spAkhir]!!)
                         tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${ivHasilMap[iv]}").replace(".",",")))
                         soundingTotal = 0.0
                         ivHasilMap.keys.forEach {it2 ->
