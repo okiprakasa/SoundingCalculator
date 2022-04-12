@@ -4204,7 +4204,7 @@ class TabFragment(private val title: String) : Fragment() {
         val angkaTahun = it.tanggal_ba_sampling.subSequence(it.tanggal_ba_sampling.length-4, it.tanggal_ba_sampling.length).toString()
         val baseArial = FontProgramFactory.createFont("res/font/arial.ttf")
         val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
-        val title = Text("\n\nBERITA ACARA PENGAMBILAN CONTOH\n").setFont(fontArial).setFontSize(11f).setBold()
+        val title = Text("\n\nBERITA ACARA PENGAMBILAN CONTOH BARANG\n").setFont(fontArial).setFontSize(11f).setBold()
         val subTitle = Text("NOMOR: ${it.nomor_ba_sampling.uppercase()}\n\n\n").setFont(fontArial).setFontSize(10f)
         val titlePara = Paragraph().add(title).add(subTitle).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
         val cellTop = Cell(1,2).add(titlePara).setBorder(Border.NO_BORDER)
