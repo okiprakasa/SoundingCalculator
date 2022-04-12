@@ -74,7 +74,7 @@
     <string name="pegawai">Pegawai</string>
     <string name="pengguna_jasa">Pengguna Jasa</string>
     <string name="jabatan">Jabatan</string>
-    <string name="jabatan_login">Jabatan (Cth: PBC Muda/Ahli Muda</string>
+    <string name="jabatan_login">Jabatan (Cth: PBC Muda)</string>
     <string name="hint_jabatan">Cth: Direktur Utama</string>
     <string name="hint_jabatan_pegawai">Cth: PBC Muda/Ahli Muda</string>
     <string name="hint_pengguna_jasa">Cth: Bagus Suhardja</string>
