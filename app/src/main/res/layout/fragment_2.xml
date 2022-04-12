@@ -869,7 +869,8 @@
             android:text="@string/no_raw_record"
             android:textSize="16sp"
             android:visibility="gone"
-            tools:visibility="gone"/>
+            tools:visibility="gone"
+            tools:ignore="TooManyViews" />
 
         <TextView
             android:id="@+id/tvNoFinalDataAvailable"
