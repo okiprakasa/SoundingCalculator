@@ -1034,9 +1034,9 @@ class TabFragment(private val title: String) : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-                    userDao.fetchAllUser().collect {
+                    userDao.fetchAllCompany().collect {
                         val list = ArrayList(it)
-                        setupUser(list,userDao)
+                        setupCompany(list,userDao)
                     }
                 }
 
@@ -1151,7 +1151,8 @@ class TabFragment(private val title: String) : Fragment() {
                                     btnAddCompany.visibility = View.GONE
                                     penggunajasaLayout.visibility = View.VISIBLE //Jabatan
                                     btnAddPenggunaJasa.visibility = View.VISIBLE
-                                    perusahaanLayout.visibility = View.VISIBLE //Perusahaan
+                                    judulPerusahaan.visibility = View.VISIBLE //Perusahaan
+                                    perusahaan.visibility = View.VISIBLE
                                     nama.hint = getText(R.string.hint_pengguna_jasa)
                                     svCompanyList.visibility = View.GONE
                                     lifecycleScope.launch {
@@ -1184,7 +1185,8 @@ class TabFragment(private val title: String) : Fragment() {
                         penggunajasaLayout.visibility = View.GONE
                         btnAddPenggunaJasa.visibility = View.GONE
                         svServiceUserList.visibility = View.GONE
-                        perusahaanLayout.visibility = View.GONE
+                        judulPerusahaan.visibility = View.GONE //Perusahaan
+                        perusahaan.visibility = View.GONE
                         nama.hint = getText(R.string.hint_perusahaan)
                         lifecycleScope.launch {
                             userDao.fetchAllCompany().collect {

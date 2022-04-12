@@ -117,7 +117,7 @@
                                 android:fontFamily="@font/nunito"
                                 android:gravity="center_horizontal"
                                 android:text="@string/data_umum"
-                                android:textSize="17sp" />
+                                android:textSize="16.5sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -332,7 +332,7 @@
                                 android:fontFamily="@font/nunito"
                                 android:gravity="center_horizontal"
                                 android:text="@string/data_dokumen"
-                                android:textSize="17sp" />
+                                android:textSize="16.5sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -483,7 +483,7 @@
                                     android:fontFamily="@font/nunito"
                                     android:gravity="center_horizontal"
                                     android:text="@string/data_sounding"
-                                    android:textSize="17sp" />
+                                    android:textSize="16.5sp" />
 
                                 <ImageView
                                     android:id="@+id/addOrClose1"
@@ -651,7 +651,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/no_raw_record"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:visibility="gone"
             tools:visibility="gone"/>
 
@@ -661,7 +661,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/no_final_record"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:visibility="gone"/>
 
     </LinearLayout>

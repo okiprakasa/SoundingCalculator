@@ -192,33 +192,27 @@
             tools:ignore="Autofill"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/perusahaan_layout"
+    <TextView
+        android:id="@+id/judul_perusahaan"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:text="@string/company"
+        android:fontFamily="@font/helvetica"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+    <Spinner
+        android:id="@+id/perusahaan"
+        android:backgroundTint="@color/appTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/judul_perusahaan"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/company"
-            android:fontFamily="@font/helvetica"
-            android:textSize="12sp" />
-
-        <Spinner
-            android:backgroundTint="@color/appTheme"
-            android:id="@+id/perusahaan"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="-13dp"/>
-    </LinearLayout>
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="-7dp"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btnAddCompany"
@@ -279,7 +273,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/no_record"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:visibility="gone"
         tools:visibility="gone"/>
 
