@@ -287,7 +287,8 @@ class LoginActivity : AppCompatActivity() {
                                         kantor_pegawai = it.kantor,
                                         kanwil_pegawai = it.kanwil,
                                         lokasi_ba_pegawai = it.lokasi_ba,
-                                        format_ba_pegawai = it.format_ba_sounding,
+                                        format_ba_sounding_pegawai = it.format_ba_sounding,
+                                        format_ba_sampling_pegawai = it.format_ba_sampling,
                                         format_3d_pegawai = it.format_3d
                                     ))
                                 }

@@ -44,11 +44,16 @@ data class ReportEntity(
     val produk: String = "",
     val bentuk: String = "",
     val nama_sarkut: String = "",
-    val nomor_ba: String = "",
-    val tanggal_ba: String = "",
+    val nomor_ba_sounding: String = "",
+    val tanggal_ba_sounding: String = "",
     val lokasi_ba: String = "",
     val jumlah_contoh: String = "",
     val waktu_aju: String = "",
+    val nomor_ba_sampling: String = "",
+    val tanggal_ba_sampling: String = "",
+    val no_form_3d: String = "",
+    val petugas_2: String = "",
+    val saksi_2: String = "",
     val kantor_pegawai_final: String = "",
     val kanwil_pegawai_final: String = ""
         )

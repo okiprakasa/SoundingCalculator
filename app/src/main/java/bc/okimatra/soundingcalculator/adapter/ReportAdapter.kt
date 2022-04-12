@@ -40,12 +40,12 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
             noSemuaTangki = noSemuaTangki.subSequence(0, noSemuaTangki.length-1).toString()
         }
 
-        if (item.nomor_ba.length < 30) {
-            holder.tvNoBa.text = item.nomor_ba
+        if (item.nomor_ba_sounding.length < 30) {
+            holder.tvNoBa.text = item.nomor_ba_sounding
         } else {
-            holder.tvNoBa.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba.subSequence(0, 18),item.nomor_ba.subSequence(item.nomor_ba.length-8, item.nomor_ba.length))
+            holder.tvNoBa.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba_sounding.subSequence(0, 18),item.nomor_ba_sounding.subSequence(item.nomor_ba_sounding.length-8, item.nomor_ba_sounding.length))
         }
-        holder.tvWaktu.text = item.tanggal_ba.replace("-"," ")
+        holder.tvWaktu.text = item.tanggal_ba_sounding.replace("-"," ")
         holder.tvHasil.text = item.hasil_perhitungan.replace(".",",")
         holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi, item.produk, item.bentuk))
         holder.tvPerusahaan.text = String.format(context.getString(R.string.deskripsi, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.perusahaan_sounding[0]))

@@ -412,11 +412,22 @@ class TabFragment(private val title: String) : Fragment() {
                     lifecycleScope.launch {
                         userDao.fetchAllUser().collect {
                             if (it.isNotEmpty()) {
-                                noBa.setText(String.format(getString(R.string.number_0,it[0].format_ba_pegawai, currentyear)))
-                                noBa.hint = String.format(getString(R.string.number_0,it[0].format_ba_pegawai, currentyear))
+                                noBa.setText(String.format(getString(R.string.number_0,it[0].format_ba_sounding_pegawai, currentyear)))
+                                noBa.hint = String.format(getString(R.string.number_0,it[0].format_ba_sounding_pegawai, currentyear)).replace("X","001")
+                                noBaSampling.setText(String.format(getString(R.string.number_0,it[0].format_ba_sampling_pegawai, currentyear)))
+                                noBaSampling.hint = String.format(getString(R.string.number_0,it[0].format_ba_sampling_pegawai, currentyear)).replace("X","001")
                                 lokasiBa.setText(it[0].lokasi_ba_pegawai)
                                 lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), it[0].lokasi_ba_pegawai)
+                                form3d.setText(String.format(getString(R.string.number_0,it[0].format_3d_pegawai, currentyear)))
+                                form3d.hint = String.format(getString(R.string.number_0,it[0].format_3d_pegawai, currentyear))
+                                populateDropdownUserwithEmpty(ArrayList(it), petugas)
                             }
+                        }
+                    }
+
+                    lifecycleScope.launch {
+                        userDao.fetchAllServiceUser().collect {
+                            populateDropdownServiceUserwithEmpty(ArrayList(it), saksi)
                         }
                     }
 
@@ -553,8 +564,8 @@ class TabFragment(private val title: String) : Fragment() {
                             lifecycleScope.launch {
                                 userDao.fetchAllUser().collect { itUser ->
                                     if (itUser.isNotEmpty()) {
-                                        noBa.setText(String.format(getString(R.string.number_0,itUser[0].format_ba_pegawai, currentyear)))
-                                        noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_pegawai, currentyear))
+                                        noBa.setText(String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear)))
+                                        noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear))
                                         lokasiBa.setText(itUser[0].lokasi_ba_pegawai)
                                         lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser[0].lokasi_ba_pegawai)
                                     }
@@ -610,6 +621,24 @@ class TabFragment(private val title: String) : Fragment() {
                             cal.set(Calendar.MONTH, month)
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                             tanggalBa.setText(tanggalID)
+                            tanggalBaSampling.setText(tanggalID)
+                        }
+                        DatePickerDialog(
+                            requireContext(),
+                            R.style.TimePickerTheme,
+                            dateSetListener,
+                            cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH),
+                            cal.get(Calendar.DAY_OF_MONTH)
+                        ).show()
+                    }
+                    tanggalBaSampling.setOnClickListener {
+                        dateSetListener = DatePickerDialog.OnDateSetListener {
+                                _, year, month, dayOfMonth ->
+                            cal.set(Calendar.YEAR, year)
+                            cal.set(Calendar.MONTH, month)
+                            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            tanggalBaSampling.setText(tanggalID)
                         }
                         DatePickerDialog(
                             requireContext(),
@@ -650,14 +679,19 @@ class TabFragment(private val title: String) : Fragment() {
                         ).show()
                     }
                     btnSave.setOnClickListener {
-                        val produkValue = endSpaceRemover(produk.text.toString())
+                        val produkValue = endSpaceRemover(produk.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                         val bentukValue = endSpaceRemover(bentuk.text.toString())
-                        val namaSarkutValue = endSpaceRemover(namaSarkut.text.toString())
+                        val namaSarkutValue = endSpaceRemover(namaSarkut.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                         val jumlahContohValue = endSpaceRemover(jumlahBarcon.text.toString())
                         val waktuAjuValue = waktuBarcon.text.toString()
-                        val noBaValue = endSpaceRemover(noBa.text.toString())
-                        val tanggalBaValue = tanggalBa.text.toString()
-                        val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString())
+                        val noBaSoundingValue = endSpaceRemover(noBa.text.toString())
+                        val tanggalBaSoundingValue = tanggalBa.text.toString()
+                        val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                        val noBaSamplingValue = endSpaceRemover(noBaSampling.text.toString())
+                        val tanggalBaSamplingValue = tanggalBaSampling.text.toString()
+                        val form3dValue = endSpaceRemover(form3d.text.toString())
+                        val petugas2Value = endSpaceRemover(petugas.selectedItem.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                        val saksi2Value = endSpaceRemover(saksi.selectedItem.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                         val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir: ","").replace(".",",")
                         val listSounding = ArrayList<String>()
                         ivSpAwalMap.keys.forEach {
@@ -686,17 +720,29 @@ class TabFragment(private val title: String) : Fragment() {
                             waktuAjuValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Waktu Aju Contoh Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
-                            noBaValue.isEmpty() -> {
-                                Toast.makeText(requireContext(), "Nomor BA Masih Kosong", Toast.LENGTH_SHORT).show()
+                            noBaSoundingValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Nomor BAPFP Sounding Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
-                            noBaValue.contains("X") -> {
-                                Toast.makeText(requireContext(), "Nomor BA Masih X", Toast.LENGTH_SHORT).show()
+                            noBaSoundingValue.contains("X") -> {
+                                Toast.makeText(requireContext(), "Nomor BAPFP Sounding Masih X", Toast.LENGTH_SHORT).show()
                             }
-                            tanggalBaValue.isEmpty() -> {
-                                Toast.makeText(requireContext(), "Tanggal BA Masih Kosong", Toast.LENGTH_SHORT).show()
+                            tanggalBaSoundingValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Tanggal BAPFP Sounding Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
                             lokasiBaValue.isEmpty() -> {
-                                Toast.makeText(requireContext(), "Lokasi BA Masih Kosong", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Lokasi BAPFP Sounding Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            noBaSamplingValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Nomor BAPBC Sampling Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            noBaSamplingValue.contains("X") -> {
+                                Toast.makeText(requireContext(), "Nomor BAPBC Sampling Masih X", Toast.LENGTH_SHORT).show()
+                            }
+                            tanggalBaSamplingValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Tanggal BAPBC Sampling Masih Kosong", Toast.LENGTH_SHORT).show()
+                            }
+                            form3dValue.isEmpty() -> {
+                                Toast.makeText(requireContext(), "Nomor Form 3D Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
                             emptyCounter > 0 -> {
                                 Toast.makeText(requireContext(), "$emptyCounter Nilai Sounding Masih Empty", Toast.LENGTH_SHORT).show()
@@ -828,21 +874,26 @@ class TabFragment(private val title: String) : Fragment() {
                                             alamat_perusahaan_sounding = alamatPerusahaanSoundingList as ArrayList<String>,
                                             lokasi_sounding = lokasiSoundingList as ArrayList<String>,
                                             waktu = waktuList as ArrayList<String>,
-                                            produk = produkValue,
-                                            bentuk = bentukValue,
                                             waktu_date = Date().time,
                                             judulKalibrasi1 = judulKalibrasi1List as ArrayList<String>,
                                             judulKalibrasi2 = judulKalibrasi2List as ArrayList<String>,
                                             judulFraksi = judulFraksiList as ArrayList<String>,
                                             judulDataTabel = judulDataTabelList as ArrayList<String>,
+                                            hasil = hasilList as ArrayList<String>,
+                                            hasil_perhitungan = hasilPerhitunganValue,
+                                            produk = produkValue,
+                                            bentuk = bentukValue,
                                             nama_sarkut = namaSarkutValue,
-                                            tanggal_ba = tanggalBaValue,
+                                            nomor_ba_sounding = noBaSoundingValue,
+                                            tanggal_ba_sounding = tanggalBaSoundingValue,
                                             lokasi_ba = lokasiBaValue,
                                             jumlah_contoh = jumlahContohValue,
                                             waktu_aju = waktuAjuValue,
-                                            hasil = hasilList as ArrayList<String>,
-                                            hasil_perhitungan = hasilPerhitunganValue,
-                                            nomor_ba = noBaValue,
+                                            nomor_ba_sampling = noBaSamplingValue,
+                                            tanggal_ba_sampling = tanggalBaSamplingValue,
+                                            no_form_3d = form3dValue,
+                                            petugas_2 = petugas2Value,
+                                            saksi_2 = saksi2Value,
                                             kantor_pegawai_final = kantorPegawai,
                                             kanwil_pegawai_final = kanwilPegawai
                                         ))
@@ -863,8 +914,8 @@ class TabFragment(private val title: String) : Fragment() {
                                         lifecycleScope.launch {
                                             userDao.fetchAllUser().collect { itUser ->
                                                 if (itUser.isNotEmpty()) {
-                                                    noBa.setText(String.format(getString(R.string.number_0,itUser[0].format_ba_pegawai, currentyear)))
-                                                    noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_pegawai, currentyear))
+                                                    noBa.setText(String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear)))
+                                                    noBa.hint = String.format(getString(R.string.number_0,itUser[0].format_ba_sounding_pegawai, currentyear))
                                                     lokasiBa.setText(itUser[0].lokasi_ba_pegawai)
                                                     lokasiBa.hint = String.format(getString(R.string.hint_lokasi_ba), itUser[0].lokasi_ba_pegawai)
                                                 }
@@ -907,6 +958,22 @@ class TabFragment(private val title: String) : Fragment() {
                                 }, 200) //wait on loading
                             }
                         }
+                    }
+                    down.setOnClickListener {
+                        down.visibility = View.GONE
+                        judulPetugas.visibility = View.VISIBLE
+                        layoutPetugas.visibility = View.VISIBLE
+                        judulSaksi.visibility = View.VISIBLE
+                        layoutSaksi.visibility = View.VISIBLE
+                        up.visibility = View.VISIBLE
+                    }
+                    up.setOnClickListener {
+                        up.visibility = View.GONE
+                        judulPetugas.visibility = View.GONE
+                        layoutPetugas.visibility = View.GONE
+                        judulSaksi.visibility = View.GONE
+                        layoutSaksi.visibility = View.GONE
+                        down.visibility = View.VISIBLE
                     }
 
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
@@ -1931,7 +1998,8 @@ class TabFragment(private val title: String) : Fragment() {
                                 kantor_pegawai = it.kantor,
                                 kanwil_pegawai = it.kanwil,
                                 lokasi_ba_pegawai = it.lokasi_ba,
-                                format_ba_pegawai = it.format_ba_sounding,
+                                format_ba_sounding_pegawai = it.format_ba_sounding,
+                                format_ba_sampling_pegawai = it.format_ba_sampling,
                                 format_3d_pegawai = it.format_3d
                             ))
                             Toast.makeText(context, "Data Berhasil Disimpan", Toast.LENGTH_SHORT).show()
@@ -2038,7 +2106,8 @@ class TabFragment(private val title: String) : Fragment() {
                                     kantor_pegawai = it.kantor,
                                     kanwil_pegawai = it.kanwil,
                                     lokasi_ba_pegawai = it.lokasi_ba,
-                                    format_ba_pegawai = it.format_ba_sounding,
+                                    format_ba_sounding_pegawai = it.format_ba_sounding,
+                                    format_ba_sampling_pegawai = it.format_ba_sampling,
                                     format_3d_pegawai = it.format_3d
                                 ))
                                 Toast.makeText(context, "Data Berhasil Diupdate", Toast.LENGTH_SHORT)
@@ -3405,8 +3474,8 @@ class TabFragment(private val title: String) : Fragment() {
                 "${it.kantor_pegawai_final.replace("KPPBC", "KANTOR PENGAWASAN DAN PELAYANAN BEA DAN CUKAI").replace("TMP", "TIPE MADYA PABEAN")}\n\n")
             .setFont(fontArial).setFontSize(10f)
         val headerPara = Paragraph().add(header).setMultipliedLeading(1.2f).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(10f).setPaddingTop(10f)
-        val title = Text("BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
-                "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
+        val title = Text("BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba_sounding}   " +
+                "Tanggal: ${it.tanggal_ba_sounding.replace("-"," ").subSequence(it.tanggal_ba_sounding.indexOf(",") + 2, it.tanggal_ba_sounding.length)}\n\n")
             .setFont(fontArial).setFontSize(10f)
         val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER)
         val cellTop = Cell(1,2).add(headerPara).add(titlePara)
@@ -3484,7 +3553,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         val paraLeft = Paragraph()
             .add(Text("${it.lokasi_ba},\n").setFont(fontArial).setFontSize(10f))
-            .add(Text("${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",")+2, it.tanggal_ba.length)}\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("${it.tanggal_ba_sounding.replace("-"," ").subSequence(it.tanggal_ba_sounding.indexOf(",")+2, it.tanggal_ba_sounding.length)}\n").setFont(fontArial).setFontSize(10f))
             .add(Text("\n\n\n").setFont(fontArial).setFontSize(10f))
             .add(Text("Tanda tangan dan cap perusahaan").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
@@ -3513,8 +3582,8 @@ class TabFragment(private val title: String) : Fragment() {
         val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
         for (i in 0..maxIndex) {
             doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
-            val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba}   " +
-                    "Tanggal: ${it.tanggal_ba.replace("-"," ").subSequence(it.tanggal_ba.indexOf(",") + 2, it.tanggal_ba.length)}\n\n")
+            val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba_sounding}   " +
+                    "Tanggal: ${it.tanggal_ba_sounding.replace("-"," ").subSequence(it.tanggal_ba_sounding.indexOf(",") + 2, it.tanggal_ba_sounding.length)}\n\n")
                 .setFont(fontArial).setFontSize(10f)
             val titlePara = Paragraph().add(title).setMultipliedLeading(1.2f).setHorizontalAlignment(HorizontalAlignment.CENTER).setTextAlignment(TextAlignment.CENTER).setPaddingTop(10f)
             val cellTop = Cell(1,2).add(titlePara)
@@ -3836,6 +3905,23 @@ class TabFragment(private val title: String) : Fragment() {
             spinner.adapter = adapter
         }
     }
+    private fun populateDropdownUserwithEmpty(list:ArrayList<PegawaiEntity>, spinner: Spinner) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            items.add("Empty")
+            for (i in 0 until list.size) {
+                items.add(list[i].nama_pegawai)
+            }
+            val adapter = activity?.let { it ->
+                ArrayAdapter(
+                    it,
+                    R.layout.dropdown_layout,
+                    items
+                )
+            }
+            spinner.adapter = adapter
+        }
+    }
     private fun populateDropdownUserOffice(list:ArrayList<KantorEntity>, spinner: Spinner) {
         val items = arrayListOf<String>()
         if (list.isNotEmpty()) {
@@ -3879,6 +3965,21 @@ class TabFragment(private val title: String) : Fragment() {
                     R.layout.dropdown_layout,
                     items
                 )
+            spinner.adapter = adapter
+        }
+    }
+    private fun populateDropdownServiceUserwithEmpty(list:ArrayList<PenggunaJasaEntity>, spinner: Spinner) {
+        val items = arrayListOf<String>()
+        if (list.isNotEmpty()) {
+            items.add("Empty")
+            for (i in 0 until list.size) {
+                items.add(list[i].nama_pengguna_jasa)
+            }
+            val adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_layout,
+                items
+            )
             spinner.adapter = adapter
         }
     }

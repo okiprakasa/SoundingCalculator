@@ -123,44 +123,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:layout_marginTop="20dp"
-                                android:fontFamily="@font/helvetica"
-                                android:gravity="center_horizontal"
-                                android:text="@string/produk"
-                                android:textSize="13sp"/>
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="25dp"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginEnd="25dp"
-                                android:background="@drawable/rounded_input">
-
-                                <!-- INPUT -->
-                                <androidx.appcompat.widget.AppCompatEditText
-                                    android:id="@+id/produk"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
-                                    android:fontFamily="@font/poppins_light"
-                                    android:hint="@string/hint_produk"
-                                    android:inputType="textCapWords"
-                                    android:paddingStart="15dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingEnd="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:scrollbars="vertical"
-                                    android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="12sp"
-                                    tools:ignore="TooManyViews" />
-
-                            </RelativeLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="25dp"
                                 android:layout_marginTop="14dp"
                                 android:fontFamily="@font/helvetica"
                                 android:gravity="center_horizontal"
@@ -359,6 +321,7 @@
                                     android:layout_height="wrap_content"
                                     android:background="@android:color/transparent"
                                     android:fontFamily="@font/poppins_light"
+                                    android:hint="@string/hint_format_ba"
                                     android:inputType="textCapWords"
                                     android:paddingStart="15dp"
                                     android:paddingTop="10dp"
@@ -439,6 +402,257 @@
                                     android:textCursorDrawable="@drawable/cursor_color"
                                     android:textSize="12sp" />
                             </RelativeLayout>
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/data_sampling_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="10dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="5dp"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="30dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:fontFamily="@font/nunito"
+                                android:gravity="center_horizontal"
+                                android:text="@string/data_dokumen_sampling"
+                                android:textSize="16.5sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/helvetica"
+                                android:gravity="center_horizontal"
+                                android:text="@string/no_ba"
+                                android:textSize="13sp" />
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input">
+
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/no_ba_sampling"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/poppins_light"
+                                    android:hint="@string/hint_format_ba_sampling"
+                                    android:inputType="textCapWords"
+                                    android:paddingStart="15dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textCursorDrawable="@drawable/cursor_color"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="12dp"
+                                android:fontFamily="@font/helvetica"
+                                android:gravity="center_horizontal"
+                                android:text="@string/tanggal_ba"
+                                android:textSize="13sp" />
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input">
+
+
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/tanggal_ba_sampling"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:clickable="false"
+                                    android:cursorVisible="false"
+                                    android:focusable="false"
+                                    android:focusableInTouchMode="false"
+                                    android:fontFamily="@font/poppins_light"
+                                    android:hint="@string/hint_tanggal_ba"
+                                    android:paddingStart="15dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textCursorDrawable="@drawable/cursor_color"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/helvetica"
+                                android:gravity="center_horizontal"
+                                android:text="@string/produk"
+                                android:textSize="13sp"/>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input">
+
+                                <!-- INPUT -->
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/produk"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/poppins_light"
+                                    android:hint="@string/hint_produk"
+                                    android:inputType="textCapWords"
+                                    android:paddingStart="15dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:scrollbars="vertical"
+                                    android:textCursorDrawable="@drawable/cursor_color"
+                                    android:textSize="12sp"
+                                    tools:ignore="TooManyViews" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="12dp"
+                                android:fontFamily="@font/helvetica"
+                                android:gravity="center_horizontal"
+                                android:text="@string/form_3d"
+                                android:textSize="13sp" />
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input">
+
+
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/form_3d"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/poppins_light"
+                                    android:hint="@string/hint_no_dokumen"
+                                    android:paddingStart="15dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textCursorDrawable="@drawable/cursor_color"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/judul_petugas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/helvetica"
+                                android:text="@string/petugas"
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
+
+                            <RelativeLayout
+                                android:id="@+id/layout_petugas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input"
+                                android:visibility="gone">
+
+                                <Spinner
+                                    android:id="@+id/petugas"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/rounded_input"
+                                    android:spinnerMode="dropdown" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/judul_saksi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/helvetica"
+                                android:text="@string/saksi"
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
+
+                            <RelativeLayout
+                                android:id="@+id/layout_saksi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="25dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="25dp"
+                                android:background="@drawable/rounded_input"
+                                android:visibility="gone">
+
+                                <Spinner
+                                    android:id="@+id/saksi"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/rounded_input"
+                                    android:spinnerMode="dropdown"/>
+                            </RelativeLayout>
+
+                            <ImageView
+                                android:id="@+id/down"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/ic_down"
+                                android:layout_marginTop="10dp"
+                                android:contentDescription="@string/detail_arrow"/>
+
+                            <ImageView
+                                android:id="@+id/up"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/ic_up"
+                                android:layout_marginTop="10dp"
+                                android:contentDescription="@string/detail_arrow"
+                                android:visibility="gone"/>
 
                         </LinearLayout>
 
