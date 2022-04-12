@@ -145,7 +145,7 @@
                                     android:background="@android:color/transparent"
                                     android:fontFamily="@font/poppins_light"
                                     android:hint="@string/hint_produk"
-                                    android:inputType="textMultiLine|textCapWords"
+                                    android:inputType="textCapWords"
                                     android:paddingStart="15dp"
                                     android:paddingTop="10dp"
                                     android:paddingEnd="10dp"
@@ -227,7 +227,8 @@
                                     android:paddingEnd="10dp"
                                     android:paddingBottom="10dp"
                                     android:textCursorDrawable="@drawable/cursor_color"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"
+                                    android:scrollbars="vertical"/>
                             </RelativeLayout>
 
                             <TextView

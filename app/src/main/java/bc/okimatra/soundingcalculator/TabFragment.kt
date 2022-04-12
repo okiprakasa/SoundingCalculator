@@ -135,7 +135,6 @@ class TabFragment(private val title: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val userDao = (requireActivity().application as UserApp).db.userDao()
-
         when {
             title === "Calculator" -> {
                 var results: List<Double>
@@ -475,7 +474,7 @@ class TabFragment(private val title: String) : Fragment() {
                     finalTab.setOnClickListener {
                         lifecycleScope.launch {
                             userDao.countAllSounding().collect { itTotalSounding ->
-                                if (itTotalSounding > 0) {
+                                if (itTotalSounding > 1) {
                                     svSoundingList.visibility = View.GONE
                                     tvNoRawDataAvailable.visibility = View.GONE
                                     svFinalList.visibility = View.VISIBLE
@@ -488,9 +487,15 @@ class TabFragment(private val title: String) : Fragment() {
                                         btnAddSounding.visibility = View.GONE
                                         btnSave.visibility = View.GONE
                                         lifecycleScope.launch {
-                                            userDao.fetchAllReport().collect {
-                                                val list = ArrayList(it)
+                                            userDao.fetchAllReport().collect { it1 ->
+                                                val list = ArrayList(it1)
                                                 setupReport(list, userDao)
+                                                lifecycleScope.launch {
+                                                    userDao.fetchAllSounding().collect { it2 ->
+                                                        populateDropdownSoundingwithEmpty(ArrayList(it2), awal1, false)
+                                                        populateDropdownEmptyOut(akhir1)
+                                                    }
+                                                }
                                             }
                                         }
                                         fabFinalReport.visibility = View.VISIBLE
@@ -502,16 +507,16 @@ class TabFragment(private val title: String) : Fragment() {
                                         soundingContainer.visibility = View.VISIBLE
                                         btnAddSounding.visibility = View.VISIBLE
                                         btnSave.visibility = View.VISIBLE
-                                    }
-                                    lifecycleScope.launch {
-                                        userDao.fetchAllSounding().collect {
-                                            populateDropdownSoundingwithEmpty(ArrayList(it), awal1, false)
-                                            populateDropdownEmptyOut(akhir1)
+                                        lifecycleScope.launch {
+                                            userDao.fetchAllSounding().collect {
+                                                populateDropdownSoundingwithEmpty(ArrayList(it), awal1, false)
+                                                populateDropdownEmptyOut(akhir1)
+                                            }
                                         }
                                     }
                                     spinnerListener(binding2, addOrClose1, userDao)
                                 } else {
-                                    Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui Simpan Data\n Pada Tab Calculator", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(requireContext(), "Mohon Tambahkan Raw Data\n Terlebih Dahulu Melalui\nSimpan Data Pada\nTab Calculator", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -654,6 +659,17 @@ class TabFragment(private val title: String) : Fragment() {
                         val tanggalBaValue = tanggalBa.text.toString()
                         val lokasiBaValue = endSpaceRemover(lokasiBa.text.toString())
                         val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir: ","").replace(".",",")
+                        val listSounding = ArrayList<String>()
+                        ivSpAwalMap.keys.forEach {
+                            listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
+                            listSounding += arrayListOf(ivSpAkhirMap[it]!!.selectedItem.toString()) //ID from ivSpAwal = ivSpAkhir
+                        }
+                        var emptyCounter = 0
+                        for (i in listSounding.indices) {
+                            if (listSounding[i] == "Empty In; 0" || listSounding[i] == "Empty Out; 0") {
+                                emptyCounter++
+                            }
+                        }
                         when {
                             produkValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Produk/Jenis Barang Masih Kosong", Toast.LENGTH_SHORT).show()
@@ -673,7 +689,7 @@ class TabFragment(private val title: String) : Fragment() {
                             noBaValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Nomor BA Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
-                            noBaValue.contains("BAPFP-X") -> {
+                            noBaValue.contains("X") -> {
                                 Toast.makeText(requireContext(), "Nomor BA Masih X", Toast.LENGTH_SHORT).show()
                             }
                             tanggalBaValue.isEmpty() -> {
@@ -682,13 +698,10 @@ class TabFragment(private val title: String) : Fragment() {
                             lokasiBaValue.isEmpty() -> {
                                 Toast.makeText(requireContext(), "Lokasi BA Masih Kosong", Toast.LENGTH_SHORT).show()
                             }
+                            emptyCounter > 0 -> {
+                                Toast.makeText(requireContext(), "$emptyCounter Nilai Sounding Masih Empty", Toast.LENGTH_SHORT).show()
+                            }
                             else -> {
-                                val listSounding = ArrayList<String>()
-                                ivSpAwalMap.keys.forEach {
-                                    listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
-                                    listSounding += arrayListOf(ivSpAkhirMap[it]!!.selectedItem.toString()) //ID from ivSpAwal = ivSpAkhir
-                                }
-                                Log.d("okimatra6", listSounding.toString())
                                 val tinggiCairanList = MutableList(listSounding.size) {0.0}
                                 val suhuCairanList = MutableList(listSounding.size) {0.0}
                                 val suhuKalibrasiTangkiList = MutableList(listSounding.size) {0.0}
@@ -729,96 +742,61 @@ class TabFragment(private val title: String) : Fragment() {
                                 z = 0
                                 counterSounding = 1
                                 for (i in listSounding.indices) {
-                                    if (listSounding[i] != "Empty In; 0" && listSounding[i] != "Empty Out; 0") {
-                                        lifecycleScope.launch {
-                                            userDao.fetchSoundingByNoTangkiAndWaktu(
-                                                listSounding[i].subSequence(0, listSounding[i].indexOf(";")).toString(),
-                                                monthExtract(
-                                                    listSounding[i].subSequence(
-                                                        listSounding[i].indexOf(";") + 2,
-                                                        listSounding[i].length
-                                                    ).toString()
-                                                )
-                                            ).collect {
-                                                try {
-                                                    Log.d("okimatra1", tinggiCairanList.toString())
-                                                    tinggiCairanList[i] = it.tinggi_cairan
-                                                    Log.d("okimatra2", tinggiCairanList.toString())
-                                                    suhuCairanList[i] = it.suhu_cairan
-                                                    suhuKalibrasiTangkiList[i] =
-                                                        it.suhu_kalibrasi_tangki
-                                                    tinggiMejaList[i] = it.tinggi_meja
-                                                    faktorMuaiList[i] = it.faktor_muai
-                                                    tinggiCairanTerkoreksiList[i] =
-                                                        it.tinggi_cairan_terkoreksi
-                                                    volumeKalibrasi1List[i] = it.volume_kalibrasi1
-                                                    densityCairanList[i] = it.density_cairan
-                                                    volumeFraksiList[i] = it.volume_fraksi
-                                                    volumeKalibrasi2List[i] = it.volume_kalibrasi2
-                                                    volumeMidList[i] = it.volume_mid
-                                                    volumeAppList[i] = it.volume_app
-                                                    volumeObsList[i] = it.volume_obs
-                                                    volumeList[i] = it.volume
-                                                    hasilSoundingList[i] = it.hasil_sounding
-                                                    noTangkiList[i] = it.no_tangki
-                                                    pegawaiSoundingList[i] = it.pegawai_sounding
-                                                    nipPegawaiList[i] = it.nip_pegawai
-                                                    penggunaJasaSoundingList[i] =
-                                                        it.pengguna_jasa_sounding
-                                                    jabatanPenggunaJasaList[i] =
-                                                        it.jabatan_pengguna_jasa
-                                                    perusahaanSoundingList[i] =
-                                                        it.perusahaan_sounding
-                                                    npwpPerusahaanSoundingList[i] =
-                                                        it.npwp_perusahaan_sounding
-                                                    alamatPerusahaanSoundingList[i] =
-                                                        it.alamat_perusahaan_sounding
-                                                    lokasiSoundingList[i] = it.lokasi_sounding
-                                                    waktuList[i] = it.waktu
-                                                    judulKalibrasi1List[i] = it.judulKalibrasi1
-                                                    judulKalibrasi2List[i] = it.judulKalibrasi2
-                                                    judulFraksiList[i] = it.judulFraksi
-                                                    judulDataTabelList[i] = it.judulDataTabel
-                                                    kantorPegawai = it.kantor_pegawai
-                                                    kanwilPegawai = it.kanwil_pegawai
-                                                } catch (e: Exception) {
-                                                    Log.d("okimatra7", e.message.toString())
-                                                }
+                                    lifecycleScope.launch {
+                                        userDao.fetchSoundingByNoTangkiAndWaktu(
+                                            listSounding[i].subSequence(0, listSounding[i].indexOf(";")).toString(),
+                                            monthExtract(
+                                                listSounding[i].subSequence(
+                                                    listSounding[i].indexOf(";") + 2,
+                                                    listSounding[i].length
+                                                ).toString()
+                                            )
+                                        ).collect {
+                                            try {
+                                                Log.d("okimatra1", tinggiCairanList.toString())
+                                                tinggiCairanList[i] = it.tinggi_cairan
+                                                Log.d("okimatra2", tinggiCairanList.toString())
+                                                suhuCairanList[i] = it.suhu_cairan
+                                                suhuKalibrasiTangkiList[i] =
+                                                    it.suhu_kalibrasi_tangki
+                                                tinggiMejaList[i] = it.tinggi_meja
+                                                faktorMuaiList[i] = it.faktor_muai
+                                                tinggiCairanTerkoreksiList[i] =
+                                                    it.tinggi_cairan_terkoreksi
+                                                volumeKalibrasi1List[i] = it.volume_kalibrasi1
+                                                densityCairanList[i] = it.density_cairan
+                                                volumeFraksiList[i] = it.volume_fraksi
+                                                volumeKalibrasi2List[i] = it.volume_kalibrasi2
+                                                volumeMidList[i] = it.volume_mid
+                                                volumeAppList[i] = it.volume_app
+                                                volumeObsList[i] = it.volume_obs
+                                                volumeList[i] = it.volume
+                                                hasilSoundingList[i] = it.hasil_sounding
+                                                noTangkiList[i] = it.no_tangki
+                                                pegawaiSoundingList[i] = it.pegawai_sounding
+                                                nipPegawaiList[i] = it.nip_pegawai
+                                                penggunaJasaSoundingList[i] =
+                                                    it.pengguna_jasa_sounding
+                                                jabatanPenggunaJasaList[i] =
+                                                    it.jabatan_pengguna_jasa
+                                                perusahaanSoundingList[i] =
+                                                    it.perusahaan_sounding
+                                                npwpPerusahaanSoundingList[i] =
+                                                    it.npwp_perusahaan_sounding
+                                                alamatPerusahaanSoundingList[i] =
+                                                    it.alamat_perusahaan_sounding
+                                                lokasiSoundingList[i] = it.lokasi_sounding
+                                                waktuList[i] = it.waktu
+                                                judulKalibrasi1List[i] = it.judulKalibrasi1
+                                                judulKalibrasi2List[i] = it.judulKalibrasi2
+                                                judulFraksiList[i] = it.judulFraksi
+                                                judulDataTabelList[i] = it.judulDataTabel
+                                                kantorPegawai = it.kantor_pegawai
+                                                kanwilPegawai = it.kanwil_pegawai
+                                            } catch (e: Exception) {
+                                                Log.d("okimatra7", e.message.toString())
                                             }
                                         }
-                                    }
-                                    else { //To add listSounding[i] sequentially because of lazy userDao
-                                        Log.d("okimatra3",tinggiCairanList.toString())
-                                        tinggiCairanList[i] = 0.0
-                                        Log.d("okimatra4",tinggiCairanList.toString())
-                                        suhuCairanList[i] = 0.0
-                                        suhuKalibrasiTangkiList[i] = 0.0
-                                        tinggiMejaList[i] = 0.0
-                                        faktorMuaiList[i] = 0.0
-                                        tinggiCairanTerkoreksiList[i] = 0.0
-                                        volumeKalibrasi1List[i] = 0.0
-                                        densityCairanList[i] = 0.0
-                                        volumeFraksiList[i] = 0.0
-                                        volumeKalibrasi2List[i] = 0.0
-                                        volumeMidList[i] = 0.0
-                                        volumeAppList[i] = 0.0
-                                        volumeObsList[i] = 0.0
-                                        volumeList[i] = 0.0
-                                        hasilSoundingList[i] = 0.0
-                                        noTangkiList[i] = ""
-                                        pegawaiSoundingList[i] = ""
-                                        nipPegawaiList[i] = ""
-                                        penggunaJasaSoundingList[i] = ""
-                                        jabatanPenggunaJasaList[i] = ""
-                                        perusahaanSoundingList[i] = ""
-                                        npwpPerusahaanSoundingList[i] = ""
-                                        alamatPerusahaanSoundingList[i] = ""
-                                        lokasiSoundingList[i] = ""
-                                        waktuList[i] = ""
-                                        judulKalibrasi1List[i] = ""
-                                        judulKalibrasi2List[i] = ""
-                                        judulFraksiList[i] = ""
-                                        judulDataTabelList[i] = ""
                                     }
                                 }
                                 Handler(Looper.getMainLooper()).postDelayed({ //Give time to load all database data
@@ -926,7 +904,7 @@ class TabFragment(private val title: String) : Fragment() {
                                             }
                                         }
                                     }
-                                }, 150) //wait on loading
+                                }, 200) //wait on loading
                             }
                         }
                     }
@@ -3087,15 +3065,6 @@ class TabFragment(private val title: String) : Fragment() {
         canvas.closePathStroke()
     }
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
-        val bmpQrCode = getQrCodeBitmap(it)
-        val streamQrCode = ByteArrayOutputStream()
-        bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
-        val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
-        val imgQrCode = Image(imgQrCodeData)
-        imgQrCode.scale(0.15f, 0.15f)
-        imgQrCode.setFixedPosition(346f, 210f)
-        doc.add(imgQrCode)
-
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
         doc.add(Paragraph().add("\n\n").setFixedLeading(10f))
         val metodeFraksi = it.volume_fraksi > 0
@@ -3188,7 +3157,6 @@ class TabFragment(private val title: String) : Fragment() {
         pegCell.setPaddingLeft(51f)
         table.addCell(pegCell)
         doc.add(table)
-//        table.deleteBodyRows()
 
         val nipSpace = it.nip_pegawai.subSequence(0,8).toString() +
                 " " + it.nip_pegawai.subSequence(8,14).toString() +
@@ -3197,6 +3165,15 @@ class TabFragment(private val title: String) : Fragment() {
         val nip = listOf(nipSpace)
         val jabatan = listOf(it.jabatan_pengguna_jasa)
         writeAuthenticationwithCustomer(jabatan, nip, doc)
+
+        val bmpQrCode = getQrCodeBitmap(it)
+        val streamQrCode = ByteArrayOutputStream()
+        bmpQrCode.compress(Bitmap.CompressFormat.PNG, 100, streamQrCode)
+        val imgQrCodeData = ImageDataFactory.create(streamQrCode.toByteArray())
+        val imgQrCode = Image(imgQrCodeData)
+        imgQrCode.scale(0.15f, 0.15f)
+        imgQrCode.setFixedPosition(346f, 210f)
+        doc.add(imgQrCode)
     }
     private fun writeDataTitle(text: String, doc: Document) {
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
@@ -3262,7 +3239,6 @@ class TabFragment(private val title: String) : Fragment() {
             table.addCell(pegCell)
         }
         doc.add(table)
-//        table.deleteBodyRows()
     }
     private fun getQrCodeBitmap(it: SoundingEntity): Bitmap {
         val size = 512 //pixels
