@@ -1894,6 +1894,11 @@ class TabFragment(private val title: String) : Fragment() {
                     ivTvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
                     i++
                 }
+                soundingTotal = 0.0
+                ivHasilMap.keys.forEach { it2 ->
+                    soundingTotal += ivHasilMap[it2]!!
+                }
+                hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
                 Toast.makeText(requireContext(), "Tab Deleted", Toast.LENGTH_SHORT).show()
             }
         }
@@ -2001,7 +2006,9 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     } else {
                         spAkhirDbFinalMap[spAkhir] = 0.0
-                        ivHasilMap[iv] = roundDigits(spAwalDbFinalMap[spAwal]!! - spAkhirDbFinalMap[spAkhir]!!)
+                        ivHasilMap[iv] =
+                            roundDigits(spAwalDbFinalMap[spAwal]!! -
+                                    spAkhirDbFinalMap[spAkhir]!!)
                         tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${ivHasilMap[iv]}").replace(".",",")))
                         soundingTotal = 0.0
                         ivHasilMap.keys.forEach { it2 ->
