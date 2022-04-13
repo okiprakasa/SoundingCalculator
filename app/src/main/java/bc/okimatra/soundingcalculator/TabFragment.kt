@@ -4592,7 +4592,7 @@ class TabFragment(private val title: String) : Fragment() {
                 .setVerticalAlignment(VerticalAlignment.TOP)
                 .setPaddingTop(-padding)
                 .setPaddingLeft(3*padding)
-                .setPaddingRight(3*padding)
+                .setPaddingRight(7*padding)
             tablelist.addCell(valueCell)
 
             val akhirCell = Cell().add(Paragraph().add(Text(listAkhir[i]).setFont(fontArial).setFontSize(10f)))
@@ -4600,7 +4600,7 @@ class TabFragment(private val title: String) : Fragment() {
                 .setHorizontalAlignment(HorizontalAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.TOP)
                 .setPaddingTop(-padding)
-                .setPaddingLeft(3*padding)
+                .setPaddingLeft(7*padding)
                 .setPaddingRight(5*padding)
             tablelist.addCell(akhirCell)
         }
