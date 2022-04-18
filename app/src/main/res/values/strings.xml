@@ -176,10 +176,10 @@
     <string name="hint_kanwil">Cth: Kanwil DJBC Sulawesi Bagian Utara</string>
     <string name="hint_lokasi">Cth: Pasangkayu</string>
     <string name="tv_format_ba">Format BA Sounding (Tanpa Tahun)</string>
-    <string name="hint_format_ba">Cth: BA-PFP-111/KBC.180104/2022</string>
+    <string name="hint_format_ba">Cth: BA-PFP-XX/KBC.180104/</string>
     <string name="tv_format_3d">Format Form 3D (Tanpa Tahun)</string>
     <string name="form_3d">Nomor Form 3D</string>
     <string name="hint_format_3d">Cth: DP110800</string>
     <string name="tv_format_ba_sampling">Format BA Sampling (Tanpa Tahun)</string>
-    <string name="hint_format_ba_sampling">Cth: BA-PCB-111/KBC.180104/2022</string>
+    <string name="hint_format_ba_sampling">Cth: BA-PCB-XX/KBC.180104/</string>
 </resources>
