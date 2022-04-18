@@ -1894,6 +1894,11 @@ class TabFragment(private val title: String) : Fragment() {
                     ivTvMap[it]!!.text = String.format(getString(R.string.data_sounding), i)
                     i++
                 }
+                soundingTotal = 0.0
+                ivHasilMap.keys.forEach { it2 ->
+                    soundingTotal += ivHasilMap[it2]!!
+                }
+                hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
                 Toast.makeText(requireContext(), "Tab Deleted", Toast.LENGTH_SHORT).show()
             }
         }
@@ -2001,7 +2006,9 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     } else {
                         spAkhirDbFinalMap[spAkhir] = 0.0
-                        ivHasilMap[iv] = roundDigits(spAwalDbFinalMap[spAwal]!! - spAkhirDbFinalMap[spAkhir]!!)
+                        ivHasilMap[iv] =
+                            roundDigits(spAwalDbFinalMap[spAwal]!! -
+                                    spAkhirDbFinalMap[spAkhir]!!)
                         tvHasil.text = String.format(getString(R.string.hasil_akhir_edited, zeroRemover("${ivHasilMap[iv]}").replace(".",",")))
                         soundingTotal = 0.0
                         ivHasilMap.keys.forEach { it2 ->
@@ -4051,7 +4058,7 @@ class TabFragment(private val title: String) : Fragment() {
 
         val para5 = Paragraph().add(Text("5. Keterangan :").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         cellTop.add(para5)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan, ""), cellTop)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan.replace("Hasil Akhir: ",""), ""), cellTop)
         cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
         writeDataList2withSemicolomn(listOf("1)", "2)"), listOf("Waktu dan Pukul                      ", "Jumlah Contoh Barang"),
             listOf(
@@ -4592,7 +4599,7 @@ class TabFragment(private val title: String) : Fragment() {
                 .setVerticalAlignment(VerticalAlignment.TOP)
                 .setPaddingTop(-padding)
                 .setPaddingLeft(3*padding)
-                .setPaddingRight(3*padding)
+                .setPaddingRight(7*padding)
             tablelist.addCell(valueCell)
 
             val akhirCell = Cell().add(Paragraph().add(Text(listAkhir[i]).setFont(fontArial).setFontSize(10f)))
@@ -4600,7 +4607,7 @@ class TabFragment(private val title: String) : Fragment() {
                 .setHorizontalAlignment(HorizontalAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.TOP)
                 .setPaddingTop(-padding)
-                .setPaddingLeft(3*padding)
+                .setPaddingLeft(7*padding)
                 .setPaddingRight(5*padding)
             tablelist.addCell(akhirCell)
         }
