@@ -213,7 +213,7 @@
                 android:inputType="text"
                 android:fontFamily="@font/poppins_light"
                 android:textSize="12sp"
-                android:hint="@string/hint_format_ba"
+                android:hint="@string/hint_format_ba_tanpa_tahun"
                 tools:ignore="Autofill"
                 android:gravity="center_vertical"
                 android:scrollbars="vertical"/>
@@ -240,7 +240,7 @@
                 android:inputType="text"
                 android:fontFamily="@font/poppins_light"
                 android:textSize="12sp"
-                android:hint="@string/hint_format_ba_sampling"
+                android:hint="@string/hint_format_ba_sampling_tanpa_tahun"
                 tools:ignore="Autofill"
                 android:gravity="center_vertical"
                 android:scrollbars="vertical"/>
