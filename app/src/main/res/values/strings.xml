@@ -10,6 +10,9 @@
     <string name="hasil_pembulatan">Hasil Pembulatan (MT)</string>
     <string name="hint_hasil_pembulatan">Cth: 8000</string>
     <string name="tinggi_cairan">Tinggi Cairan (mm)</string>
+    <string name="tinggi_cairan1">Tinggi Cairan Simplo (mm)</string>
+    <string name="tinggi_cairan2">Tinggi Cairan Duplo (mm)</string>
+    <string name="tinggi_cairan3">Tinggi Cairan Triplo (mm)</string>
     <string name="hint_tinggi_cairan">Cth: 12000</string>
     <string name="awal">Awal</string>
     <string name="petugas">Petugas Sampling 2 (Tidak Wajib)</string>
@@ -28,6 +31,9 @@
     <string name="hint_no_ba">BAPFP-XX/KBC.150504/2022</string>
     <string name="no_ba_edited">BAPFP-XX/KBC.150504/%s</string>
     <string name="suhu_cairan">Suhu Cairan (°C)</string>
+    <string name="suhu_cairan1">Suhu Cairan Atas (°C)</string>
+    <string name="suhu_cairan2">Suhu Cairan Tengah (°C)</string>
+    <string name="suhu_cairan3">Suhu Cairan Bawah (°C)</string>
     <string name="hint_suhu_cairan">Cth: 50</string>
     <string name="suhu_edited">%s °C</string>
     <string name="tinggi_meja">Tinggi Meja (mm)</string>
@@ -49,8 +55,10 @@
     <string name="tambah_sounding">TAMBAH INPUT SOUNDING</string>
     <string name="i">%s</string>
     <string name="hasil">Hasil: 0.000 MT</string>
+    <string name="hasil_kgm">Hasil: 0.000 KGM</string>
     <string name="hasil_final">Hasil Akhir: 0.000 MT</string>
     <string name="hasil_final_edited">Hasil Akhir: %s MT</string>
+    <string name="hasil_final_edited_kgm">Hasil Akhir: %s KGM</string>
     <string name="kota">Kotabaru</string>
     <string name="tinggi_terkoreksi">Tinggi Terkoreksi: 0.000 m</string>
     <string name="volume_app">Volume App: 0.000 L</string>
@@ -86,6 +94,7 @@
     <string name="tabel_kalibrasi2_edited">"Tabel Kalibrasi ($s0 m)</string>
     <string name="tabel_fraksi_edited">Tabel Fraksi (%s mm)</string>
     <string name="hasil_akhir_edited">%s MT</string>
+    <string name="hasil_akhir_edited_kgm">%s KGM</string>
     <string name="deskripsi">%s\n%s</string>
     <string name="before_edited">__.___.___._-___.___</string>
     <string name="number_15">%s.%s.%s.%s-%s.%s</string>

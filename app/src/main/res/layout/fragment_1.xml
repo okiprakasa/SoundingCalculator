@@ -74,7 +74,7 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
-                        android:text="@string/tinggi_cairan"
+                        android:text="@string/tinggi_cairan1"
                         android:textSize="13sp"/>
 
                     <RelativeLayout
@@ -86,7 +86,81 @@
                         android:background="@drawable/rounded_input">
 
                         <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/tinggi_cairan"
+                            android:id="@+id/tinggi_cairan1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/hint_tinggi_cairan"
+                            android:inputType="numberDecimal"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:paddingStart="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="10dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/tinggi_cairan2"
+                        android:textSize="13sp"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_input">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tinggi_cairan2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/hint_tinggi_cairan"
+                            android:inputType="numberDecimal"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:paddingStart="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="10dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/tinggi_cairan3"
+                        android:textSize="13sp"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_input">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tinggi_cairan3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
@@ -111,7 +185,7 @@
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
-                        android:text="@string/suhu_cairan"
+                        android:text="@string/suhu_cairan1"
                         android:textSize="13sp" />
 
                     <RelativeLayout
@@ -123,7 +197,81 @@
                         android:background="@drawable/rounded_input">
 
                         <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/suhu_cairan"
+                            android:id="@+id/suhu_cairan1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/hint_suhu_cairan"
+                            android:inputType="numberDecimal"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:paddingStart="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="10dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/suhu_cairan2"
+                        android:textSize="13sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_input">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/suhu_cairan2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/poppins_light"
+                            android:hint="@string/hint_suhu_cairan"
+                            android:inputType="numberDecimal"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:paddingStart="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="10dp"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/helvetica"
+                        android:gravity="center_horizontal"
+                        android:text="@string/suhu_cairan3"
+                        android:textSize="13sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="25dp"
+                        android:background="@drawable/rounded_input">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/suhu_cairan3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
@@ -593,7 +741,7 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/helvetica"
                         android:gravity="center_horizontal"
-                        android:text="@string/hasil"
+                        android:text="@string/hasil_kgm"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 

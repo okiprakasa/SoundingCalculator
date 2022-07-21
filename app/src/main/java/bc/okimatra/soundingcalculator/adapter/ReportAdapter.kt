@@ -46,7 +46,7 @@ class ReportAdapter(private val items: ArrayList<ReportEntity>,
             holder.tvNoBa.text = String.format(context.getString(R.string.no_ba_holder),item.nomor_ba_sounding.subSequence(0, 18),item.nomor_ba_sounding.subSequence(item.nomor_ba_sounding.length-8, item.nomor_ba_sounding.length))
         }
         holder.tvWaktu.text = item.tanggal_ba_sounding.replace("-"," ")
-        holder.tvHasil.text = item.hasil_perhitungan.replace(".",",")
+        holder.tvHasil.text = item.hasil_perhitungan
         holder.tvBentuk.text = String.format(context.getString(R.string.deskripsi, item.produk, item.bentuk))
         holder.tvPerusahaan.text = String.format(context.getString(R.string.deskripsi, String.format(context.getString(R.string.no_tangki_edited, noSemuaTangki)), item.perusahaan_sounding[0]))
 

@@ -60,6 +60,8 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.math.BigDecimal
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -224,10 +226,10 @@ class TabFragment(private val title: String) : Fragment() {
                     next.setOnClickListener {
                         val hasil = hasilKalkulator.text.toString()
                         when {
-                            hasil == "Hasil: 0.000 MT" -> {
+                            hasil == "Hasil: 0.000 KGM" -> {
                                 Toast.makeText(context, "Mohon Cek Data\nNilai Hasil Masih 0", Toast.LENGTH_SHORT).show()
                             }
-                            hasil.subSequence(hasil.indexOf(":")+1, hasil.length-3).toString().replace(",",".").replace(" ","").toDouble()<0 -> {
+                            hasil.subSequence(hasil.indexOf(":")+1, hasil.length-4).toString().replace(".","").replace(",",".").replace(" ","").toDouble()<0 -> {
                                 Toast.makeText(context, "Mohon Cek Data\nHasil Bernilai Negatif", Toast.LENGTH_SHORT).show()
                             }
                             else -> {
@@ -295,10 +297,10 @@ class TabFragment(private val title: String) : Fragment() {
                         }
                     }
 
-                    val listETTinggi = listOf(tinggiCairan, tinggiMeja)
+                    val listETTinggi = listOf(tinggiCairan1, tinggiCairan2, tinggiCairan3, tinggiMeja)
                     results = calculatorTinggiListener(listETTinggi)
 
-                    val listET = listOf(suhuCairan, suhuTetap, muai, tabelFraksi, tabelKalibrasi, tabelKalibrasi2, densityCairan)
+                    val listET = listOf(suhuCairan1, suhuCairan2, suhuCairan3, suhuTetap, muai, tabelFraksi, tabelKalibrasi, tabelKalibrasi2, densityCairan)
                     results = calculatorListener(listET)
 
                     simpanHasil.setOnClickListener {
@@ -316,8 +318,8 @@ class TabFragment(private val title: String) : Fragment() {
                                 Toast.makeText(requireContext(), "Waktu Sounding Belum Diisi", Toast.LENGTH_SHORT).show()
                             }
                             else -> {
-                                val tinggiCairanAngka = _binding1?.tinggiCairan?.text.toString().toDouble()
-                                val suhuCairanAngka = _binding1?.suhuCairan?.text.toString().toDouble()
+                                val tinggiCairanAngka = (_binding1?.tinggiCairan1?.text.toString().toDouble() + _binding1?.tinggiCairan2?.text.toString().toDouble() + _binding1?.tinggiCairan3?.text.toString().toDouble())/3.0
+                                val suhuCairanAngka = (_binding1?.suhuCairan1?.text.toString().toDouble() + _binding1?.suhuCairan2?.text.toString().toDouble() + _binding1?.suhuCairan3?.text.toString().toDouble())/3.0
                                 val suhuKalibrasiAngka = _binding1?.suhuTetap?.text.toString().toDouble()
                                 val tinggiMejaAngka = _binding1?.tinggiMeja?.text.toString().toDouble()
                                 val koefisienMuai = _binding1?.muai?.text.toString().toDouble()
@@ -385,8 +387,12 @@ class TabFragment(private val title: String) : Fragment() {
                                                                 kanwil_pegawai = kanwilPegawai
                                                             ))
                                                             Toast.makeText(requireContext(), "Data Telah Tersimpan", Toast.LENGTH_SHORT).show()
-                                                            _binding1?.tinggiCairan?.text?.clear()
-                                                            _binding1?.suhuCairan?.text?.clear()
+                                                            _binding1?.tinggiCairan1?.text?.clear()
+                                                            _binding1?.tinggiCairan2?.text?.clear()
+                                                            _binding1?.tinggiCairan3?.text?.clear()
+                                                            _binding1?.suhuCairan1?.text?.clear()
+                                                            _binding1?.suhuCairan2?.text?.clear()
+                                                            _binding1?.suhuCairan3?.text?.clear()
                                                             _binding1?.suhuTetap?.text?.clear()
                                                             _binding1?.tinggiMeja?.text?.clear()
                                                             _binding1?.muai?.text?.clear()
@@ -752,7 +758,7 @@ class TabFragment(private val title: String) : Fragment() {
                         val form3dValue = endSpaceRemover(form3d.text.toString())
                         val petugas2Value = endSpaceRemover(petugas.selectedItem.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
                         val saksi2Value = endSpaceRemover(saksi.selectedItem.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
-                        val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir : ","").replace(".",",")
+                        val hasilPerhitunganValue = hasilPerhitungan.text.toString().replace("Hasil Akhir : ","")
                         val listSounding = ArrayList<String>()
                         ivSpAwalMap.keys.forEach {
                             listSounding += arrayListOf(ivSpAwalMap[it]!!.selectedItem.toString())
@@ -1483,7 +1489,7 @@ class TabFragment(private val title: String) : Fragment() {
                     }
 
                     titleSounding1.text = String.format(getString(R.string.data_sounding), 1)
-                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited_kgm, DecimalFormat("#,###").format(roundDigits(soundingTotal)*1000.0).replace(",",".")))
                     addClickListener(binding2, btnAddSounding, userDao)
                 }
             }
@@ -1898,7 +1904,8 @@ class TabFragment(private val title: String) : Fragment() {
                 ivHasilMap.keys.forEach { it2 ->
                     soundingTotal += ivHasilMap[it2]!!
                 }
-                hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+//                hasilPerhitungan.text123 = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+                hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited_kgm, DecimalFormat("#,###").format(roundDigits(soundingTotal)*1000.0).replace(",",".")))
                 Toast.makeText(requireContext(), "Tab Deleted", Toast.LENGTH_SHORT).show()
             }
         }
@@ -1951,7 +1958,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     ivHasilMap.keys.forEach { it2 ->
                                         soundingTotal += ivHasilMap[it2]!!
                                     }
-                                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+                                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited_kgm, DecimalFormat("#,###").format(roundDigits(soundingTotal)*1000.0).replace(",",".")))
                                 } catch (e: Exception) {
                                     Log.d("okimatra11", e.message.toString())
                                 }
@@ -1968,7 +1975,7 @@ class TabFragment(private val title: String) : Fragment() {
                         ivHasilMap.keys.forEach {it2 ->
                             soundingTotal += ivHasilMap[it2]!!
                         }
-                        hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+                        hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited_kgm, DecimalFormat("#,###").format(roundDigits(soundingTotal)*1000.0).replace(",",".")))
                     }
                 }
             }
@@ -1998,7 +2005,7 @@ class TabFragment(private val title: String) : Fragment() {
                                     ivHasilMap.keys.forEach { it2 ->
                                         soundingTotal += ivHasilMap[it2]!!
                                     }
-                                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+                                    hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited_kgm, DecimalFormat("#,###").format(roundDigits(soundingTotal)*1000.0).replace(",",".")))
                                 } catch (e: Exception) {
                                     Log.d("okimatra12", e.message.toString())
                                 }
@@ -2014,7 +2021,7 @@ class TabFragment(private val title: String) : Fragment() {
                         ivHasilMap.keys.forEach { it2 ->
                             soundingTotal += ivHasilMap[it2]!!
                         }
-                        hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited, zeroRemover("${roundDigits(soundingTotal)}").replace(".",",")))
+                        hasilPerhitungan.text = String.format(getString(R.string.hasil_final_edited_kgm, DecimalFormat("#,###").format(roundDigits(soundingTotal)*1000.0).replace(",",".")))
                     }
                 }
             }
@@ -2023,7 +2030,7 @@ class TabFragment(private val title: String) : Fragment() {
 
     private fun resetResult() {
         binding1.apply {
-            hasilKalkulator.text = getText(R.string.hasil)
+            hasilKalkulator.text = getText(R.string.hasil_kgm)
             hasilVolume.text = getText(R.string.volume)
             hasilVolumeApp.text = getText(R.string.volume_app)
             hasilVolumeObs.text = getText(R.string.volume_obs)
@@ -2041,9 +2048,13 @@ class TabFragment(private val title: String) : Fragment() {
     private fun calculatorCheck(): Boolean {
         binding1.apply {
             val checkResult: Boolean = try {
-                tinggiCairan.text.toString().toDouble() >= 0.0 &&
+                tinggiCairan1.text.toString().toDouble() >= 0.0 &&
+                        tinggiCairan2.text.toString().toDouble() >= 0.0 &&
+                        tinggiCairan3.text.toString().toDouble() >= 0.0 &&
                         tinggiMeja.text.toString().toDouble() >= 0.0 &&
-                        suhuCairan.text.toString().toDouble() >= 0.0 &&
+                        suhuCairan1.text.toString().toDouble() >= 0.0 &&
+                        suhuCairan2.text.toString().toDouble() >= 0.0 &&
+                        suhuCairan3.text.toString().toDouble() >= 0.0 &&
                         suhuTetap.text.toString().toDouble() >= 0.0 &&
                         muai.text.toString().toDouble() >= 0.0 &&
                         densityCairan.text.toString().toDouble() > 0.0
@@ -2059,8 +2070,9 @@ class TabFragment(private val title: String) : Fragment() {
         var soundingCorrected: String
         var soundingCorrectedFinal: String
         binding1.apply {
-            soundingCorrected = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
-            soundingCorrectedFinal = ((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble())/1000).toString()
+            val tinggiCairan = (tinggiCairan1.text.toString().toDouble() + tinggiCairan2.text.toString().toDouble() + tinggiCairan3.text.toString().toDouble())/3.0
+            soundingCorrected = (tinggiCairan + tinggiMeja.text.toString().toDouble()).toString()
+            soundingCorrectedFinal = ((tinggiCairan + tinggiMeja.text.toString().toDouble())/1000).toString()
             soundingCorrect = (round(soundingCorrected.toDouble())/1000.0)
             dataTabel.text = String.format(getString(R.string.data_tabel_edited), soundingCorrect.toString())
             try {
@@ -2085,7 +2097,7 @@ class TabFragment(private val title: String) : Fragment() {
             else {
                 judulTabelKalibrasi2.text = String.format(getString(R.string.tabel_kalibrasi_edited1), (round((judulTabelKalibrasi.text.toString().subSequence(17,judulTabelKalibrasi.text.toString().length-3).toString().toDouble() + 0.01)* 10.0) / 10.0).toString())
             }
-            satuanmm = (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()).toString()
+            satuanmm = (tinggiCairan + tinggiMeja.text.toString().toDouble()).toString()
             satuanmm = satuanmm.subSequence(satuanmm.indexOf(".")-1,satuanmm.indexOf(".")).toString()
             judulTabelFraksi.text = String.format(getString(R.string.tabel_fraksi_edited), satuanmm)
             if ("0 mm" in judulTabelFraksi.text.toString()) {
@@ -2097,7 +2109,7 @@ class TabFragment(private val title: String) : Fragment() {
     }
     private fun tinggiCek (): Boolean {
         binding1.apply {
-            return tinggiCairan.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
+            return tinggiCairan1.text.toString().isNotEmpty() and tinggiCairan2.text.toString().isNotEmpty() and tinggiCairan3.text.toString().isNotEmpty() and tinggiMeja.text.toString().isNotEmpty()
         }
     }
     private fun soundingCalculator(): List<Double> {
@@ -2112,6 +2124,9 @@ class TabFragment(private val title: String) : Fragment() {
         var tinggiTerkoreksi = 0.0
         binding1.apply {
             if (calculatorCheck()) {
+                val tinggiCairan = roundNoDigits((tinggiCairan1.text.toString().toDouble() + tinggiCairan2.text.toString().toDouble() + tinggiCairan3.text.toString().toDouble())/3.0)
+                val suhuCairan = roundNoDigits((suhuCairan1.text.toString().toDouble() + suhuCairan2.text.toString().toDouble() + suhuCairan3.text.toString().toDouble())/3.0)
+                val nondec = DecimalFormat("#,###")
                 when {
                     tabelFraksi.text.toString().isNotEmpty() and tabelKalibrasi.text.toString()
                         .isNotEmpty() -> {
@@ -2119,24 +2134,20 @@ class TabFragment(private val title: String) : Fragment() {
                         volumeKalibrasi2 = tabelKalibrasi.text.toString().toDouble()
                         volumeMid = volumeKalibrasi2
                         tinggiTerkoreksi = roundDigits(
-                            (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
-                                .toDouble()) / 1000
+                            (tinggiCairan + tinggiMeja.text.toString().toDouble()) / 1000
                         )
                         volumeApp = roundDigits(
-                            tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString()
-                                .toDouble()
+                            tabelFraksi.text.toString().toDouble() + tabelKalibrasi.text.toString().toDouble()
                         )
                         volumeObs = roundDigits(
-                            volumeApp * (1.0 + ((suhuCairan.text.toString()
-                                .toDouble() - suhuTetap.text.toString()
-                                .toDouble()) * muai.text.toString().toDouble()))
+                            volumeApp * (1.0 + ((suhuCairan - suhuTetap.text.toString().toDouble()) * muai.text.toString().toDouble()))
                         )
                         volume = roundDigits(volumeObs / 1000.0)
                         nilaiHasilKalkulator =
                             roundDigits(volume * densityCairan.text.toString().toDouble())
                         hasilKalkulator.text = String.format(
-                            getString(R.string.hasil_akhir_edited),
-                            nilaiHasilKalkulator.toString().replace(".", ",")
+                            getString(R.string.hasil_akhir_edited_kgm),
+                            nondec.format(nilaiHasilKalkulator*1000.0).replace(",", ".")
                         )
                         hasilVolume.text = String.format(
                             getString(R.string.volume_edited),
@@ -2159,10 +2170,10 @@ class TabFragment(private val title: String) : Fragment() {
                         .isNotEmpty() -> {
                         volumeKalibrasi2 = tabelKalibrasi2.text.toString().toDouble()
                         tinggiTerkoreksi = roundDigits(
-                            (tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString()
+                            (tinggiCairan + tinggiMeja.text.toString()
                                 .toDouble()) / 1000
                         )
-                        delta =((tinggiCairan.text.toString().toDouble() + tinggiMeja.text.toString().toDouble()) / 1000 -
+                        delta =((tinggiCairan + tinggiMeja.text.toString().toDouble()) / 1000 -
                                 judulTabelKalibrasi.text.toString().subSequence(
                                     judulTabelKalibrasi.text.indexOf("(") + 1,
                                     judulTabelKalibrasi.text.indexOf(")") - 2
@@ -2175,16 +2186,14 @@ class TabFragment(private val title: String) : Fragment() {
                             .toDouble() - tabelKalibrasi.text.toString().toDouble())
                         volumeApp = roundDigits(volumeMid)
                         volumeObs = roundDigits(
-                            volumeApp * (1.0 + ((suhuCairan.text.toString()
-                                .toDouble() - suhuTetap.text.toString()
-                                .toDouble()) * muai.text.toString().toDouble()))
+                            volumeApp * (1.0 + ((suhuCairan - suhuTetap.text.toString().toDouble()) * muai.text.toString().toDouble()))
                         )
                         volume = roundDigits(volumeObs / 1000.0)
                         nilaiHasilKalkulator =
                             roundDigits(volume * densityCairan.text.toString().toDouble())
                         hasilKalkulator.text = String.format(
-                            getString(R.string.hasil_akhir_edited),
-                            nilaiHasilKalkulator.toString().replace(".", ",")
+                            getString(R.string.hasil_akhir_edited_kgm),
+                            nondec.format(nilaiHasilKalkulator*1000.0).replace(",", ".")
                         )
                         hasilVolume.text = String.format(
                             getString(R.string.volume_edited),
@@ -3657,6 +3666,8 @@ class TabFragment(private val title: String) : Fragment() {
     }
     private fun bodyRawReport(doc: Document, it: SoundingEntity) {
         val fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI)
+        val dec = DecimalFormat("#,###.###")
+        val nondec = DecimalFormat("#,###")
         doc.add(Paragraph().add("\n\n").setFixedLeading(10f))
         val metodeFraksi = it.volume_fraksi > 0
         writeDataTitle("Data Umum", doc)
@@ -3674,8 +3685,8 @@ class TabFragment(private val title: String) : Fragment() {
         writeDataTitle("Data Lapangan", doc)
         val judulLapangan = listOf("Tinggi Cairan", "Suhu Cairan")
         val nilaiLapangan = listOf(
-            "${zeroRemover((it.tinggi_cairan/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
-            "${zeroRemover(it.suhu_cairan.toBigDecimal().toPlainString()).replace(".", ",")} °C"
+            "${decimalFormat(dec.format((it.tinggi_cairan/1000).toBigDecimal()))} m",
+            "${nondec.format(it.suhu_cairan.toBigDecimal()).replace(",",".")} °C"
         )
         writeDatawithSemicolomn(judulLapangan, nilaiLapangan, doc)
         doc.add(Paragraph().add("\n").setFixedLeading(5f))
@@ -3696,16 +3707,16 @@ class TabFragment(private val title: String) : Fragment() {
         if (metodeFraksi) {
             judulTabel = listOf(it.judulKalibrasi1, it.judulFraksi, "Massa Jenis Cairan")
             nilaiTabel = listOf(
-                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
-                "${zeroRemover(it.volume_fraksi.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${decimalFormat(dec.format(it.volume_kalibrasi1.toBigDecimal()))} L",
+                "${decimalFormat(dec.format(it.volume_fraksi.toBigDecimal()))} L",
                 "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
             )
         } else {
             judulTabel = listOf(it.judulKalibrasi1,"Tabel Kalibrasi (${it.judulDataTabel})", it.judulKalibrasi2, "Massa Jenis Cairan")
             nilaiTabel = listOf(
-                "${zeroRemover(it.volume_kalibrasi1.toBigDecimal().toPlainString()).replace(".",",")} L",
-                "${zeroRemover(it.volume_mid.toBigDecimal().toPlainString()).replace(".",",")} L",
-                "${zeroRemover(it.volume_kalibrasi2.toBigDecimal().toPlainString()).replace(".", ",")} L",
+                "${decimalFormat(dec.format(it.volume_kalibrasi1.toBigDecimal()))} L",
+                "${decimalFormat(dec.format(it.volume_mid.toBigDecimal()))} L",
+                "${decimalFormat(dec.format(it.volume_kalibrasi2.toBigDecimal()))} L",
                 "${zeroRemover(it.density_cairan.toBigDecimal().toPlainString()).replace(".",",")} MT/KL"
             )
         }
@@ -3717,10 +3728,10 @@ class TabFragment(private val title: String) : Fragment() {
         val calcData = listOf("Tinggi Terkoreksi", "Volume App", "Volume Obs", "Volume", "Hasil Akhir Muatan")
         val calcValue = listOf(
             "${zeroRemover(it.tinggi_cairan_terkoreksi.toBigDecimal().toPlainString()).replace(".",",")} m",
-            "${zeroRemover(it.volume_app.toBigDecimal().toPlainString()).replace(".", ",")} L",
-            "${zeroRemover(it.volume_obs.toBigDecimal().toPlainString()).replace(".",",")} L",
-            "${zeroRemover(it.volume.toBigDecimal().toPlainString()).replace(".",",")} KL",
-            "${zeroRemover(it.hasil_sounding.toBigDecimal().toPlainString()).replace(".",",")} MT"
+            "${decimalFormat(dec.format(it.volume_app.toBigDecimal()))} L",
+            "${decimalFormat(dec.format(it.volume_obs.toBigDecimal()))} L",
+            "${decimalFormat(dec.format(it.volume.toBigDecimal()))} KL",
+            "${(nondec.format((it.hasil_sounding*1000.0).toBigDecimal())).replace(",",".")} KGM"
         )
         writeDatawithSemicolomn(calcData, calcValue, doc)
         doc.add(Paragraph().add("\n").setFixedLeading(8f))
@@ -4015,6 +4026,8 @@ class TabFragment(private val title: String) : Fragment() {
                 "${zeroRemover(it.tinggi_meja[0].toBigDecimal().toPlainString()).replace(".",",")} mm"),
             cellTop)
 
+        val dec = DecimalFormat("#,###.###")
+        val nondec = DecimalFormat("#,###")
         val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
         val para4 = Paragraph().add(Text("4. Hasil ").setFont(fontArial).setFontSize(10f))
             .add(soundingItalic)
@@ -4031,8 +4044,8 @@ class TabFragment(private val title: String) : Fragment() {
                 "${zeroRemover(it.suhu_cairan[0].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                 "${zeroRemover((it.tinggi_cairan[0]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                 "${zeroRemover(it.density_cairan[0].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[0].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[0].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                "${decimalFormat(dec.format(it.volume_app[0].toBigDecimal()))} L",
+                "${decimalFormat(dec.format(it.hasil_sounding[0].toBigDecimal()))} MT " + "(${(nondec.format((it.hasil_sounding[0]*1000.0).toBigDecimal())).replace(",",".")} KGM)"),
             cellTop)
 
         val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
@@ -4046,19 +4059,20 @@ class TabFragment(private val title: String) : Fragment() {
                 "${zeroRemover(it.suhu_cairan[1].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                 "${zeroRemover((it.tinggi_cairan[1]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                 "${zeroRemover(it.density_cairan[1].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                "${zeroRemover(it.volume_app[1].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                "${zeroRemover(it.hasil_sounding[1].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                "${decimalFormat(dec.format(it.volume_app[1].toBigDecimal()))} L",
+                "${decimalFormat(dec.format(it.hasil_sounding[1].toBigDecimal()))} MT " + "(${(nondec.format((it.hasil_sounding[1]*1000.0).toBigDecimal())).replace(",",".")} KGM)"),
             cellTop)
 
         val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
             .add(soundingItalic)
-            .add(Text("         :    ${zeroRemover(it.hasil[0].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+            .add(Text("         :    ${decimalFormat(dec.format(it.hasil[0].toBigDecimal()))} MT " + "(${decimalFormat(nondec.format(it.hasil[0].toBigDecimal()*BigDecimal(1000)))} KGM)\n").setFont(fontArial).setFontSize(10f))
             .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
         cellTop.add(para4c)
 
+        val hasilFinal = finalFormat(it.hasil_perhitungan)
         val para5 = Paragraph().add(Text("5. Keterangan :").setFont(fontArial).setFontSize(10f)).setMultipliedLeading(1.2f).setPaddingLeft(10f).setPaddingBottom(3f)
         cellTop.add(para5)
-        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, it.hasil_perhitungan.replace("Hasil Akhir: ",""), ""), cellTop)
+        writeDataListwithSemicolomn(listOf("a.", "b.", "c."), listOf("Bentuk Fisik/Warna/Bau", "Jumlah Barang", "Contoh Barang Diambil/Diajukan"), listOf(it.bentuk, "${decimalFormat(dec.format(hasilFinal/1000.0))} MT " + "(${decimalFormat(dec.format(hasilFinal))} KGM)", ""), cellTop)
         cellTop.add(Paragraph().add("\n").setFixedLeading(-5f))
         writeDataList2withSemicolomn(listOf("1)", "2)"), listOf("Waktu dan Pukul                      ", "Jumlah Contoh Barang"),
             listOf(
@@ -4094,6 +4108,8 @@ class TabFragment(private val title: String) : Fragment() {
         val fontArial = PdfFontFactory.createFont(baseArial, PdfEncodings.WINANSI)
         val maxIndex = (it.hasil_sounding.size-3)/4
         val soundingItalic = Text("Sounding").setItalic().setFont(fontArial).setFontSize(10f)
+        val dec = DecimalFormat("#,###.###")
+        val nondec = DecimalFormat("#,###")
         for (i in 0..maxIndex) {
             doc.add(AreaBreak(AreaBreakType.NEXT_PAGE))
             val title = Text("LEMBAR LANJUTAN BERITA ACARA PEMERIKSAAN FISIK SEBELUM PENGAJUAN PEB\nDALAM BENTUK CURAH\nNomor: ${it.nomor_ba_sounding}   " +
@@ -4126,8 +4142,8 @@ class TabFragment(private val title: String) : Fragment() {
                         "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                         "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                         "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                        "${decimalFormat(dec.format(it.volume_app[i*4+2].toBigDecimal()))} L",
+                        "${decimalFormat(dec.format(it.hasil_sounding[i*4+2].toBigDecimal()))} MT "+ "(${decimalFormat(nondec.format((it.hasil_sounding[i*4+2]*1000.0).toBigDecimal()))} KGM)"),
                     cellTop)
 
                 val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
@@ -4141,13 +4157,13 @@ class TabFragment(private val title: String) : Fragment() {
                         "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                         "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                         "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                        "${decimalFormat(dec.format(it.volume_app[i*4+3].toBigDecimal()))} L",
+                        "${decimalFormat(dec.format(it.hasil_sounding[i*4+3].toBigDecimal()))} MT " + "(${decimalFormat(nondec.format((it.hasil_sounding[i*4+3]*1000.0).toBigDecimal()))} KGM)"),
                     cellTop)
 
                 val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text("         :    ${decimalFormat(dec.format(it.hasil[i*2+1].toBigDecimal()))} MT "+ "(${decimalFormat(nondec.format(it.hasil[i*2+1].toBigDecimal()*BigDecimal(1000)))} KGM)\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2c)
 
@@ -4175,8 +4191,8 @@ class TabFragment(private val title: String) : Fragment() {
                         "${zeroRemover(it.suhu_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                         "${zeroRemover((it.tinggi_cairan[i*4+4]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                         "${zeroRemover(it.density_cairan[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+4].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+4].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                        "${decimalFormat(dec.format(it.volume_app[i*4+4].toBigDecimal()))} L",
+                        "${decimalFormat(dec.format(it.hasil_sounding[i*4+4].toBigDecimal()))} MT " + "(${decimalFormat(nondec.format((it.hasil_sounding[i*4+4]*1000.0).toBigDecimal()))} KGM)"),
                     cellTop)
 
                 val para4b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
@@ -4190,13 +4206,13 @@ class TabFragment(private val title: String) : Fragment() {
                         "${zeroRemover(it.suhu_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                         "${zeroRemover((it.tinggi_cairan[i*4+5]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                         "${zeroRemover(it.density_cairan[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+5].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+5].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                        "${decimalFormat(dec.format(it.volume_app[i*4+5].toBigDecimal()))} L",
+                        "${decimalFormat(dec.format(it.hasil_sounding[i*4+5].toBigDecimal()))} MT " + "(${decimalFormat(nondec.format((it.hasil_sounding[i*4+5]*1000.0).toBigDecimal()))} KGM)"),
                     cellTop)
 
                 val para4c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+2].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text("         :    ${decimalFormat(dec.format(it.hasil[i*2+2].toBigDecimal()))} MT "+"(${decimalFormat(nondec.format(it.hasil[i*2+2].toBigDecimal()*BigDecimal(1000)))} KGM)\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para4c)
 //                for (j in i*4+2..(i*4+1) step 2) {}
@@ -4225,8 +4241,8 @@ class TabFragment(private val title: String) : Fragment() {
                         "${zeroRemover(it.suhu_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                         "${zeroRemover((it.tinggi_cairan[i*4+2]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                         "${zeroRemover(it.density_cairan[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+2].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+2].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                        "${decimalFormat(dec.format(it.volume_app[i*4+2].toBigDecimal()))} L",
+                        "${decimalFormat(dec.format(it.hasil_sounding[i*4+2].toBigDecimal()))} MT " + "(${decimalFormat(nondec.format((it.hasil_sounding[i*4+2]*1000.0).toBigDecimal()))} KGM)"),
                     cellTop)
 
                 val para2b = Paragraph().add(Text("b. ").setFont(fontArial).setFontSize(10f))
@@ -4240,13 +4256,13 @@ class TabFragment(private val title: String) : Fragment() {
                         "${zeroRemover(it.suhu_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} °C",
                         "${zeroRemover((it.tinggi_cairan[i*4+3]/1000).toBigDecimal().toPlainString()).replace(".",",")} m",
                         "${zeroRemover(it.density_cairan[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT/KL",
-                        "${zeroRemover(it.volume_app[i*4+3].toBigDecimal().toPlainString()).replace(".", ",")} L",
-                        "${zeroRemover(it.hasil_sounding[i*4+3].toBigDecimal().toPlainString()).replace(".",",")} MT"),
+                        "${decimalFormat(dec.format(it.volume_app[i*4+3].toBigDecimal()))} L",
+                        "${decimalFormat(dec.format(it.hasil_sounding[i*4+3].toBigDecimal()))} MT " + "(${decimalFormat(nondec.format((it.hasil_sounding[i*4+3]*1000.0).toBigDecimal()))} KGM)"),
                     cellTop)
 
                 val para2c = Paragraph().add(Text("c. Hasil ").setFont(fontArial).setFontSize(10f))
                     .add(soundingItalic)
-                    .add(Text("         :    ${zeroRemover(it.hasil[i*2+1].toBigDecimal().toPlainString()).replace(".",",")} MT\n").setFont(fontArial).setFontSize(10f))
+                    .add(Text("         :    ${decimalFormat(dec.format(it.hasil[i*2+1].toBigDecimal()))} MT " +"(${decimalFormat(nondec.format(it.hasil[i*2+1].toBigDecimal()*BigDecimal(1000)))} KGM)\n").setFont(fontArial).setFontSize(10f))
                     .setMultipliedLeading(1.2f).setPaddingLeft(21.9f).setPaddingTop(-3f).setPaddingBottom(3f)
                 cellTop.add(para2c)
             }
@@ -4752,11 +4768,23 @@ class TabFragment(private val title: String) : Fragment() {
             text
         }
     }
+    private fun decimalFormat(text: String): String {
+        return text.replace(".","*").replace(",",".").replace("*",",")
+    }
+    private fun finalFormat(text: String): Double {
+        return text.replace("Hasil Akhir:","").replace(" ","").replace("KGM","").replace(".","").replace(",",".").trim().replace("\uFEFF", "").toDouble()
+    }
     private fun roundDigits(number: Double): Double {
         val number6digits = (number * 1000000).roundToLong()/1000000.toDouble()
         val number5digits = (number6digits * 100000).roundToLong()/100000.toDouble()
         val number4digits = (number5digits * 10000).roundToLong()/10000.toDouble()
         return (number4digits * 1000).roundToLong()/1000.toDouble()
+    }
+    private fun roundNoDigits(number: Double): Double {
+        val number3digits = (number * 10000).roundToLong()/10000.toDouble()
+        val number2digits = (number3digits * 1000).roundToLong()/1000.toDouble()
+        val number1digits = (number2digits * 100).roundToLong()/100.toDouble()
+        return number1digits.roundToLong()/1.toDouble()
     }
 
     private fun visibilityGone(listTextView: List<TextView>, listEditText: List<AppCompatEditText>) {

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import bc.okimatra.soundingcalculator.R
 import bc.okimatra.soundingcalculator.databinding.ItemsRowSoundingBinding
 import bc.okimatra.soundingcalculator.datasetup.SoundingEntity
+import java.text.DecimalFormat
 
 class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
                       private val updateListener:(id:Int)->Unit,
@@ -26,13 +27,14 @@ class SoundingAdapter(private val items: ArrayList<SoundingEntity>,
         val item = items[position]
         val hariTanggal = item.waktu.replace("-"," ").subSequence(0, item.waktu.indexOf(":")-3).toString()
         val pukul = item.waktu.subSequence(item.waktu.indexOf(":")-2, item.waktu.length).toString()
+        val nondec = DecimalFormat("#,###")
 
         if (item.no_tangki.length<9) {
             holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,item.no_tangki))
         } else {
             holder.tvNoTangki.text = String.format(context.getString(R.string.no_tangki_edited,"${item.no_tangki.subSequence(0,7)}..."))
         }
-        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited, item.hasil_sounding.toString().replace(".",",")))
+        holder.tvHasil.text = String.format(context.getString(R.string.hasil_akhir_edited_kgm, (nondec.format((item.hasil_sounding*1000.0).toBigDecimal())).replace(",",".")))
         holder.tvWaktu.text = hariTanggal
         holder.tvJamSounding.text = String.format(context.getString(R.string.waktu_edited, pukul))
         holder.tvNama.text = item.perusahaan_sounding
